@@ -11,12 +11,16 @@ from basic_funcs.basic_function import *
 
 import warnings
 warnings.filterwarnings('ignore')
+dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 
-close = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/daily/close.xlsx', index_col='Unnamed: 0')
-high_limit = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/daily/high_limit.xlsx', index_col='Unnamed: 0')
-low = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/daily/low.xlsx', index_col='Unnamed: 0')
-high = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/daily/high.xlsx', index_col='Unnamed: 0')
-open = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/daily/open.xlsx', index_col='Unnamed: 0')
+
+close = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
+open = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/open.csv', index_col='Unnamed: 0', date_parser=dateparse)
+high = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high.csv', index_col='Unnamed: 0', date_parser=dateparse)
+low = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low.csv', index_col='Unnamed: 0', date_parser=dateparse)
+high_limit = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high_limit.csv', index_col='Unnamed: 0', date_parser=dateparse)
+low_limit = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low_limit.csv', index_col='Unnamed: 0', date_parser=dateparse)
+volume = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv', index_col='Unnamed: 0', date_parser=dateparse)
 
 close = close[close.index >= '2020-02-01']
 high = high[high.index >= '2020-02-01']

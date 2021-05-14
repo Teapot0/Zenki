@@ -13,7 +13,7 @@ get_query_count()
 
 
 start = '2017-03-17'
-end = '2021-04-18'
+end = '2021-05-10'
 dateList = get_trade_days(start_date=start, end_date=end)
 
 margin_stock_list = []
@@ -31,6 +31,7 @@ for stock in tqdm(margin_stock_list):
     margin_total_value[stock].loc[temp_df['date']] = temp_df['fin_value'].values
     margin_sell_value[stock].loc[temp_df['date']] = temp_df['sec_sell_value'].values
 
-margin_buy_value.to_excel('/Users/caichaohong/Desktop/Zenki/融资融券/margin_buy_value.xlsx')
+margin_buy_value = margin_buy_value.sort_index(axis=1)
+margin_buy_value.to_csv('/Users/caichaohong/Desktop/Zenki/融资融券/margin_buy_value.csv')
 margin_total_value.to_excel('/Users/caichaohong/Desktop/Zenki/融资融券/margin_total_value.xlsx')
 margin_sell_value.to_excel('/Users/caichaohong/Desktop/Zenki/融资融券/margin_sell_value.xlsx')

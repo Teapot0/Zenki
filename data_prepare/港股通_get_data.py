@@ -92,7 +92,7 @@ dateList = get_trade_days(start_date=start, end_date=end)
 share = pd.read_excel('/Users/caichaohong/Desktop/Zenki/南北向资金/share.xlsx', index_col='Unnamed: 0')
 ratio = pd.read_excel('/Users/caichaohong/Desktop/Zenki/南北向资金/ratio.xlsx', index_col='Unnamed: 0')
 price = pd.read_excel('/Users/caichaohong/Desktop/Zenki/南北向资金/price.xlsx', index_col='Unnamed: 0')
-value = pd.read_excel('/Users/caichaohong/Desktop/Zenki/南北向资金/value.xlsx', index_col='Unnamed: 0')
+value = pd.read_excel('/Users/caichaohong/Desktop/Zenki/南北向资金/hold_value.xlsx', index_col='Unnamed: 0')
 
 for i in tqdm(range(len(dateList))):
     date = dateList[i]
@@ -185,6 +185,36 @@ def resample_data_weekly(df, df_type):
 
 
 price_week = resample_data_weekly(price, df_type='close')
+
+
+# 前十大活跃股数据
+
+trade_days = get_trade_days(start_date='2017-03-17', end_date='2021-05-10')
+
+raw_df = pd.read_excel('/Users/caichaohong/Desktop/Zenki/南北向资金/TOP_10_raw_data.xlsx',index_col='Unnamed: 0')
+
+raw_df = raw_df[raw_df['day']<='2021-05-07']
+
+for date in tqdm(['2021-05-07', '2021-05-10']):
+    temp = finance.run_query(query(finance.STK_EL_TOP_ACTIVATE).filter(finance.STK_EL_TOP_ACTIVATE.day==date,
+                                                                       finance.STK_EL_TOP_ACTIVATE.link_id.in_([310001,310002])))
+    raw_df = raw_df.append(temp)
+raw_df.index = pd.to_datetime(raw_df.index)
+raw_df.to_excel('/Users/caichaohong/Desktop/Zenki/南北向资金/TOP_10_raw_data.xlsx')
+
+
+all_top_10 = sorted(raw_df['code'].unique())
+top_10_net_buy = pd.DataFrame(index=trade_days, columns=all_top_10)
+
+for date in tqdm(trade_days):
+    temp = raw_df[raw_df['day']==date]
+    for code in temp['code']:
+        top_10_net_buy.loc[date][code] = temp[temp['code']==code]['buy'].sum() - temp[temp['code']==code]['sell'].sum()
+
+top_10_net_buy = top_10_net_buy* 10**(-8)
+top_10_net_buy.to_excel('/Users/caichaohong/Desktop/Zenki/南北向资金/TOP_10_net_buy.xlsx')
+
+
 
 
 

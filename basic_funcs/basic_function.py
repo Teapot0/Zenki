@@ -11,6 +11,16 @@ color_list = ['grey', 'rosybrown', 'saddlebrown', 'orange', 'goldenrod',
               'deeppink', 'lightpink']
 
 
+def read_csv_select(path, start_time=False, end_time=False, stock_list=False):
+    dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
+    df = pd.read_csv(path,index_col='Unnamed: 0', date_parser=dateparse)
+    df = df[(df.index>=start_time) & (df.index<=end_time)]
+    if stock_list == False:
+        return df
+    else:
+        return df[stock_list]
+
+
 def read_excel_select(path, start_date, end_date, stocks=False):
     temp_df = pd.read_excel(path, index_col='Unnamed: 0')
     temp_df = temp_df[(temp_df.index >= start_date) & (temp_df.index<= end_date)]
@@ -26,6 +36,7 @@ def sigmoid(x):
 
 def tanh(x):
     return (np.exp(x) - np.exp(-x)) / (np.exp(x) + np.exp(-x))
+
 
 def vwap(price, volume):
     return price.div(volume,axis=0)
@@ -80,6 +91,20 @@ def plot_hold_position(data, risk_free_rate=0.03):
         annual_rts,
         (annual_rts - risk_free_rate) / (np.std(df['rts']) * np.sqrt(N))))
     plt.show()
+
+
+def plot_rts(value_rts, comm_fee=0.003, hold_time=1):
+    out_df = pd.DataFrame(index=close.index)
+    # out_df['holds'] = holds['holdings']
+    out_df['rts'] = value_rts.fillna(0)  # 没有收益的为0
+    out_df['rts'][::hold_time] = out_df['rts'][::hold_time] - comm_fee  # 每隔 hold_time 减去手续费和滑点，其中有一些未交易日，NA值自动不动
+    out_df['net_value'] = (1 + out_df['rts']).cumprod()
+    na_num = out_df['net_value'].isna().sum()
+    position_max_draw = list(np.zeros(na_num))
+    out_df['nv_max_draw'] = position_max_draw + list(MaxDrawdown(list(out_df['net_value'].dropna())).reshape(-1))
+    out_df['benchmark_rts'] = hs300['close'].pct_change(1).fillna(0)
+    out_df['benchmark_net_value'] = (1 + out_df['benchmark_rts']).cumprod()
+    plot_hold_position(data=out_df, risk_free_rate=0.03)
 
 
 def get_top_value_factor_rts(factor, rts, top_number=10, hold_time=3, weight="avg", return_holdings_list=False):
@@ -221,7 +246,7 @@ def get_params_out(top_number_list, hold_time_list, factor_df, rts_df, comm_fee=
     return out
 
 
-def quantile_factor_test_plot(factor, rts, benchmark_rts, quantiles, hold_time, plot_title, weight="avg",
+def quantile_factor_test_plot(factor, rts, benchmark_rts, quantiles, hold_time, plot_title=False, weight="avg",
                               comm_fee=0.003):
     # factor是time index, stocks columns的df
     # top number is the number of top biggest factor values each day
@@ -266,7 +291,10 @@ def quantile_factor_test_plot(factor, rts, benchmark_rts, quantiles, hold_time, 
         out['net_value'] = (1 + out['daily_rts']).cumprod()
         plt.plot(out['net_value'].values, color=color_list[q], label='Quantile{}'.format(q))
     plt.legend(bbox_to_anchor=(1.015, 0), loc=3, borderaxespad=0, fontsize=7.5)
-    plt.title('{}\nquantiles={}\n持股时间={}'.format(plot_title, quantiles, hold_time))
+    if plot_title == False:
+        plt.title('quantiles={}\n持股时间={}'.format(quantiles, hold_time))
+    else :
+        plt.title('{}\nquantiles={}\n持股时间={}'.format(plot_title, quantiles, hold_time))
 
     return out
 
