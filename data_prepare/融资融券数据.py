@@ -32,6 +32,11 @@ for stock in tqdm(margin_stock_list):
     margin_sell_value[stock].loc[temp_df['date']] = temp_df['sec_sell_value'].values
 
 margin_buy_value = margin_buy_value.sort_index(axis=1)
+margin_total_value = margin_total_value.sort_index(axis=1)
+margin_sell_value = margin_sell_value.sort_index(axis=1)
 margin_buy_value.to_csv('/Users/caichaohong/Desktop/Zenki/融资融券/margin_buy_value.csv')
-margin_total_value.to_excel('/Users/caichaohong/Desktop/Zenki/融资融券/margin_total_value.xlsx')
-margin_sell_value.to_excel('/Users/caichaohong/Desktop/Zenki/融资融券/margin_sell_value.xlsx')
+margin_total_value.to_csv('/Users/caichaohong/Desktop/Zenki/融资融券/margin_total_value.csv')
+margin_sell_value.to_csv('/Users/caichaohong/Desktop/Zenki/融资融券/margin_sell_value.csv')
+
+
+

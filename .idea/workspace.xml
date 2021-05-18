@@ -2,15 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cecfbeec-0420-4871-b54c-912bf3919c91" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Factor_Test/北向净流入estimate.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/多因子策略_xgboost.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_prepare/update_data.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Factor_Test/other_factor.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Factor_Test/超额融资.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Factor_Test/舆情因子.py" beforeDir="false" afterPath="$PROJECT_DIR$/Factor_Test/舆情因子.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TN策略/资金面策略.py" beforeDir="false" afterPath="$PROJECT_DIR$/TN策略/资金面策略.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Factor_Test/多因子策略_xgboost.py" beforeDir="false" afterPath="$PROJECT_DIR$/Factor_Test/多因子策略_xgboost.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/basic_funcs/basic_function.py" beforeDir="false" afterPath="$PROJECT_DIR$/basic_funcs/basic_function.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_prepare/data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_prepare/data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_prepare/港股通_get_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_prepare/港股通_get_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_prepare/融资融券数据.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_prepare/融资融券数据.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,74 +18,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data_prepare/融资融券数据.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="418">
-              <caret line="27" column="37" selection-start-line="27" selection-start-column="37" selection-end-line="27" selection-end-column="37" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Factor_Test/多因子策略_xgboost.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-353">
-              <caret line="215" selection-start-line="215" selection-end-line="215" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-                <element signature="e#868#1155#0" />
-                <element signature="e#1157#1184#0" />
-                <element signature="e#4917#7356#0" />
-                <element signature="e#7395#9284#1" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TN策略/资金面策略.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="226">
-              <caret line="28" column="107" lean-forward="true" selection-start-line="15" selection-end-line="28" selection-end-column="107" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Factor_Test/北向净流入estimate.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret selection-end-line="12" selection-end-column="12" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data_prepare/低估_财务数据.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="66">
-              <caret line="10" selection-start-line="10" selection-end-line="10" selection-end-column="29" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/basic_funcs/basic_function.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1056">
-              <caret line="248" column="4" selection-start-line="248" selection-start-column="4" selection-end-line="248" selection-end-column="4" />
+            <state relative-caret-position="1452">
+              <caret line="399" selection-start-line="399" selection-end-line="399" />
               <folding>
                 <element signature="e#176#501#0" />
                 <element signature="e#587#862#0" />
@@ -101,50 +33,70 @@
                 <element signature="e#1782#1862#0" />
                 <element signature="e#1921#2015#0" />
                 <element signature="e#2073#3123#0" />
-                <element signature="e#3184#3896#0" />
-                <element signature="e#4016#5319#0" />
-                <element signature="e#4016#4044#0" />
-                <element signature="e#4703#5222#0" />
-                <element signature="e#4855#5019#0" />
-                <element signature="e#5421#6696#0" />
-                <element signature="e#5421#5445#0" />
-                <element signature="e#6104#6599#0" />
-                <element signature="e#6256#6396#0" />
-                <element signature="e#6870#8101#0" />
-                <element signature="e#6870#6908#0" />
-                <element signature="e#7400#8004#0" />
-                <element signature="e#7546#7776#0" />
-                <element signature="e#8196#9459#0" />
-                <element signature="e#8417#9345#0" />
-                <element signature="e#8454#9345#0" />
-                <element signature="e#9625#11694#0" />
-                <element signature="e#9625#9663#0" />
-                <element signature="e#10236#11399#0" />
-                <element signature="e#10518#11026#0" />
-                <element signature="e#10693#10863#0" />
-                <element signature="e#11740#13299#0" />
-                <element signature="e#11740#11753#0" />
-                <element signature="e#11926#13147#0" />
-                <element signature="e#12043#12569#0" />
-                <element signature="e#12273#12362#0" />
-                <element signature="e#12633#13147#0" />
-                <element signature="e#12688#13147#0" />
-                <element signature="e#13356#14354#0" />
-                <element signature="e#13454#14333#0" />
-                <element signature="e#13687#13806#0" />
-                <element signature="e#14387#14848#0" />
-                <element signature="e#14892#15257#0" />
-                <element signature="e#15038#15242#0" />
+                <element signature="e#3198#3980#0" />
+                <element signature="e#3198#3260#0" />
+                <element signature="e#4100#5403#0" />
+                <element signature="e#4100#4128#0" />
+                <element signature="e#4787#5306#0" />
+                <element signature="e#4939#5103#0" />
+                <element signature="e#5505#6780#0" />
+                <element signature="e#5505#5529#0" />
+                <element signature="e#6188#6683#0" />
+                <element signature="e#6340#6480#0" />
+                <element signature="e#6954#8185#0" />
+                <element signature="e#6954#6992#0" />
+                <element signature="e#7484#8088#0" />
+                <element signature="e#7630#7860#0" />
+                <element signature="e#8280#9543#0" />
+                <element signature="e#8501#9429#0" />
+                <element signature="e#8538#9429#0" />
+                <element signature="e#9709#11853#0" />
+                <element signature="e#9709#9747#0" />
+                <element signature="e#10355#11558#0" />
+                <element signature="e#10660#11226#0" />
+                <element signature="e#10835#11064#0" />
+                <element signature="e#11899#13458#0" />
+                <element signature="e#11899#11912#0" />
+                <element signature="e#12085#13306#0" />
+                <element signature="e#12202#12728#0" />
+                <element signature="e#12432#12521#0" />
+                <element signature="e#12792#13306#0" />
+                <element signature="e#12847#13306#0" />
+                <element signature="e#13515#14513#0" />
+                <element signature="e#13613#14492#0" />
+                <element signature="e#13846#13965#0" />
+                <element signature="e#14546#15007#0" />
+                <element signature="e#15051#15416#0" />
+                <element signature="e#15197#15401#0" />
+                <element signature="e#15466#15753#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Factor_Test/舆情因子.py">
+        <entry file="file://$PROJECT_DIR$/Factor_Test/多因子策略_xgboost.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1166">
-              <caret line="53" column="31" selection-start-line="53" selection-start-column="31" selection-end-line="53" selection-end-column="31" />
+            <state relative-caret-position="374">
+              <caret line="32" column="118" selection-start-line="32" selection-end-line="32" selection-end-column="118" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Factor_Test/超额融资.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="440">
+              <caret line="35" selection-start-line="35" selection-end-line="35" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Factor_Test/other_factor.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="32" column="28" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -153,10 +105,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Other_Analysis/roe.py">
+        <entry file="file://$PROJECT_DIR$/Factor_Test/北向净流入estimate.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="13" column="29" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
+            <state relative-caret-position="286">
+              <caret line="13" selection-start-line="13" selection-end-line="13" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data_prepare/低估_财务数据.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="220">
+              <caret line="10" selection-start-line="10" selection-end-line="10" selection-end-column="29" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -283,9 +247,11 @@
         <option value="$PROJECT_DIR$/data_prepare/data.py" />
         <option value="$PROJECT_DIR$/data_prepare/update_data.py" />
         <option value="$PROJECT_DIR$/data_prepare/融资融券数据.py" />
-        <option value="$PROJECT_DIR$/basic_funcs/basic_function.py" />
         <option value="$PROJECT_DIR$/Factor_Test/舆情因子.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/超额融资.py" />
+        <option value="$PROJECT_DIR$/basic_funcs/basic_function.py" />
         <option value="$PROJECT_DIR$/Factor_Test/多因子策略_xgboost.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/other_factor.py" />
       </list>
     </option>
   </component>
@@ -400,7 +366,7 @@
       <window_info anchor="bottom" id="DB Execution Console" order="8" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.41639698" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Python Console" order="11" visible="true" weight="0.35167205" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="11" visible="true" weight="0.45415318" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -539,18 +505,38 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/data_prepare/融资融券数据.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="27" column="37" selection-start-line="27" selection-start-column="37" selection-end-line="27" selection-end-column="37" />
+        <state relative-caret-position="-359">
+          <caret selection-end-line="7" selection-end-column="9" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data_prepare/低估_财务数据.py">
+    <entry file="file://$PROJECT_DIR$/Other_Analysis/roe.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="10" selection-start-line="10" selection-end-line="10" selection-end-column="29" />
+        <state relative-caret-position="-2641">
+          <caret line="13" column="29" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/舆情因子.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="13" selection-start-line="13" selection-end-line="14" selection-end-column="54" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TN策略/资金面策略.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="55" column="152" lean-forward="true" selection-start-line="55" selection-end-line="55" selection-end-column="152" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
@@ -559,8 +545,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/basic_funcs/basic_function.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1056">
-          <caret line="248" column="4" selection-start-line="248" selection-start-column="4" selection-end-line="248" selection-end-column="4" />
+        <state relative-caret-position="1452">
+          <caret line="399" selection-start-line="399" selection-end-line="399" />
           <folding>
             <element signature="e#176#501#0" />
             <element signature="e#587#862#0" />
@@ -572,94 +558,86 @@
             <element signature="e#1782#1862#0" />
             <element signature="e#1921#2015#0" />
             <element signature="e#2073#3123#0" />
-            <element signature="e#3184#3896#0" />
-            <element signature="e#4016#5319#0" />
-            <element signature="e#4016#4044#0" />
-            <element signature="e#4703#5222#0" />
-            <element signature="e#4855#5019#0" />
-            <element signature="e#5421#6696#0" />
-            <element signature="e#5421#5445#0" />
-            <element signature="e#6104#6599#0" />
-            <element signature="e#6256#6396#0" />
-            <element signature="e#6870#8101#0" />
-            <element signature="e#6870#6908#0" />
-            <element signature="e#7400#8004#0" />
-            <element signature="e#7546#7776#0" />
-            <element signature="e#8196#9459#0" />
-            <element signature="e#8417#9345#0" />
-            <element signature="e#8454#9345#0" />
-            <element signature="e#9625#11694#0" />
-            <element signature="e#9625#9663#0" />
-            <element signature="e#10236#11399#0" />
-            <element signature="e#10518#11026#0" />
-            <element signature="e#10693#10863#0" />
-            <element signature="e#11740#13299#0" />
-            <element signature="e#11740#11753#0" />
-            <element signature="e#11926#13147#0" />
-            <element signature="e#12043#12569#0" />
-            <element signature="e#12273#12362#0" />
-            <element signature="e#12633#13147#0" />
-            <element signature="e#12688#13147#0" />
-            <element signature="e#13356#14354#0" />
-            <element signature="e#13454#14333#0" />
-            <element signature="e#13687#13806#0" />
-            <element signature="e#14387#14848#0" />
-            <element signature="e#14892#15257#0" />
-            <element signature="e#15038#15242#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Other_Analysis/roe.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="13" column="29" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/舆情因子.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1166">
-          <caret line="53" column="31" selection-start-line="53" selection-start-column="31" selection-end-line="53" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TN策略/资金面策略.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="28" column="107" lean-forward="true" selection-start-line="15" selection-end-line="28" selection-end-column="107" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/北向净流入estimate.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="12" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#3198#3980#0" />
+            <element signature="e#3198#3260#0" />
+            <element signature="e#4100#5403#0" />
+            <element signature="e#4100#4128#0" />
+            <element signature="e#4787#5306#0" />
+            <element signature="e#4939#5103#0" />
+            <element signature="e#5505#6780#0" />
+            <element signature="e#5505#5529#0" />
+            <element signature="e#6188#6683#0" />
+            <element signature="e#6340#6480#0" />
+            <element signature="e#6954#8185#0" />
+            <element signature="e#6954#6992#0" />
+            <element signature="e#7484#8088#0" />
+            <element signature="e#7630#7860#0" />
+            <element signature="e#8280#9543#0" />
+            <element signature="e#8501#9429#0" />
+            <element signature="e#8538#9429#0" />
+            <element signature="e#9709#11853#0" />
+            <element signature="e#9709#9747#0" />
+            <element signature="e#10355#11558#0" />
+            <element signature="e#10660#11226#0" />
+            <element signature="e#10835#11064#0" />
+            <element signature="e#11899#13458#0" />
+            <element signature="e#11899#11912#0" />
+            <element signature="e#12085#13306#0" />
+            <element signature="e#12202#12728#0" />
+            <element signature="e#12432#12521#0" />
+            <element signature="e#12792#13306#0" />
+            <element signature="e#12847#13306#0" />
+            <element signature="e#13515#14513#0" />
+            <element signature="e#13613#14492#0" />
+            <element signature="e#13846#13965#0" />
+            <element signature="e#14546#15007#0" />
+            <element signature="e#15051#15416#0" />
+            <element signature="e#15197#15401#0" />
+            <element signature="e#15466#15753#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Factor_Test/多因子策略_xgboost.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-353">
-          <caret line="215" selection-start-line="215" selection-end-line="215" />
+        <state relative-caret-position="374">
+          <caret line="32" column="118" selection-start-line="32" selection-end-line="32" selection-end-column="118" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/超额融资.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="35" selection-start-line="35" selection-end-line="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/北向净流入estimate.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#868#1155#0" />
-            <element signature="e#1157#1184#0" />
-            <element signature="e#4917#7356#0" />
-            <element signature="e#7395#9284#1" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_prepare/低估_财务数据.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="10" selection-start-line="10" selection-end-line="10" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/other_factor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="32" column="28" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>

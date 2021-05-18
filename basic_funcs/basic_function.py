@@ -93,8 +93,10 @@ def plot_hold_position(data, risk_free_rate=0.03):
     plt.show()
 
 
-def plot_rts(value_rts, comm_fee=0.003, hold_time=1):
-    out_df = pd.DataFrame(index=close.index)
+def plot_rts(value_rts, benchmark_rts,comm_fee=0.003, hold_time=1):
+    # bencnmark rts is series or column of df for the rts of close
+    # valur rts = daily rts series
+    out_df = pd.DataFrame()
     # out_df['holds'] = holds['holdings']
     out_df['rts'] = value_rts.fillna(0)  # 没有收益的为0
     out_df['rts'][::hold_time] = out_df['rts'][::hold_time] - comm_fee  # 每隔 hold_time 减去手续费和滑点，其中有一些未交易日，NA值自动不动
@@ -102,7 +104,7 @@ def plot_rts(value_rts, comm_fee=0.003, hold_time=1):
     na_num = out_df['net_value'].isna().sum()
     position_max_draw = list(np.zeros(na_num))
     out_df['nv_max_draw'] = position_max_draw + list(MaxDrawdown(list(out_df['net_value'].dropna())).reshape(-1))
-    out_df['benchmark_rts'] = hs300['close'].pct_change(1).fillna(0)
+    out_df['benchmark_rts'] = benchmark_rts.fillna(0)
     out_df['benchmark_net_value'] = (1 + out_df['benchmark_rts']).cumprod()
     plot_hold_position(data=out_df, risk_free_rate=0.03)
 
@@ -257,13 +259,13 @@ def quantile_factor_test_plot(factor, rts, benchmark_rts, quantiles, hold_time, 
     out.iloc[:NA_rows, ] = np.nan
     temp_stock_list = []
 
-    stock_number = factor.shape[1]
+    stock_number = factor.dropna(axis=1, how='all').shape[1] # 一直都na去掉
 
     plt.figure(figsize=(9, 9))
     plt.plot((1 + benchmark_rts).cumprod().values, color='black', label='benchmark_net_value')
 
     for q in range(quantiles):
-
+        # 默认q取0-9，共10层
         start_i = q * int(stock_number / quantiles)
         if q == quantiles - 1:  # 最后一层
             end_i = stock_number
@@ -278,15 +280,14 @@ def quantile_factor_test_plot(factor, rts, benchmark_rts, quantiles, hold_time, 
             temp_ii = (i - NA_rows) % hold_time  # 判断是否换仓
             if temp_ii == 0:  # 换仓日
                 temp_factor = factor.loc[date].sort_values(ascending=False).dropna()  # 每天从大到小
-                temp_stock_list = list(temp_factor.index[start_i:end_i])  # 未来hold_time的股票池
-
+                if len(temp_factor) > 0:  # 若无股票，则持仓不变
+                    temp_stock_list = list(temp_factor.index[start_i:end_i])  # 未来hold_time的股票池
             temp_rts_daily = rts.loc[date_1][temp_stock_list]
 
             if weight == 'avg':  # 每天收益率均值
                 out.loc[date_1] = temp_rts_daily.mean()
 
-        out['daily_rts'][::hold_time] = out['daily_rts'][
-                                        ::hold_time] - comm_fee  # 每隔 hold_time 减去手续费和滑点，其中有一些未交易日，NA值自动不动
+        out['daily_rts'][::hold_time] = out['daily_rts'][::hold_time] - comm_fee  # 每隔 hold_time 减去手续费和滑点，其中有一些未交易日，NA值自动不动
         out['daily_rts'] = out['daily_rts'].fillna(0)
         out['net_value'] = (1 + out['daily_rts']).cumprod()
         plt.plot(out['net_value'].values, color=color_list[q], label='Quantile{}'.format(q))
@@ -388,4 +389,22 @@ def zt_yesterday(close, high_limit):
         temp_zt = temp[temp == high_limit.loc[date]].index
         out.loc[close.index[i+1]] = round(close_rts.loc[close.index[i+1]][temp_zt].mean(),3)
     return out
+
+
+def transform_rts_to_daily_intervals(rts):
+    out = (rts >= 0.09) * 3 + ((rts > 0.06) & (rts < 0.09)) * 2 + ((rts >= 0.03) & (rts <= 0.06)) * 1 + (
+            (rts < 0.03) & (rts > -0.03)) * 0 + ((rts >= -0.06) & (rts <= -0.03)) * -1 + (
+                      (rts > -0.09) & (rts < -0.06)) * -2 + (rts <= -0.09) * -3
+    return out
+
+
+def transform_300_rts_to_daily_intervals(rts):
+    out = (rts >= 0.02) * 3 + ((rts > 0.01) & (rts < 0.02)) * 2 + ((rts >= 0.005) & (rts <= 0.01)) * 1 + (
+            (rts < 0.005) & (rts > -0.005)) * 0 + ((rts >= -0.01) & (rts <= -0.005)) * -1 + (
+                      (rts > -0.02) & (rts < -0.01)) * -2 + (rts <= -0.02) * -3
+    return out
+
+
+
+
 
