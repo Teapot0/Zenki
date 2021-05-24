@@ -1,4 +1,5 @@
 import numpy as np
+from numpy import sqrt, pi, e
 import pandas as pd
 from tqdm import tqdm
 import matplotlib.pyplot as plt
@@ -28,6 +29,9 @@ def read_excel_select(path, start_date, end_date, stocks=False):
         return temp_df
     else:
         return temp_df[stocks]
+
+def normal_pdf(x):
+    return (1 / sqrt(2 * pi)) * e^((-x ^ 2) / 2)
 
 
 def sigmoid(x):
@@ -131,7 +135,7 @@ def get_top_value_factor_rts(factor, rts, top_number=10, hold_time=3, weight="av
 
         temp_ii = (i - NA_rows) % hold_time  # 判断是否换仓
         if temp_ii == 0:
-            temp_factor = factor.loc[date].sort_values(ascending=False).dropna()  # 每天从大到小
+            temp_factor = factor.loc[date].dropna().sort_values(ascending=False) # 每天从大到小
             temp_stock_list = list(temp_factor.index[:top_number])  # 未来hold_time的股票池
 
         temp_rts_daily = rts.loc[date_1][temp_stock_list]
@@ -392,16 +396,16 @@ def zt_yesterday(close, high_limit):
 
 
 def transform_rts_to_daily_intervals(rts):
-    out = (rts >= 0.09) * 3 + ((rts > 0.06) & (rts < 0.09)) * 2 + ((rts >= 0.03) & (rts <= 0.06)) * 1 + (
-            (rts < 0.03) & (rts > -0.03)) * 0 + ((rts >= -0.06) & (rts <= -0.03)) * -1 + (
-                      (rts > -0.09) & (rts < -0.06)) * -2 + (rts <= -0.09) * -3
+    out = (rts >= 0.09) * 7 + ((rts > 0.06) & (rts < 0.09)) * 6 + ((rts >= 0.03) & (rts <= 0.06)) * 5 + (
+            (rts < 0.03) & (rts > -0.03)) * 4 + ((rts >= -0.06) & (rts <= -0.03)) * 3 + (
+                      (rts > -0.09) & (rts < -0.06)) * 2 + (rts <= -0.09) * 1
     return out
 
 
 def transform_300_rts_to_daily_intervals(rts):
-    out = (rts >= 0.02) * 3 + ((rts > 0.01) & (rts < 0.02)) * 2 + ((rts >= 0.005) & (rts <= 0.01)) * 1 + (
-            (rts < 0.005) & (rts > -0.005)) * 0 + ((rts >= -0.01) & (rts <= -0.005)) * -1 + (
-                      (rts > -0.02) & (rts < -0.01)) * -2 + (rts <= -0.02) * -3
+    out = (rts >= 0.02) * 7 + ((rts > 0.01) & (rts < 0.02)) * 6 + ((rts >= 0.005) & (rts <= 0.01)) * 5 + (
+            (rts < 0.005) & (rts > -0.005)) * 4 + ((rts >= -0.01) & (rts <= -0.005)) * 3 + (
+                      (rts > -0.02) & (rts < -0.01)) * 2 + (rts <= -0.02) * 1
     return out
 
 

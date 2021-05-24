@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import jqdatasdk as jq
 from jqdatasdk import auth, get_query_count, get_price, opt, query, get_fundamentals, finance, get_trade_days, \
-    valuation, get_security_info
+    valuation, get_security_info, get_index_stocks,  get_bars
 from tqdm import tqdm
 from datetime import datetime, time, timedelta
 import matplotlib.pyplot as plt
@@ -22,6 +22,8 @@ plt.rcParams['font.sans-serif'] = ['Songti SC']
 plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
 dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
+
+hs300_list = get_index_stocks('000300.XSHG')
 
 hs300 = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/510300.XSHG.xlsx', index_col='Unnamed: 0')
 hs300['rts_1'] = hs300['close'].pct_change(1)
@@ -43,8 +45,8 @@ high_limit = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high_limi
 close = clean_close(close, low, high_limit)  # 新股一字板
 close = clean_st_exit(close)  # 退市和ST
 close_rts_1 = close.pct_change(1)
-close_rts_5 = close_rts_1.rolling(5).sum()
-close_rts_10 = close_rts_1.rolling(10).sum()
+close_rts_5 = close.pct_change(5)
+close_rts_10 = close.pct_change(10)
 close_rts_interval_1 = transform_rts_to_daily_intervals(close_rts_1)
 
 out_0 = pd.read_csv('/Users/caichaohong/Desktop/Zenki/沪深300秒懂舆情因子/sentimentfactor0.csv', index_col='Unnamed: 0',date_parser=dateparse)
@@ -55,6 +57,7 @@ out_012 = pd.read_csv('/Users/caichaohong/Desktop/Zenki/沪深300秒懂舆情因
 margin_buy_value = pd.read_csv('/Users/caichaohong/Desktop/Zenki/融资融券/margin_buy_value.csv', index_col='Unnamed: 0',date_parser=dateparse)
 margin_total_value = pd.read_csv('/Users/caichaohong/Desktop/Zenki/融资融券/margin_total_value.csv', index_col='Unnamed: 0',date_parser=dateparse)
 
+#抗跌因子
 reverse_rts = ((close_rts_interval_1.sub(hs300['rts_interval_1'],axis=0)).mul(hs300['rts_interval_1']**2, axis=0))
 
 
@@ -137,7 +140,7 @@ if hold_n == 5:
 if hold_n == 10:
     rts_df = close_rts_10
 
-hold_percent = 0.2
+hold_percent = 0.1
 
 buy_list = pd.Series(index=close_rts_1.index)
 daily_rts = pd.Series(index=close_rts_1.index)
@@ -154,9 +157,10 @@ for i in tqdm(range(9, len(sent_date_list) - 1)):
             f1 = pd.DataFrame(index=sent_stock_list)
             f1['close_rts_1'] = close_rts_interval_1.loc[date][sent_stock_list].values
             f1['close_rts_5'] = close_rts_interval_1.rolling(5).sum().loc[date][sent_stock_list].values
-            f1['close_rts_10'] = close_rts_10.loc[date][sent_stock_list].values
-            f1['reverse_rts_5'] = (close_rts_interval_1.sub(hs300['rts_interval_1']))*(hs300['rts_interval_1']**2).rolling(5).sum()
-            # f1['reverse_std'] = close_rts_1.rolling(5).std().sub(hs300['rts_1'].rolling(5).std())
+            f1['close_rts_10'] = close_rts_interval_1.rolling(10).sum().loc[date][sent_stock_list].values
+            f1['reverse_rts_1'] = reverse_rts.loc[date][sent_stock_list].values
+            f1['reverse_rts_5'] = reverse_rts.rolling(5).sum().loc[date][sent_stock_list].values
+            f1['reverse_rts_10'] = reverse_rts.rolling(10).sum().loc[date][sent_stock_list].values
 
             # f1['excess_rts_1'] = f1['close_rts_1'].values - hs300['rts_1'].loc[date]
             # f1['excess_rts_5'] = f1['close_rts_5'].values - hs300['rts_5'].loc[date]
@@ -193,7 +197,7 @@ for i in tqdm(range(9, len(sent_date_list) - 1)):
 
         f1 = get_factor_north(date_yes, date)
 
-        clf = XGBClassifier(base_score=0.5, booster='gbtree', learning_rate=0.05, max_depth=8, n_estimators=50)
+        clf = XGBClassifier(base_score=0.5, booster='gbtree', learning_rate=0.02, max_depth=12, n_estimators=100, eval_metric='error')
         clf.fit(f1.drop(columns=['is_buy']), f1['is_buy'])
 
         f2 = get_factor_north(date, date_1)
@@ -216,4 +220,16 @@ real_n = int(0.5*len(sent_stock_list))
 real_rts = close_rts_1[sent_stock_list].apply(lambda x: x.sort_values(ascending=False)[:real_n].mean(),axis=1)
 plot_rts(real_rts, benchmark_rts=hs300['rts_1'], comm_fee=0.003, hold_time=1)
 
+
+# 抗跌300池
+
+reverse_rts = ((close_rts_interval_1.sub(hs300['rts_interval_1'], axis=0)).mul(hs300['rts_interval_1']**2, axis=0))
+
+value_rts ,holdings= get_top_value_factor_rts(factor=reverse_rts[hs300_list], rts=close_rts_1, top_number=5, hold_time=5, return_holdings_list=True)
+
+plot_rts(value_rts=value_rts['daily_rts'], benchmark_rts=hs300['rts_1'],comm_fee=0.003, hold_time=5)
+
+check = pd.DataFrame({'rts': value_rts['daily_rts'], 'hold':holdings['holdings']})
+
+check = check.sort_values(by='rts', ascending=False)
 

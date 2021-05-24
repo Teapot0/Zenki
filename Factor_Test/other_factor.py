@@ -15,6 +15,9 @@ from sklearn.model_selection import train_test_split
 from xgboost import XGBClassifier, plot_importance
 from sklearn.preprocessing import StandardScaler
 
+auth('15951961478', '961478')
+get_query_count()
+
 dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 
 hs300_list = get_index_stocks('000300.XSHG')
@@ -43,10 +46,11 @@ reverse_rts = ((close_rts_interval_1[hs300_list].sub(hs300['rts_interval_1'], ax
 
 excess_share = share.diff(1)
 
-value_rts = get_top_value_factor_rts(factor=reverse_std, rts=close_rts_1, top_number=5, hold_time=5)
+value_rts = get_top_value_factor_rts(factor=reverse_rts, rts=close_rts_1, top_number=5, hold_time=5)
 plt.plot((1+value_rts).cumprod())
 
-plot_rts(value_rts=value_rts['daily_rts'],benchmark_rts=hs300['rts_1'], hold_time=3)
+plot_rts(value_rts=value_rts['daily_rts'],benchmark_rts=hs300['rts_1'], hold_time=5)
 
 
-z = get_params_out(top_number_list=[5,10,20,30], hold_time_list=[1,2,3,5,10,20],factor_df=reverse_std, rts_df=close_rts_1)
+z = get_params_out(top_number_list=[5,10,20,30], hold_time_list=[1,2,3,5,10,20],factor_df=reverse_rts, rts_df=close_rts_1)
+z.to_excel()

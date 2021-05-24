@@ -23,6 +23,11 @@ all_stock = pd.read_excel('/Users/caichaohong/Desktop/Zenki/all_stock_names.xlsx
 
 hs300 = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/510300.XSHG.xlsx', index_col='Unnamed: 0')
 
+# hs300
+p = get_price('510300.XSHG', start_date='2017-03-17', end_date='2021-05-21',
+                             fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
+p.to_excel('/Users/caichaohong/Desktop/Zenki/price/510300.XSHG.xlsx')
+
 close = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
 open = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/open.csv', index_col='Unnamed: 0', date_parser=dateparse)
 high = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high.csv', index_col='Unnamed: 0', date_parser=dateparse)
@@ -35,7 +40,6 @@ volume = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv', 
 # 市场行情
 
 def update_daily_prices(new_end_date, new_start_date, close, open, high, low, high_limit, low_limit, volume):
-    # open,close,high,low,high_limit,low_limit,volume
 
     # 判断是否同日期开始和结束
     if (close.index[0] == open.index[0]) & (open.index[0] == high.index[0]) & (high.index[0] == low.index[0]) & (
@@ -118,7 +122,7 @@ def update_daily_prices(new_end_date, new_start_date, close, open, high, low, hi
     volume.to_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv')
 
 
-update_daily_prices(new_end_date='2021-05-10', new_start_date='2017-03-17', close=close, open=open, high=high, low=low,
+update_daily_prices(new_end_date='2021-05-21', new_start_date='2017-03-17', close=close, open=open, high=high, low=low,
                     high_limit=high_limit, low_limit=low_limit, volume=volume)
 
 #  南北向资金持仓-----------------------------
@@ -179,6 +183,7 @@ def update_north_data(new_end_date, new_start_date, share, ratio, value,close):
     share.to_csv('/Users/caichaohong/Desktop/Zenki/南北向资金/share.csv')
     ratio.to_csv('/Users/caichaohong/Desktop/Zenki/南北向资金/ratio.csv')
     value.to_csv('/Users/caichaohong/Desktop/Zenki/南北向资金/value.csv')
+
 
 update_north_data(new_end_date='2021-05-10', new_start_date='2017-03-17', share=share, ratio=ratio, value=value, close=close)
 

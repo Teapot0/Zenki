@@ -22,11 +22,12 @@ high_limit = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high_limi
 low_limit = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low_limit.csv', index_col='Unnamed: 0', date_parser=dateparse)
 volume = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv', index_col='Unnamed: 0', date_parser=dateparse)
 
-close = close[close.index >= '2020-02-01']
-high = high[high.index >= '2020-02-01']
-low = low[low.index >= '2020-02-01']
-open = open[open.index >= '2020-02-01']
-high_limit = high_limit[high_limit.index >= '2020-02-01']
+
+def select_data_same_start(df_list,start_time):
+    for df in df_list:
+        df = df[df.index >= start_time]
+
+select_data_same_start([close,high,low,open,high_limit],start_time='2020-01-01')
 
 # 去掉新股一字涨停价
 all_new_stock = []
@@ -47,33 +48,5 @@ for i in tqdm(range(1, close.shape[0])):
     close.iloc[i, ][new_stock_not_kai] = np.nan
 
 
-# 20个交易日，涨幅超过100的,共有190个
-
-stock_list = []
-for col in tqdm(close.columns):
-    temp = close[col]
-    temp_rts = close[col].rolling(20).apply(lambda x: x[-1]/x[0]-1)
-    if temp_rts.max() >= 1 :
-        stock_list.append(col)
 
 
-# 找相似
-
-
-
-def find_similar(target_code, start, end,length):
-    # 要用get_trade_days
-    # length = (datetime.strptime(end, "%Y-%m-%d") - datetime.strptime(start, "%Y-%m-%d")).days
-
-    corref_df = pd.DataFrame(index=close.index, columns=close.columns)
-    for s in tqdm(close.columns):
-        close_corr = close[s].rolling(length).apply(lambda x: round(np.corrcoef(close[target_code].loc[start:end], x)[0][1], 3))
-        high_corr = high[s].rolling(length).apply(lambda x: round(np.corrcoef(high[target_code].loc[start:end], x)[0][1], 3))
-        low_corr = low[s].rolling(length).apply(lambda x: round(np.corrcoef(low[target_code].loc[start:end], x)[0][1], 3))
-        open_corr = open[s].rolling(length).apply(lambda x: round(np.corrcoef(open[target_code].loc[start:end], x)[0][1], 3))
-        corref_df[s] = round((close_corr+high_corr+low_corr+open_corr)/4,2)
-    return corref_df
-
-
-z = find_similar('002284.XSHE', start='2021-04-14', end='2021-04-23',length=8)
-z.to_excel('/Users/caichaohong/Desktop/Zenki/coef/002284.xlsx')

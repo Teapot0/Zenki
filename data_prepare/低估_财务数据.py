@@ -14,7 +14,7 @@ get_query_count()
 
 stock_list = get_all_securities()
 
-years = ['2011','2012','2013','2014','2015','2016','2017','2018','2019','2020']
+years = ['2011', '2012', '2013', '2014', '2015','2016','2017','2018','2019','2020']
 
 rev= pd.DataFrame(index=stock_list, columns=years)
 rev_growth = pd.DataFrame(index=stock_list, columns=years)
