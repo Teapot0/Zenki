@@ -24,7 +24,7 @@ all_stock = pd.read_excel('/Users/caichaohong/Desktop/Zenki/all_stock_names.xlsx
 hs300 = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/510300.XSHG.xlsx', index_col='Unnamed: 0')
 
 # hs300
-p = get_price('510300.XSHG', start_date='2017-03-17', end_date='2021-05-21',
+p = get_price('510300.XSHG', start_date='2014-01-01', end_date='2021-05-25',
                              fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
 p.to_excel('/Users/caichaohong/Desktop/Zenki/price/510300.XSHG.xlsx')
 
@@ -59,8 +59,9 @@ def update_daily_prices(new_end_date, new_start_date, close, open, high, low, hi
     future_trade_days = get_trade_days(start_date=close.index[-1], end_date=new_end_date)[1:]  # 第一天重复
     old_trade_days = get_trade_days(start_date=new_start_date, end_date=close.index[0])[:-1]  # 最后一天重复
     new_trade_days = list(future_trade_days) + list(old_trade_days)
+    print ('{} new trade days'.format(len(new_trade_days)))
 
-    for date in new_trade_days:
+    for date in tqdm(new_trade_days):
         close.loc[date] = np.nan
         open.loc[date] = np.nan
         high.loc[date] = np.nan
@@ -68,6 +69,7 @@ def update_daily_prices(new_end_date, new_start_date, close, open, high, low, hi
         volume.loc[date] = np.nan
         high_limit.loc[date] = np.nan
         low_limit.loc[date] = np.nan
+
 
     stock_list = list(close.columns)
     for s in tqdm(stock_list):
@@ -122,7 +124,7 @@ def update_daily_prices(new_end_date, new_start_date, close, open, high, low, hi
     volume.to_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv')
 
 
-update_daily_prices(new_end_date='2021-05-21', new_start_date='2017-03-17', close=close, open=open, high=high, low=low,
+update_daily_prices(new_end_date='2021-05-25', new_start_date='2014-01-01', close=close, open=open, high=high, low=low,
                     high_limit=high_limit, low_limit=low_limit, volume=volume)
 
 #  南北向资金持仓-----------------------------
@@ -166,7 +168,7 @@ def update_north_data(new_end_date, new_start_date, share, ratio, value,close):
         temp = finance.run_query(
             query(finance.STK_HK_HOLD_INFO).filter(finance.STK_HK_HOLD_INFO.link_id.in_([310001, 310002]),
                                                    finance.STK_HK_HOLD_INFO.day == date))
-        share.loc[date][temp['code']] = temp['share_number'].values
+        share.loc[date][temp['code']] = temp['share_number'].values # 有error???????
         ratio.loc[date][temp['code']] = temp['share_ratio'].values
 
         tmp_share = share.loc[date]
@@ -185,7 +187,7 @@ def update_north_data(new_end_date, new_start_date, share, ratio, value,close):
     value.to_csv('/Users/caichaohong/Desktop/Zenki/南北向资金/value.csv')
 
 
-update_north_data(new_end_date='2021-05-10', new_start_date='2017-03-17', share=share, ratio=ratio, value=value, close=close)
+update_north_data(new_end_date='2021-05-25', new_start_date='2014-01-01', share=share, ratio=ratio, value=value, close=close)
 
 
 
@@ -209,27 +211,28 @@ def update_market_cap(new_start_date, new_end_date, market_cap, share):
                                         valuation.market_cap).filter(valuation.code.in_(list(market_cap.columns))), date=date)
             market_cap.loc[date][df['code']] = df['market_cap'].values
     else:
-        print ("No need to Update")
-
+        print("No need to Update")
+    market_cap.index = pd.to_datetime(market_cap.index)
     # share 是持股数，用来检测股票数量是否相等, 新加入股票补齐
 
     new_stocks = list(set(share.columns).difference(set(market_cap.columns)))
-    print ('total number of new stocks = {}'.format(len(new_stocks)))
-    for s in new_stocks:
-        market_cap[s] = np.nan
+    if len(new_stocks)>0:
+        print ('total number of new stocks = {}'.format(len(new_stocks)))
+        for s in new_stocks:
+            market_cap[s] = np.nan
 
-    for date in tqdm(list(market_cap.index)):
-        df = get_fundamentals(query(valuation.code,
-                                    valuation.market_cap).filter(valuation.code.in_(new_stocks)), date=datetime.date(date))
-        # get_fundamentals 必须是 date格式的日期
-        market_cap.loc[date][df['code']] = df['market_cap'].values
+        for date in tqdm(list(market_cap.index)):
+            df = get_fundamentals(query(valuation.code,
+                                        valuation.market_cap).filter(valuation.code.in_(new_stocks)), date=datetime.date(date))
+            # get_fundamentals 必须是 date格式的日期
+            market_cap.loc[date][df['code']] = df['market_cap'].values
 
     market_cap = market_cap.sort_index(axis=0)  # 按index排序
-    market_cap.index = pd.to_datetime(market_cap.index)
+    market_cap = market_cap.sort_index(axis=1) # 按股票代码排序
     market_cap.to_csv('/Users/caichaohong/Desktop/Zenki/南北向资金/market_cap.csv')
 
 
-update_market_cap(new_start_date='2017-03-17',new_end_date='2021-05-10',market_cap=market_cap, share=share)
+update_market_cap(new_start_date='2014-01-01',new_end_date='2021-05-25',market_cap=market_cap, share=share)
 
 # 融资融券
 margin_buy_value = pd.read_csv('/Users/caichaohong/Desktop/Zenki/融资融券/margin_buy_value.csv', index_col='Unnamed: 0',date_parser=dateparse)
