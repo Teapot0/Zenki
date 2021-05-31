@@ -1,16 +1,14 @@
 import pandas as pd
 import numpy as np
 import jqdatasdk as jq
-from jqdatasdk import auth, get_query_count, get_price, opt, query, get_fundamentals, finance, get_trade_days, \
-    valuation, get_security_info
+from jqdatasdk import auth, get_query_count, get_price, opt, query, get_fundamentals, finance, get_trade_days, valuation, get_security_info
 from tqdm import tqdm
 from datetime import datetime, time, timedelta
 import matplotlib.pyplot as plt
 import os
 from basic_funcs.basic_function import *
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import explained_variance_score, mean_absolute_error, mean_squared_error, median_absolute_error, \
-    r2_score
+from sklearn.metrics import explained_variance_score, mean_absolute_error, mean_squared_error, median_absolute_error, r2_score
 
 value = pd.read_excel('/Users/caichaohong/Desktop/Zenki/南北向资金/value.xlsx', index_col='Unnamed: 0')
 share = pd.read_excel('/Users/caichaohong/Desktop/Zenki/南北向资金/share.xlsx', index_col='Unnamed: 0')

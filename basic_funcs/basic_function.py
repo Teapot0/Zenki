@@ -78,38 +78,38 @@ def plot_hold_position(data, risk_free_rate=0.03):
     # data_prepare must have net_value, rts , and benchmark的net_value
     df = data.copy(deep=True)
     df['year'] = [x.year for x in df.index]
-    N = len(df['year'][df['year'] == 2019])  # 每年多少天，估算一共多少年
+    N = len(df['year'][df['year'] == 2020])  # 每年多少天，估算一共多少年
     plt.figure(figsize=(8, 8))
     ax1 = plt.subplot()
     ax2 = ax1.twinx()
-    ax1.plot(df['net_value'].values, 'black', label='port_net_value')
-    ax1.plot(df['benchmark_net_value'].values, 'blue', label='benchmark_net_value')
-    ax1.plot((1 + df['rts'] - df['benchmark_rts']).cumprod().values, 'gold', label='cumulative alpha')  # 画超额收益 Alpha
-    ax2.plot(df['nv_max_draw'].values, 'red', linestyle='--', label='port_max_draw')
+    ax1.plot(df['net_value'], 'black', label='port_net_value')
+    ax1.plot(df['benchmark_net_value'], 'blue', label='benchmark_net_value')
+    ax1.plot((1 + df['rts'] - df['benchmark_rts']).cumprod(), 'gold', label='cumulative alpha')  # 画超额收益 Alpha
+    ax2.plot(df['nv_max_draw'], 'red', linestyle='-.',linewidth=1, label='port_max_draw')
     ax1.legend()
     ax2.legend()
     annual_rts = df['net_value'].values[-1] ** (1 / (round(df.shape[0] / (N), 2))) - 1
-    plt.title('Max_Drawdown={} \n total_rts={} \n annualized rts ={}\n Sharpe={}'.format(
-        MaxDrawdown(list(df['net_value'].dropna())).max(),
-        df['net_value'].values[-1],
-        annual_rts,
+    plt.title('years_={} Max_Drawdown={} \n total_rts={} annualized rts ={}\n Sharpe={}'.format(
+        round(df.shape[0] / (N), 2),
+        np.round(MaxDrawdown(list(df['net_value'].dropna())).max(),4),
+        np.round(df['net_value'].values[-1],2),
+        np.round(annual_rts,4),
         (annual_rts - risk_free_rate) / (np.std(df['rts']) * np.sqrt(N))))
     plt.show()
 
 
-def plot_rts(value_rts, benchmark_rts,comm_fee=0.003, hold_time=1):
-    # bencnmark rts is series or column of df for the rts of close
+def plot_rts(value_rts, benchmark_df,comm_fee=0.003, hold_time=1):
+    # bencnmark rts is series or column of df for the rts of close，必须第一个是NA
     # valur rts = daily rts series
     out_df = pd.DataFrame()
-    # out_df['holds'] = holds['holdings']
-    out_df['rts'] = value_rts.fillna(0)  # 没有收益的为0
-    out_df['rts'][::hold_time] = out_df['rts'][::hold_time] - comm_fee  # 每隔 hold_time 减去手续费和滑点，其中有一些未交易日，NA值自动不动
-    out_df['net_value'] = (1 + out_df['rts']).cumprod()
-    na_num = out_df['net_value'].isna().sum()
-    position_max_draw = list(np.zeros(na_num))
-    out_df['nv_max_draw'] = position_max_draw + list(MaxDrawdown(list(out_df['net_value'].dropna())).reshape(-1))
-    out_df['benchmark_rts'] = benchmark_rts.fillna(0)
-    out_df['benchmark_net_value'] = (1 + out_df['benchmark_rts']).cumprod()
+    NA_num = value_rts.isna().sum()  # 只留一个NA 用于归net-value to 1
+    out_df['rts'] = value_rts.iloc[NA_num - 1:, ]
+    out_df['rts'][::hold_time] = out_df['rts'][::hold_time] - comm_fee
+    out_df['net_value'] = (1 + out_df['rts'].fillna(0)).cumprod()  # 应该只有第一个NA
+
+    out_df['nv_max_draw'] = list(MaxDrawdown(list(out_df['net_value'])).reshape(-1))
+    out_df['benchmark_rts'] = benchmark_df.loc[out_df.index]['close'].pct_change(1)
+    out_df['benchmark_net_value'] = (1 + out_df['benchmark_rts'].fillna(0)).cumprod()
     plot_hold_position(data=out_df, risk_free_rate=0.03)
 
 
