@@ -8,12 +8,7 @@ from datetime import datetime, time, timedelta
 import matplotlib.pyplot as plt
 import os
 from basic_funcs.basic_function import *
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import explained_variance_score, mean_absolute_error, mean_squared_error, median_absolute_error, \
-    r2_score, accuracy_score
-from sklearn.model_selection import train_test_split
-from xgboost import XGBClassifier, plot_importance
-from sklearn.preprocessing import StandardScaler
+import seaborn as sns
 
 auth('15951961478', '961478')
 get_query_count()
@@ -36,8 +31,7 @@ pe = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv', ind
 
 
 # # 5年ROE
-share_nv = net_profit/(roe_yeayly*0.01)
-roe_5 = net_profit.rolling(5).sum()/share_nv.rolling(5).sum() * 100
+roe_5 = roe_yeayly.rolling(5).mean()
 
 # 每天财务选股
 stock_list_panel = {}
@@ -174,6 +168,17 @@ for stdn1 in stdn1_list:
                                             print(ii)
 
 params_df.to_excel('/Users/caichaohong/Desktop/Zenki/stra_f_momentum2.xlsx')
+
+
+
+
+# 大盘对照
+
+hs300['port_rts']= daily_rts['daily_rts']
+
+
+sns.regplot(x=hs300['rts_1'], y=hs300['port_rts'])
+
 
 
 

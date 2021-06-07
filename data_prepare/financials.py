@@ -132,40 +132,6 @@ net_profit_growth_yearly.to_csv('/Users/caichaohong/Desktop/Zenki/financials/net
 gross_profit_margin_yearly.to_csv('/Users/caichaohong/Desktop/Zenki/financials/gross_profit_margin_yearly.csv')
 adjusted_profit_yearly.to_csv('/Users/caichaohong/Desktop/Zenki/financials/adjusted_profit_yearly.csv')
 
-#加入2010年的
-
-roe_yearly=pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/roe_yearly.csv', index_col='statDate')
-roa_yearly=pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/roa_yearly.csv', index_col='statDate')
-total_revenue_yearly=pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/total_revenue_yearly.csv', index_col='statDate')
-total_revenue_growth_yearly=pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/total_revenue_growth_yearly.csv', index_col='statDate')
-net_profit_yearly=pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/net_profit_yearly.csv', index_col='statDate')
-net_profit_growth_yearly=pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/net_profit_growth_yearly.csv', index_col='statDate')
-gross_profit_margin_yearly=pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/gross_profit_margin_yearly.csv', index_col='statDate')
-adjusted_profit_yearly=pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/adjusted_profit_yearly.csv', index_col='statDate')
-
-
-ret = get_fundamentals(query(indicator.code,
-                             indicator.roe,
-                             indicator.roa,
-                             income.total_operating_revenue,
-                             indicator.inc_total_revenue_year_on_year,
-                             income.np_parent_company_owners,
-                             indicator.inc_net_profit_to_shareholders_year_on_year,
-                             indicator.gross_profit_margin,
-                             indicator.adjusted_profit).filter(indicator.code.in_(net_profit_yearly.columns)),
-                           statDate='2010')
-
-roe_yearly.loc['2011-12-31'] = np.nan
-roe_yearly.loc['2011-12-31'][ret['code']] = ret['roe']
-roe_yeayly = roe_yearly.sort_index()
-roe_yeayly.to_csv('/Users/caichaohong/Desktop/Zenki/financials/roe_yearly.csv')
-net_profit.loc['2011-12-31'] = np.nan
-net_profit.loc['2011-12-31'][ret['code']] = ret['np_parent_company_owners']*10**(-8)
-net_profit= net_profit.sort_index()
-net_profit.to_csv('/Users/caichaohong/Desktop/Zenki/financials/net_profit_yearly.csv')
-
-
-
 
 # valuation 市值数据：======================
 dateList = [x.strftime('%Y-%m-%d') for x in close.index]
@@ -187,5 +153,19 @@ for i in tqdm(range(len(dateList))):
 circulating_market_cap.to_csv('/Users/caichaohong/Desktop/Zenki/financials/circulating_market_cap.csv')
 pe_ratio.to_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv')
 ps_ratio.to_csv('/Users/caichaohong/Desktop/Zenki/financials/ps_ratio.csv')
+
+
+
+
+# 股息率
+
+sw_ind1 = get_industries('sw_l1')
+# 801780银行，801150医药，801160公用事业，801180房地产
+df_bank=finance.run_query(query(finance.SW1_DAILY_VALUATION).filter(finance.SW1_DAILY_VALUATION.code=='801780'))
+
+
+
+
+
 
 

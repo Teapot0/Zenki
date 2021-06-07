@@ -24,7 +24,7 @@ all_stock = pd.read_excel('/Users/caichaohong/Desktop/Zenki/all_stock_names.xlsx
 hs300 = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/510300.XSHG.xlsx', index_col='Unnamed: 0')
 
 # hs300
-p = get_price('510300.XSHG', start_date='2014-01-01', end_date='2021-05-27',
+p = get_price('510300.XSHG', start_date='2014-01-01', end_date='2021-06-04',
                              fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
 p.to_excel('/Users/caichaohong/Desktop/Zenki/price/510300.XSHG.xlsx')
 
@@ -124,8 +124,53 @@ def update_daily_prices(new_end_date, new_start_date, close, open, high, low, hi
     volume.to_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv')
 
 
-update_daily_prices(new_end_date='2021-05-27', new_start_date='2014-01-01', close=close, open=open, high=high, low=low,
+update_daily_prices(new_end_date='2021-06-04', new_start_date='2014-01-01', close=close, open=open, high=high, low=low,
                     high_limit=high_limit, low_limit=low_limit, volume=volume)
+
+
+# market_cap
+
+market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv', index_col='Unnamed: 0', date_parser=dateparse)
+
+def update_market_cap(new_start_date, new_end_date, market_cap, close):
+    # share 是持股数df，换成其他df也行，用来检测股票数量是否相等
+
+    future_trade_days = get_trade_days(start_date=market_cap.index[-1], end_date=new_end_date)[1:]  # 第一天重复
+    old_trade_days = get_trade_days(start_date=new_start_date, end_date=market_cap.index[0])[:-1]  # 最后一天重复
+    new_trade_days = list(future_trade_days) + list(old_trade_days)
+
+    if len(new_trade_days) > 0:
+        for date in new_trade_days:
+            market_cap.loc[date] = np.nan
+
+        for date in tqdm(new_trade_days):
+            df = get_fundamentals(query(valuation.code,
+                                        valuation.market_cap).filter(valuation.code.in_(list(market_cap.columns))), date=date)
+            market_cap.loc[date][df['code']] = df['market_cap'].values
+    else:
+        print("No need to Update")
+    market_cap.index = pd.to_datetime(market_cap.index)
+    # close 是持股数，用来检测股票数量是否相等, 新加入股票补齐
+
+    new_stocks = list(set(close.columns).difference(set(market_cap.columns)))
+    if len(new_stocks)>0:
+        print ('total number of new stocks = {}'.format(len(new_stocks)))
+        for s in new_stocks:
+            market_cap[s] = np.nan
+
+        for date in tqdm(list(market_cap.index)):
+            df = get_fundamentals(query(valuation.code,
+                                        valuation.market_cap).filter(valuation.code.in_(new_stocks)), date=datetime.date(date))
+            # get_fundamentals 必须是 date格式的日期
+            market_cap.loc[date][df['code']] = df['market_cap'].values
+
+    market_cap = market_cap.sort_index(axis=0)  # 按index排序
+    market_cap = market_cap.sort_index(axis=1) # 按股票代码排序
+    market_cap=market_cap.dropna(how='all',axis=0)
+    market_cap.to_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv')
+
+
+update_market_cap(new_start_date='2014-01-01',new_end_date='2021-06-04',market_cap=market_cap, close=close)
 
 #  南北向资金持仓-----------------------------
 
@@ -189,50 +234,6 @@ def update_north_data(new_end_date, new_start_date, share, ratio, value,close):
 
 update_north_data(new_end_date='2021-05-26', new_start_date='2014-01-01', share=share, ratio=ratio, value=value, close=close)
 
-
-
-# market_cap
-
-market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv', index_col='Unnamed: 0', date_parser=dateparse)
-
-def update_market_cap(new_start_date, new_end_date, market_cap, close):
-    # share 是持股数df，换成其他df也行，用来检测股票数量是否相等
-
-    future_trade_days = get_trade_days(start_date=market_cap.index[-1], end_date=new_end_date)[1:]  # 第一天重复
-    old_trade_days = get_trade_days(start_date=new_start_date, end_date=market_cap.index[0])[:-1]  # 最后一天重复
-    new_trade_days = list(future_trade_days) + list(old_trade_days)
-
-    if len(new_trade_days) > 0:
-        for date in new_trade_days:
-            market_cap.loc[date] = np.nan
-
-        for date in tqdm(new_trade_days):
-            df = get_fundamentals(query(valuation.code,
-                                        valuation.market_cap).filter(valuation.code.in_(list(market_cap.columns))), date=date)
-            market_cap.loc[date][df['code']] = df['market_cap'].values
-    else:
-        print("No need to Update")
-    market_cap.index = pd.to_datetime(market_cap.index)
-    # close 是持股数，用来检测股票数量是否相等, 新加入股票补齐
-
-    new_stocks = list(set(close.columns).difference(set(market_cap.columns)))
-    if len(new_stocks)>0:
-        print ('total number of new stocks = {}'.format(len(new_stocks)))
-        for s in new_stocks:
-            market_cap[s] = np.nan
-
-        for date in tqdm(list(market_cap.index)):
-            df = get_fundamentals(query(valuation.code,
-                                        valuation.market_cap).filter(valuation.code.in_(new_stocks)), date=datetime.date(date))
-            # get_fundamentals 必须是 date格式的日期
-            market_cap.loc[date][df['code']] = df['market_cap'].values
-
-    market_cap = market_cap.sort_index(axis=0)  # 按index排序
-    market_cap = market_cap.sort_index(axis=1) # 按股票代码排序
-    market_cap.to_csv('/Users/caichaohong/Desktop/Zenki/南北向资金/market_cap.csv')
-
-
-update_market_cap(new_start_date='2014-01-01',new_end_date='2021-05-27',market_cap=market_cap, close=close)
 
 # 融资融券
 margin_buy_value = pd.read_csv('/Users/caichaohong/Desktop/Zenki/融资融券/margin_buy_value.csv', index_col='Unnamed: 0',date_parser=dateparse)
@@ -351,10 +352,15 @@ def update_financials(new_start_date, new_end_date, cir_mc,pe,ps):
     pe = pe.sort_index(axis=1) # 按股票代码排序
     ps = ps.sort_index(axis=1) # 按股票代码排序
 
+    cir_mc = cir_mc.dropna(how='all',axis=0)
+    pe = pe.dropna(how='all',axis=0)
+    ps = ps.dropna(how='all',axis=0)
+
     cir_mc.to_csv('/Users/caichaohong/Desktop/Zenki/financials/circulating_market_cap.csv')
     pe.to_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv')
     ps.to_csv('/Users/caichaohong/Desktop/Zenki/financials/ps_ratio.csv')
 
-update_financials(new_end_date='2021-05-27', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
+
+update_financials(new_end_date='2021-06-04', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
 
 

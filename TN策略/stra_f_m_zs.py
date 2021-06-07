@@ -57,83 +57,6 @@ for i in range(market_cap.shape[0]):
 
 tmp_close = close[all_stock]
 
-
-# 大盘择时：
-hs300['ma20'] = hs300['close'].rolling(20).mean()
-hs300['down_ma20'] = (hs300['close']<hs300['ma20']).rolling(3).sum()
-
-# 止损+择时
-def std_rts_select_zs_zs(close,hs300,std_n1=20, std_n2=90, std1=0.2, std2=0.3,
-                   rts_n1=5, rts_n2=20, rts_n3=60, rts_n4=120, rts_n5=250, rts_n6=500,
-                   rts1=-0.1, rts2=-0.1, rts3=-0.1, rts4=-0.12, rts5=-0.15, rts6=-0.3,
-                   weight_n1=60, weight_n2=90, weight_n3=180, weight_n4=250,
-                   weight1=0.1, weight2=0.2, weight3=0.3, weight4=0.4, top_number=10, hold_time=5):
-    hs300['rts_1'] = hs300['close'].pct_change(1)
-    max_N = max(std_n2, rts_n6, weight_n4)
-
-    std_list = {}
-    close_rts_1 = close.pct_change(1)
-    std_l1 = close_rts_1.rolling(std_n1).std() * sqrt(std_n1)
-    std_l2 = close_rts_1.rolling(std_n2).std() * sqrt(std_n2)
-    for date in close_rts_1.index:
-        tmp1 = list(std_l1.loc[date][std_l1.loc[date] < std1].index)
-        tmp2 = list(std_l2.loc[date][std_l2.loc[date] < std2].index)
-        std_list[date] = list(set(tmp1).intersection(tmp2))  # 每一天股票池
-
-    rts_list = {}
-    close_rts1 = close.pct_change(rts_n1).sub(hs300['close'].pct_change(rts_n1), axis=0)
-    close_rts2 = close.pct_change(rts_n2).sub(hs300['close'].pct_change(rts_n2), axis=0)
-    close_rts3 = close.pct_change(rts_n3).sub(hs300['close'].pct_change(rts_n3), axis=0)
-    close_rts4 = close.pct_change(rts_n4).sub(hs300['close'].pct_change(rts_n4), axis=0)
-    close_rts5 = close.pct_change(rts_n5).sub(hs300['close'].pct_change(rts_n5), axis=0)
-    close_rts6 = close.pct_change(rts_n6).sub(hs300['close'].pct_change(rts_n6), axis=0)
-
-    for date in close_rts_1.index:  # 去掉NA
-        r1 = list(close_rts1.loc[date][close_rts1.loc[date] > rts1].index)
-        r2 = list(close_rts2.loc[date][close_rts2.loc[date] > rts2].index)
-        r3 = list(close_rts3.loc[date][close_rts3.loc[date] > rts3].index)
-        r4 = list(close_rts4.loc[date][close_rts4.loc[date] > rts4].index)
-        r5 = list(close_rts5.loc[date][close_rts5.loc[date] > rts5].index)
-        r6 = list(close_rts6.loc[date][close_rts6.loc[date] > rts6].index)
-        rts_list[date] = list(set(r1).intersection(r2, r3, r4,r5,r6))  # 每一天股票池
-
-    while len(rts_list) != len(std_list):
-        print('std list and rts list same length')
-        break
-
-    rts_f1 = close.pct_change(weight_n1).sub(hs300['close'].pct_change(weight_n1), axis=0)
-    rts_f2 = close.pct_change(weight_n2).sub(hs300['close'].pct_change(weight_n2), axis=0)
-    rts_f3 = close.pct_change(weight_n3).sub(hs300['close'].pct_change(weight_n3), axis=0)
-    rts_f4 = close.pct_change(weight_n4).sub(hs300['close'].pct_change(weight_n4), axis=0)
-    weight = weight1 * rts_f1 + weight2 * rts_f2 + weight3 * rts_f3 + weight4 * rts_f4
-
-    out_df = pd.DataFrame(columns=['daily_rts', 'hold_daily', 'zs_daily','net_value'], index=close_rts_1.index[max_N+1:])
-
-    for i in tqdm(range(max_N+1,close_rts_1.shape[0] - 1)):  # 去掉最后一天
-        date = close_rts_1.index[i]
-        date1 = close_rts_1.index[i + 1]
-        if (i-max_N-1) % hold_time == 0:
-            if hs300['down_ma20'].loc[date]==False:
-                stocklist_financial = list(set(std_list[date]).intersection(rts_list[date], stock_list_panel[date]))
-                stocklist_weighted = list(weight[stocklist_financial].loc[date].sort_values(ascending=False).index)  # 买入的股票
-                if (top_number == 'full') | (len(stocklist_weighted) <= top_number):
-                    buy_list = stocklist_weighted
-                else:
-                    buy_list = stocklist_weighted[:top_number]
-                initial_cost = close.loc[date][buy_list] # 成本
-            else :
-                buy_list=[]
-                initial_cost=np.nan
-        acc_rts = close.loc[date][buy_list] / initial_cost - 1  # 累计收益小于5% 则卖出
-        sell_list = list(acc_rts[acc_rts < -0.05].index)
-        hold_list = list(set(buy_list).difference(set(sell_list)))  #
-        out_df['hold_daily'].loc[date1] = buy_list
-        out_df['daily_rts'].loc[date1] = close_rts_1[buy_list].loc[date1].mean() * (len(hold_list)/max(1,len(buy_list)))
-        out_df['zs_daily'].loc[date1] = sell_list
-    out_df['net_value'] = (1+out_df['daily_rts']).cumprod()
-    return out_df
-
-
 # 止损
 
 
@@ -186,7 +109,6 @@ def std_rts_select_zs(close,hs300,std_n1=20, std_n2=90, std1=0.2, std2=0.3,
     for i in tqdm(range(max_N+1,close_rts_1.shape[0] - 1)):  # 去掉最后一天
         date = close_rts_1.index[i]
         date1 = close_rts_1.index[i + 1]
-        buy_list = []
         if (i-max_N-1) % hold_time == 0:
             stocklist_financial = list(set(std_list[date]).intersection(rts_list[date], stock_list_panel[date]))
             stocklist_weighted = list(weight[stocklist_financial].loc[date].sort_values(ascending=False).index)  # 买入的股票
@@ -196,9 +118,9 @@ def std_rts_select_zs(close,hs300,std_n1=20, std_n2=90, std1=0.2, std2=0.3,
                 buy_list = stocklist_weighted[:top_number]
             initial_cost = close.loc[date][buy_list]  # 成本
         acc_rts = close.loc[date][buy_list] / initial_cost - 1  # 累计收益小于5% 则卖出
-        sell_list = list(acc_rts[acc_rts < -0.05].index)
+        sell_list = list(acc_rts[acc_rts < -0.025].index)
         hold_list = list(set(buy_list).difference(set(sell_list)))  #
-        out_df['hold_daily'].loc[date1] = buy_list
+        out_df['hold_daily'].loc[date1] = hold_list
         if len(sell_list) > 0:
             out_df['daily_rts'].loc[date1] = close_rts_1[hold_list].loc[date1].mean()* (len(hold_list)/len(buy_list))
         else:
@@ -207,7 +129,7 @@ def std_rts_select_zs(close,hs300,std_n1=20, std_n2=90, std1=0.2, std2=0.3,
     return out_df
 
 
-daily_rts = std_rts_select_zs(tmp_close, hs300,std_n1=10, std_n2=40, std1=0.2, std2=0.2,
+daily_rts = std_rts_select_zs(tmp_close, hs300,std_n1=10, std_n2=60, std1=0.2, std2=0.2,
                               rts_n1=10, rts_n2=40, rts_n3=60, rts_n4=120, rts_n5=250, rts_n6=500,
                               rts1=-0.1, rts2=-0.1, rts3=-0.1, rts4=-0.12, rts5=-0.15, rts6=-0.3,
                               weight_n1=10, weight_n2=90, weight_n3=180, weight_n4=500,
