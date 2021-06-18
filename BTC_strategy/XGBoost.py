@@ -33,16 +33,20 @@ fake_bench['close'] = 1
 
 # 均线
 price_df['close_ma1'] = price_df['close'].rolling(3).mean()
-price_df['close_ma2'] = price_df['close'].rolling(6).mean()
-price_df['close_ma3'] = price_df['close'].rolling(12).mean()
-feature_df['long_ma1'] = ((price_df['close_ma1'] > price_df['close_ma2']) & (price_df['close_ma1'] > price_df['close_ma3']) & (price_df['close_ma2'] > price_df['close_ma3'])) * 1
-feature_df['short_ma1'] = ((price_df['close_ma1'] < price_df['close_ma2']) & (price_df['close_ma1'] < price_df['close_ma3']) & (price_df['close_ma2'] < price_df['close_ma3'])) * 1
+price_df['close_ma2'] = price_df['close'].rolling(12).mean()
+price_df['close_ma3'] = price_df['close'].rolling(48).mean()
+price_df['close_ma4'] = price_df['close'].rolling(192).mean()
+feature_df['close_ma1'] = price_df['close'] - price_df['close_ma1']
+feature_df['close_ma2'] = price_df['close'] - price_df['close_ma2']
+feature_df['close_ma3'] = price_df['close'] - price_df['close_ma3']
+feature_df['close_ma4'] = price_df['close'] - price_df['close_ma4']
+feature_df['close_ma1_ma2'] = price_df['close_ma1'] - price_df['close_ma2']
+feature_df['close_ma1_ma3'] = price_df['close_ma1'] - price_df['close_ma3']
+feature_df['close_ma1_ma4'] = price_df['close_ma1'] - price_df['close_ma4']
+feature_df['close_ma2_ma3'] = price_df['close_ma2'] - price_df['close_ma3']
+feature_df['close_ma2_ma4'] = price_df['close_ma2'] - price_df['close_ma4']
+feature_df['close_ma3_ma4'] = price_df['close_ma3'] - price_df['close_ma4']
 
-price_df['close_ma4'] = price_df['close'].rolling(30).mean()
-price_df['close_ma5'] = price_df['close'].rolling(60).mean()
-price_df['close_ma6'] = price_df['close'].rolling(120).mean()
-feature_df['long_ma2'] = ((price_df['close_ma4'] > price_df['close_ma5']) & (price_df['close_ma4'] > price_df['close_ma6']) & (price_df['close_ma5'] > price_df['close_ma6'])) * 1
-feature_df['short_ma2'] = ((price_df['close_ma4'] < price_df['close_ma5']) & (price_df['close_ma4'] < price_df['close_ma6']) & (price_df['close_ma5'] < price_df['close_ma6'])) * 1
 
 
 # std

@@ -19,9 +19,7 @@ low = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low.csv', index_
 high_limit = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high_limit.csv', index_col='Unnamed: 0', date_parser=dateparse)
 close = clean_close(close, low, high_limit)  # 新股一字板
 close = clean_st_exit(close)  # 退市和ST
-# 上市大于1000天的
-stock_list_4 = list(close.isna().sum()[close.isna().sum()<=17].index)
-close = close[stock_list_4]
+
 
 years = ['2010','2011','2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020']
 years_q = [x+'q'+str(i) for x in years for i in range(1,5)]
@@ -29,7 +27,7 @@ years_q.append('2021q1')
 all_stock = list(close.columns)
 
 # 季度：get_date_index :
-datelist=[get_fundamentals(query(indicator.statDate).filter(income.code == all_stock[0]),statDate=y) for y in years_q]
+datelist = [get_fundamentals(query(indicator.statDate).filter(income.code == all_stock[0]),statDate=y) for y in years_q]
 date_df = pd.DataFrame()
 for rr in datelist:
     date_df = pd.concat([date_df, rr], join='outer')

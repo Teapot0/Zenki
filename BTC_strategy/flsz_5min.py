@@ -31,20 +31,25 @@ price_df['close_nv'] = price_df['close']/price_df['close'][0]
 price_df['rts_1'] = price_df['close'].pct_change(1)
 
 # 成交量
-price_df['vol_ma1'] = price_df['vol'].rolling(10).mean()
+price_df['vol_ma1'] = price_df['vol'].rolling(120).mean()
 price_df['vol_ex1'] = (price_df['vol'] / price_df['vol_ma1'] - 1)
 vol_n = 1  # 放量大小
 price_df['vol_ex1_big'] = (price_df['vol_ex1'] > vol_n) * 1
 
 #  均线
 price_df['close_ma1'] = price_df['close'].rolling(4).mean()
-price_df['close_ma2'] = price_df['close'].rolling(16).mean()
-price_df['close_ma3'] = price_df['close'].rolling(64).mean()
-price_df['close_ma4'] = price_df['close'].rolling(248).mean()
-price_df['close_ma5'] = price_df['close'].rolling(992).mean()
-price_df['long_ma'] = ((price_df['close_ma4']>price_df['close_ma5'])&(price_df['close_ma1'] > price_df['close_ma2']) & (price_df['close_ma1'] > price_df['close_ma3']) & (price_df['close_ma2'] > price_df['close_ma3']))* 1
+price_df['close_ma2'] = price_df['close'].rolling(12).mean()
+price_df['close_ma3'] = price_df['close'].rolling(36).mean()
+price_df['close_ma4'] = price_df['close'].rolling(108).mean()
+price_df['close_ma5'] = price_df['close'].rolling(324).mean()
+price_df['long_ma'] = ((price_df['close_ma4']>price_df['close_ma5'])&
+                       (price_df['close_ma1'] > price_df['close_ma2']) &
+                       (price_df['close_ma1'] > price_df['close_ma3']) &
+                       (price_df['close_ma2'] > price_df['close_ma3'])) * 1
 
-price_df['buy_signal'] = ((price_df['long_ma'] == 1) & (price_df['rts_1'] > 0.002) & (price_df['vol_ex1_big'] == 1)) * 1
+price_df['buy_signal'] = ((price_df['long_ma'] == 1) &
+                          (price_df['rts_1'] > 0.005) &
+                          (price_df['vol_ex1_big'] == 1)) * 1
 
 
 def get_maxdraw_hold_position(price_df, max_draw):
@@ -78,54 +83,70 @@ ax1 = plt.subplot()
 ax2 = ax1.twinx()
 ax1.plot(price_df['net_value'].values, 'black')
 ax1.plot(price_df['close_nv'].values,'blue')
-# ax2.plot(price_df['close'].values,'red')
-# ax2.plot(price_df['close_ma1'].values,'blue')
-# ax2.plot(price_df['close_ma3'].values,'green')
-# ax2.plot(price_df['close_nv'].values, 'blue')
 ax2.plot(price_df['nv_max_draw'].values, 'red', linestyle='-.',linewidth=1, label='port_max_draw')
 
 
 
-def plot_rts(df):
-    plt.figure(figsize=(8, 8))
-    ax1 = plt.subplot()
-    ax2 = ax1.twinx()
-    ax1.plot(df['net_value'].values, 'black', label='port_net_value')
-    # ax1.plot(df['benchmark_net_value'], 'blue', label='benchmark_net_value')
-    # ax1.plot((1 + df['rts'] - df['benchmark_rts']).cumprod(), 'gold', label='cumulative alpha')  # 画超额收益 Alpha
-    ax2.plot(df['nv_max_draw'].values, 'red', linestyle='-.',linewidth=1, label='port_max_draw')
-    ax1.legend()
-    ax2.legend()
-    annual_rts = df['net_value'].values[-1] ** (1 / (round(df.shape[0] / (244), 2))) - 1
-    plt.title('years_={} Max_Drawdown={} \n total_rts={} annualized rts ={}\n Sharpe={}'.format(
-        round(df.shape[0] / (244), 2),
-        np.round(MaxDrawdown(list(df['net_value'].dropna())).max(),4),
-        np.round(df['net_value'].values[-1],2),
-        np.round(annual_rts,4),
-        (annual_rts - 0.03) / (np.std(df['rts_1']) * np.sqrt(244))))
-    plt.show()
+
+price_df['future_10min_rts'] = price_df['close'].pct_change(2).shift(-2)
+price_df['future_30min_rts'] = price_df['close'].pct_change(6).shift(-6)
+
+price_df['date'] = [x.strftime('%Y-%m-%d') for x in price_df.index]
+
+rts_day = price_df[['hold_rts', 'date']].groupby('date').apply(lambda x: np.float(((1+x).cumprod()-1).values[-1]))
+plt.boxplot(rts_day)
+rts_day_sorted = rts_day.sort_values(ascending=False)
+
+z = price_df.sort_values(by='future_10min_rts',ascending=False)
 
 
-plot_rts(price_df)
-
-
-
-price_df['future_10min_rts'] = price_df['close'].pct_change(10).shift(-10)
-price_df['future_30min_rts'] = price_df['close'].pct_change(30).shift(-30)
-z = price_df.sort_values(by='future_30min_rts',ascending=False)
-
-
-raw_price_df.index = pd.to_datetime(raw_price_df.index)
-price_5m = raw_price_df.groupby(pd.Grouper(freq='60Min')).agg({"open": "first", "close": "last", "low": "min", "high": "max",
-                                                       "amount":"sum", "vol":"sum", "count":"sum"})
-price_5m['close_rts'] = price_5m['close'].pct_change(1)
-price_5m['future_1h_rts'] = price_5m['close_rts'].shift(-1)
-zz = price_5m.sort_values(by='future_1h_rts', ascending=False)
+# 1月29日、30号
+zz = price_df[(price_df.index >= '2021-01-19')]
 
 
 
 
 
+'''
+param_df = pd.DataFrame(index=['vol_t', 'vol_n', 'rts_min', 'max_draw_param', 'total_rts','max_draw'])
+
+
+def params_test(vol_period_list, vol_number_list, rts_min_list,max_draw_list):
+    ii=0
+    for vol_period in vol_period_list:
+        for vol_number in vol_number_list:
+            for rts_min in rts_min_list:
+                for max_d in max_draw_list:
+                    price_df['vol_ma1'] = price_df['vol'].rolling(vol_period).mean()
+                    price_df['vol_ex1'] = (price_df['vol'] / price_df['vol_ma1'] - 1)
+                    price_df['vol_ex1_big'] = (price_df['vol_ex1'] > vol_number) * 1
+
+                    price_df['buy_signal'] = ((price_df['rts_1'] > rts_min) &
+                                              (price_df['vol_ex1_big'] == 1)) * 1
+
+                    rts_df = get_maxdraw_hold_position(price_df, max_draw=max_d)
+                    rts_df['comm_fee'] = (rts_df['hold_status'].diff(1) == 1) * 1 * 0.001
+                    rts_df['hold_rts'] = rts_df['rts_1'] * rts_df['hold_status'] - rts_df['comm_fee']
+                    rts_df['net_value'] = (1 + rts_df['hold_rts']).cumprod()
+                    rts_df['nv_max_draw'] = [np.nan] + list(MaxDrawdown(list(rts_df['net_value'].dropna())).reshape(-1))
+                    total_rts = ((1+rts_df['hold_rts']).cumprod()-1).
+                    Max_d = rts_df['nv_max_draw'].dropna().max()
+                param_df[ii] = [vol_period,vol_number,rts_min, max_d, total_rts[-1], Max_d]
+                ii+=1
+                print ('ii={}'.format(ii))
+    return param_df
+
+
+vol_period = [4,16,64,120]
+vol_number = [0.5,1]
+rts_min = [0,0.002,0.005,0.01]
+max_d_list = [0.05,0.1]
+
+param_df  = params_test(vol_period, vol_number,rts_min,max_d_list)
+for j in range(param_df.shape[1]):
+    param_df[j]['total_rts'] = param_df[j]['total_rts'][-1] - 1
+param_df.to_excel('/Users/caichaohong/Desktop/Zenki/btc_params.xlsx')
+'''
 
 
 

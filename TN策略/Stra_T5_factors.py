@@ -7,7 +7,10 @@ from tqdm import tqdm
 from datetime import datetime, time, timedelta
 import matplotlib.pyplot as plt
 import os
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
 from basic_funcs.basic_function import *
+import talib
 
 auth('15951961478', '961478')
 get_query_count()
@@ -15,28 +18,77 @@ get_query_count()
 import warnings
 warnings.filterwarnings('ignore')
 
+
+def get_short_ma_order(close, n1, n2, n3):
+    ma1 = close.rolling(n1).mean()
+    ma2 = close.rolling(n2).mean()
+    ma3 = close.rolling(n3).mean()
+    return (ma1 < ma2) & (ma2 < ma3) & (ma1 < ma3)
+
+
 dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 plt.rcParams['font.sans-serif'] = ['Songti SC']
 plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
+
+all_name = pd.read_excel('/Users/caichaohong/Desktop/Zenki/all_stock_names.xlsx',index_col='Unnamed: 0')
+all_name.index = all_name['code']
 
 hs300 = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/510300.XSHG.xlsx', index_col='Unnamed: 0')
 hs300['rts_1'] = hs300['close'].pct_change(1)
 hs300['net_value'] = (1+hs300['rts_1']).cumprod()
 
-close = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0',
-                    date_parser=dateparse)
+close = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
+close = close.dropna(how='all', axis=1) # 某列全NA
 close_rts_1 = close.pct_change(1)
-volume = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv', index_col='Unnamed: 0',
-                     date_parser=dateparse)
+close_max_5 = close.rolling(5).max()
+high = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high.csv', index_col='Unnamed: 0', date_parser=dateparse)
+low = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low.csv', index_col='Unnamed: 0', date_parser=dateparse)
+volume = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv', index_col='Unnamed: 0',date_parser=dateparse)
+open = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/open.csv', index_col='Unnamed: 0',date_parser=dateparse)
+
+# 上市大于N天的,一共1816天
+ipo_days = close.shape[0] - close.isna().sum()
+stock_list_days = list(close.isna().sum()[close.isna().sum() <= 244].index) # 大于一年的
+close = close[stock_list_days]
+
+high = high[close.columns]
+low = low[close.columns]
+open = open[close.columns]
+volume = volume[close.columns]
 money = close * volume * 10 ** (-8)
-market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv', index_col='Unnamed: 0',
-                         date_parser=dateparse)
+
+market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv', index_col='Unnamed: 0',date_parser=dateparse)
 roe_yeayly = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/roe_yearly.csv', index_col='statDate')
-pe = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv', index_col='Unnamed: 0',
-                 date_parser=dateparse)
+pe = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv', index_col='Unnamed: 0',date_parser=dateparse)
 net_profit = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/net_profit_yearly.csv', index_col='statDate')
 
-#股息率
+market_cap = market_cap[close.columns]
+roe_yeayly = roe_yeayly[close.columns]
+pe = pe[close.columns]
+net_profit = net_profit[close.columns]
+
+net_profit_growth = net_profit.pct_change(1)
+
+# # 单向波动率，上行减下行
+# vol_df = (high - open)/open - (open-low)/open
+# vol_df_n = vol_df.rolling(60).mean()
+#
+#RPS
+rps_n = 250
+close_n_min = close.rolling(rps_n).min()
+close_n_max = close.rolling(rps_n).max()
+rps_5 = ((close - close_n_min)/(close_n_max - close_n_min)).rolling(5).mean()
+rps_10 = ((close - close_n_min)/(close_n_max - close_n_min)).rolling(5).mean()
+rps_20 = ((close - close_n_min)/(close_n_max - close_n_min)).rolling(5).mean()
+
+rps_df = pd.DataFrame(index=rps_5.columns)
+rps_df[5] = rps_5.iloc[-1,]
+rps_df[10] = rps_10.iloc[-1,]
+rps_df[20] = rps_20.iloc[-1,]
+rps_df['name'] = all_name['short_name'][rps_df.index]
+rps_df.to_excel('/Users/caichaohong/Desktop/rps_df.xlsx')
+
+# 股息率
 df_bank = finance.run_query(query(finance.SW1_DAILY_VALUATION).filter(finance.SW1_DAILY_VALUATION.code=='801780'))
 # 回购
 df_bond = bond.run_query(query(bond.REPO_DAILY_PRICE).filter(bond.REPO_DAILY_PRICE.name=='GC182').limit(2000))
@@ -55,6 +107,10 @@ df_repo['licha'].loc[datelist] = df_t1['licha'].loc[datelist]
 df_repo = df_repo.fillna(method='ffill')
 
 
+# close_rsi = get_rsi_df(close,n=20)
+# hs300['rsi_20'] = talib.RSI(hs300['close'],timeperiod=20)
+
+
 # 每天财务选股
 
 # # 5年ROE
@@ -62,7 +118,7 @@ roe_5 = roe_yeayly.rolling(5).mean()
 
 # 每天财务选股
 stock_list_panel = {}
-all_stock = set()
+
 for i in range(market_cap.shape[0]):
     date = market_cap.index[i]
     # 5年平均roe大于12%
@@ -75,22 +131,25 @@ for i in range(market_cap.shape[0]):
     money_list = list(money.iloc[i, :][money.iloc[i, :] > 0.1].index)
     tmp_list = list(set(roe_list).intersection(set(mc_100), set(pe_25), set(money_list)))
     stock_list_panel[date] = tmp_list
-    all_stock = all_stock.union(stock_list_panel[date])
-
-tmp_close = close[all_stock]
 
 
 # 择时
+hs300['short_ma'] = get_short_ma_order(hs300['close'], n1=5,n2=90,n3=180)
+
+# rsrs
+# rs_df = pd.read_csv('/Users/caichaohong/Desktop/Zenki/rsrs_120_20.csv',index_col='Unnamed: 0',date_parser=dateparse)
+
+
 def std_rts_select_dp_zs(close, hs300, std_n1=20, std_n2=90, std1=0.2, std2=0.3,
                          rts_n1=5, rts_n2=20, rts_n3=60, rts_n4=120, rts_n5=250, rts_n6=500,
                          rts1=-0.1, rts2=-0.1, rts3=-0.1, rts4=-0.12, rts5=-0.15, rts6=-0.3,
                          weight_n1=60, weight_n2=90, weight_n3=180, weight_n4=250,
-                         weight1=0.1, weight2=0.2, weight3=0.3, weight4=0.4, top_number=10, hold_time=5,comm_fee=0.002):
-    hs300['rts_1'] = hs300['close'].pct_change(1)
+                         weight1=0.1, weight2=0.1, weight3=0.1, weight4=0.3,
+                         top_number=10, comm_fee=0.002,max_down=0.1):
     max_N = max(std_n2, rts_n6, weight_n4)
 
     std_list = {}
-    close_rts_1 = close.pct_change(1)
+
     std_l1 = close_rts_1.rolling(std_n1).std() * sqrt(std_n1)
     std_l2 = close_rts_1.rolling(std_n2).std() * sqrt(std_n2)
     for date in close_rts_1.index:
@@ -123,55 +182,63 @@ def std_rts_select_dp_zs(close, hs300, std_n1=20, std_n2=90, std1=0.2, std2=0.3,
     rts_f2 = close.pct_change(weight_n2).sub(hs300['close'].pct_change(weight_n2), axis=0)
     rts_f3 = close.pct_change(weight_n3).sub(hs300['close'].pct_change(weight_n3), axis=0)
     rts_f4 = close.pct_change(weight_n4).sub(hs300['close'].pct_change(weight_n4), axis=0)
-    weight = weight1 * rts_f1 + weight2 * rts_f2 + weight3 * rts_f3 + weight4 * rts_f4
+    weight = weight1 * rts_f1.rank(axis=1) + weight2 * rts_f2.rank(axis=1) + \
+             weight3 * rts_f3.rank(axis=1) + weight4 * rts_f4.rank(axis=1)
 
     out_df = pd.DataFrame(columns=['daily_rts', 'hold_daily', 'net_value'], index=close_rts_1.index[max_N + 1:])
+
+    buy_list = []
+    initial_cost = [1]
 
     for i in tqdm(range(max_N + 1, close_rts_1.shape[0] - 1)):  # 去掉最后一天
         date = close_rts_1.index[i]
         date1 = close_rts_1.index[i + 1]
+        tmp_week = date.week
+        week1 = date1.week
 
-        if (i - max_N - 1) % hold_time == 0:
-            stocklist_financial = list(set(std_list[date]).intersection(rts_list[date], stock_list_panel[date]))
-            stocklist_weighted = list(
-                weight[stocklist_financial].loc[date].sort_values(ascending=False).index)  # 买入的股票
-            if (top_number == 'full') | (len(stocklist_weighted) <= top_number):
+        stocklist_financial = list(set(std_list[date]).intersection(rts_list[date], stock_list_panel[date]))
+        stocklist_weighted = list(weight[stocklist_financial].loc[date].sort_values(ascending=False).index)[:top_number]
+
+        if tmp_week != week1: # 每周一调仓
+            if len(stocklist_weighted) <= 3:
+                buy_list = []
+            else :
                 buy_list = stocklist_weighted
-            else:
-                buy_list = stocklist_weighted[:top_number]
             initial_cost = close.loc[date][buy_list]  # 成本
 
         acc_rts = close.loc[date][buy_list] / initial_cost - 1  # 累计收益小于5% 则卖出
-        sell_list = list(acc_rts[acc_rts < -0.025].index)
-        hold_list = list(set(buy_list).difference(set(sell_list)))  #
+        sell_list = list(acc_rts[acc_rts < -max_down].index)
+        buy_list = list(set(buy_list).difference(set(sell_list)))  #
 
-        if (i - max_N - 1) % hold_time == 0:
-            if df_repo['licha'].loc[date] > 0:
-                out_df['hold_daily'].loc[date1] = hold_list
-                out_df['daily_rts'].loc[date1] = close_rts_1[hold_list].loc[date1].mean() - comm_fee
+        if (hs300['short_ma'].loc[date]==True) & (df_repo['licha'].loc[date] < 0):
+            buy_list = []
+            out_df['hold_daily'].loc[date1] = list(all_name['short_name'][buy_list])
+
+            if len(out_df['hold_daily'].loc[date]) > 0: #当天持仓，扣手续费
+                out_df['daily_rts'].loc[date1] = -comm_fee
             else:
-                out_df['hold_daily'].loc[date1] = []
                 out_df['daily_rts'].loc[date1] = 0
-
         else:
-            if df_repo['licha'].loc[date] > 0:
-                out_df['hold_daily'].loc[date1] = hold_list
-                out_df['daily_rts'].loc[date1] = close_rts_1[hold_list].loc[date1].mean()
+            out_df['hold_daily'].loc[date1] = list(all_name['short_name'][buy_list])
+
+            if tmp_week!= week1: # 每周一调仓
+                out_df['daily_rts'].loc[date1] = close_rts_1.loc[date1][buy_list].mean()-comm_fee
             else:
-                out_df['hold_daily'].loc[date1] = []
-                out_df['daily_rts'].loc[date1] = 0
+                out_df['daily_rts'].loc[date1] = close_rts_1.loc[date1][buy_list].mean()
 
     out_df['net_value'] = (1 + out_df['daily_rts']).cumprod()
     return out_df
 
 
-daily_rts = std_rts_select_dp_zs(tmp_close, hs300, std_n1=10, std_n2=60, std1=0.2, std2=0.2,
+daily_rts = std_rts_select_dp_zs(close, hs300, std_n1=10, std_n2=60, std1=0.2, std2=0.2,
                                  rts_n1=10, rts_n2=40, rts_n3=60, rts_n4=120, rts_n5=250, rts_n6=500,
                                  rts1=-0.1, rts2=-0.1, rts3=-0.1, rts4=-0.12, rts5=-0.15, rts6=-0.3,
-                                 weight_n1=10, weight_n2=90, weight_n3=180, weight_n4=250,
-                                 weight1=0.1, weight2=0.2, weight3=0.3, weight4=0.4, top_number=10, hold_time=5, comm_fee=0.002)
+                                 weight_n1=10, weight_n2=20, weight_n3=180, weight_n4=250,
+                                 weight1=-2, weight2=0, weight3=2, weight4=4,
+                                 top_number=10, comm_fee=0.003, max_down=0.1)
 
 plot_rts(value_rts=daily_rts['daily_rts'], benchmark_df=hs300, comm_fee=0.0, hold_time=5)
+
 
 
 

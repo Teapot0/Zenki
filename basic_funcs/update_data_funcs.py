@@ -19,19 +19,17 @@ dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 def update_daily_prices(new_end_date, new_start_date, close, open, high, low, high_limit, low_limit, volume):
 
     # 判断是否同日期开始和结束
-    if (close.index[0] == open.index[0]) & (open.index[0] == high.index[0]) & (high.index[0] == low.index[0]) & (
-            low.index[0] == high_limit.index[0]) & (high_limit.index[0] == low_limit.index[0]) & (
-            low_limit.index[0] == volume.index[0]):
-        print('all_start_time_equal{}'.format(close.index[0]))
-    else:
-        print('START time NOT Equal')
+    start_same = ((close.index[0] == open.index[0]) & (open.index[0] == high.index[0]) &
+                  (high.index[0] == low.index[0]) & (low.index[0] == high_limit.index[0]) &
+                  (high_limit.index[0] == low_limit.index[0]) & (low_limit.index[0] == volume.index[0]))*1
 
-    if (close.index[-1] == open.index[-1]) & (open.index[-1] == high.index[-1]) & (high.index[-1] == low.index[-1]) & (
-            low.index[-1] == high_limit.index[-1]) & (high_limit.index[-1] == low_limit.index[-1]) & (
-            low_limit.index[-1] == volume.index[-1]):
-        print('all_end_time_equal{}'.format(close.index[-1]))
-    else:
-        print('END time NOT Equal')
+    end_same = ((close.index[-1] == open.index[-1]) & (open.index[-1] == high.index[-1]) &
+               (high.index[-1] == low.index[-1]) & (low.index[-1] == high_limit.index[-1]) &
+               (high_limit.index[-1] == low_limit.index[-1]) & (low_limit.index[-1] == volume.index[-1]))*1
+
+    while ((start_same ==1) & (end_same==1))==False:
+        break
+
 
     future_trade_days = get_trade_days(start_date=close.index[-1], end_date=new_end_date)[1:]  # 第一天重复
     old_trade_days = get_trade_days(start_date=new_start_date, end_date=close.index[0])[:-1]  # 最后一天重复
@@ -139,6 +137,50 @@ def update_market_cap(new_start_date, new_end_date, market_cap, close):
     market_cap=market_cap.dropna(how='all',axis=0)
     market_cap.to_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv')
 
+
+
+def update_financials(new_start_date, new_end_date, cir_mc,pe,ps):
+    # share 是持股数df，换成其他df也行，用来检测股票数量是否相等
+
+    future_trade_days = get_trade_days(start_date=pe.index[-1], end_date=new_end_date)[1:]  # 第一天重复
+    old_trade_days = get_trade_days(start_date=new_start_date, end_date=pe.index[0])[:-1]  # 最后一天重复
+    new_trade_days = list(future_trade_days) + list(old_trade_days)
+
+    if len(new_trade_days) > 0:
+        for date in new_trade_days:
+            cir_mc.loc[date] = np.nan
+            pe.loc[date] = np.nan
+            ps.loc[date] = np.nan
+
+        for date in tqdm(new_trade_days):
+            df = get_fundamentals(query(valuation.code,
+                                        valuation.circulating_market_cap,
+                                        valuation.pe_ratio,
+                                        valuation.ps_ratio).filter(valuation.code.in_(list(pe.columns))), date=date)
+            cir_mc.loc[date][df['code']] = df['circulating_market_cap'].values
+            pe.loc[date][df['code']] = df['pe_ratio'].values
+            ps.loc[date][df['code']] = df['ps_ratio'].values
+    else:
+        print("No need to Update")
+    cir_mc.index = pd.to_datetime(cir_mc.index)
+    pe.index = pd.to_datetime(pe.index)
+    ps.index = pd.to_datetime(ps.index)
+
+    cir_mc = cir_mc.sort_index(axis=0)  # 按index排序
+    pe = pe.sort_index(axis=0)  # 按index排序
+    ps = ps.sort_index(axis=0)  # 按index排序
+
+    cir_mc =cir_mc.sort_index(axis=1) # 按股票代码排序
+    pe = pe.sort_index(axis=1) # 按股票代码排序
+    ps = ps.sort_index(axis=1) # 按股票代码排序
+
+    cir_mc = cir_mc.dropna(how='all',axis=0)
+    pe = pe.dropna(how='all',axis=0)
+    ps = ps.dropna(how='all',axis=0)
+
+    cir_mc.to_csv('/Users/caichaohong/Desktop/Zenki/financials/circulating_market_cap.csv')
+    pe.to_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv')
+    ps.to_csv('/Users/caichaohong/Desktop/Zenki/financials/ps_ratio.csv')
 
 
 
