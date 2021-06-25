@@ -36,6 +36,9 @@ all_name.index = all_name['code']
 hs300 = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/510300.XSHG.xlsx', index_col='Unnamed: 0')
 hs300['rts_1'] = hs300['close'].pct_change(1)
 hs300['net_value'] = (1+hs300['rts_1']).cumprod()
+# 择时
+hs300['short_ma'] = get_short_ma_order(hs300['close'], n1=5,n2=90,n3=180)
+
 
 close = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
 close = close.dropna(how='all', axis=1)  # 某列全NA
@@ -74,74 +77,17 @@ datelist = list(set(df_t1.index).intersection(set(df_repo.index)))
 df_repo['licha'].loc[datelist] = df_t1['licha'].loc[datelist]
 df_repo = df_repo.fillna(method='ffill')
 
-def get_rsi_df(close,n):
-    #close is dataframe of all stock, not series
-    out = pd.DataFrame(columns=close.columns, index = close.index)
-    for s in tqdm(close.columns):
-        out[s] = talib.RSI(close[s], timeperiod=n)
-    return out
-
-
-close_rsi = get_rsi_df(close,n=20)
-hs300['rsi_20'] = talib.RSI(hs300['close'],timeperiod=20)
-
 # 每天财务选股
 
 # # 5年ROE
-roe_5 = roe_yeayly.rolling(5).mean()
+roe_5 = roe_yeayly.rolling(5,min_periods=1).mean()
+
 
 # 每天财务选股
-stock_list_panel = {}
 
-for i in range(market_cap.shape[0]):
-    date = market_cap.index[i]
-    # 5年平均roe大于12%
-    tmp_year = '{}-12-31'.format(market_cap.index[i].year - 1)
-    roe_list = list((roe_5.loc[tmp_year][roe_5.loc[tmp_year] > 12]).index)
-    # 市值大于100 pe大于25
-    mc_100 = list(market_cap.iloc[i, :][market_cap.iloc[i, :] > 100].index)
-    pe_25 = list(pe.iloc[i, :][pe.iloc[i, :] > 25].index)
-    # 成交额大于1000万
-    money_list = list(money.iloc[i, :][money.iloc[i, :] > 0.1].index)
-    tmp_list = list(set(roe_list).intersection(set(mc_100), set(pe_25), set(money_list)))
-    stock_list_panel[date] = tmp_list
+stock_list_panel = get_financial_stock_list(market_cap,roe_5, pe, money,
+                                            roe_mean=12, mc_min=100, pe_min=20, money_min=0.1)
 
-
-# 择时
-hs300['short_ma'] = get_short_ma_order(hs300['close'], n1=5,n2=90,n3=180)
-
-
-def get_rsrs(high,low,N,n):
-    rsrs=pd.DataFrame(index=high.index, columns=['rsrs', 'rsrs_mu','rsrs_std', 'signal'])
-    for i in range(n,len(high)):
-        tmp_high = high[i-n:i].dropna()
-        tmp_low = low[i-n:i].dropna()
-
-        if len(tmp_high)==0:
-            rsrs['rsrs'].loc[high.index[i]] = np.nan
-        else :
-            m = LinearRegression()
-            m.fit(X=tmp_high.values.reshape(-1,1), y=tmp_low.values.reshape(-1,1))
-            rsrs['rsrs'].loc[high.index[i]] = m.coef_[0,0]
-    rsrs['rsrs_mu'] = rsrs['rsrs'].rolling(N).mean()
-    rsrs['rsrs_std'] = rsrs['rsrs'].rolling(N).std()
-    # rsrs_high = rsrs['rsrs_mu'] + rsrs['rsrs_std']
-    # rsrs_low = rsrs['rsrs_mu'] - rsrs['rsrs_std']
-    # rsrs['signal'] = (rsrs['rsrs'] > rsrs_high)*1 + (rsrs['rsrs'] < rsrs_low)*-1
-    rsrs['signal'] = (rsrs['rsrs'] - rsrs['rsrs_mu']) / rsrs['rsrs_std']
-    return rsrs
-
-
-def get_standard_df(df,n=False):
-    if n ==False:
-        return (df - df.mean())/df.std()
-    else:
-        df_n = df.rolling(n).mean()
-        df_std = df.rolling(n).std()
-        return (df-df_n)/df_std
-
-
-rs_df = pd.read_csv('/Users/caichaohong/Desktop/Zenki/rsrs_120_20.csv',index_col='Unnamed: 0',date_parser=dateparse)
 
 
 
@@ -326,7 +272,7 @@ def get_latest_holds(date=close.index[-2],rts_n1=10, rts_n2=40, rts_n3=60, rts_n
 
 
 
-new_holds = get_latest_holds(date=close.index[-3],rts_n1=10, rts_n2=40, rts_n3=60, rts_n4=120, rts_n5=250, rts_n6=500,
+new_holds = get_latest_holds(date=close.index[-2],rts_n1=10, rts_n2=40, rts_n3=60, rts_n4=120, rts_n5=250, rts_n6=500,
                      rts1=-0.1, rts2=-0.1, rts3=-0.1, rts4=-0.12, rts5=-0.15, rts6=-0.3,
                      weight_n1=10, weight_n2=20, weight_n3=180, weight_n4=250,
                      weight1=-2, weight2=0, weight3=2, weight4=4)

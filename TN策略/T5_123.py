@@ -7,13 +7,9 @@ from tqdm import tqdm
 from datetime import datetime, time, timedelta
 import matplotlib.pyplot as plt
 import os
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression
 from basic_funcs.basic_function import *
-import talib
 
-auth('15951961478', '961478')
-get_query_count()
+auth(XX, XX)
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -30,75 +26,33 @@ dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 plt.rcParams['font.sans-serif'] = ['Songti SC']
 plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
-all_name = pd.read_excel('/Users/caichaohong/Desktop/Zenki/all_stock_names.xlsx',index_col='Unnamed: 0')
+all_name = pd.read_excel('~/Desktop/dataset/all_stock_names.xlsx',index_col='Unnamed: 0')
 all_name.index = all_name['code']
 
-hs300 = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/510300.XSHG.xlsx', index_col='Unnamed: 0')
+hs300 = pd.read_excel('~/Desktop/dataset/510300.XSHG.xlsx', index_col='Unnamed: 0')
 hs300['rts_1'] = hs300['close'].pct_change(1)
 hs300['net_value'] = (1+hs300['rts_1']).cumprod()
 
-close = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
-close = close.dropna(how='all', axis=1) # 某列全NA
+close = pd.read_csv('~/Desktop/dataset/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
+close = close.dropna(how='all', axis=1)  # 某列全NA
 close_rts_1 = close.pct_change(1)
-close_max_5 = close.rolling(5).max()
-high = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high.csv', index_col='Unnamed: 0', date_parser=dateparse)
-low = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low.csv', index_col='Unnamed: 0', date_parser=dateparse)
-volume = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv', index_col='Unnamed: 0',date_parser=dateparse)
-open = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/open.csv', index_col='Unnamed: 0',date_parser=dateparse)
 
-# 上市大于N天的,一共1816天
-ipo_days = close.shape[0] - close.isna().sum()
-stock_list_days = list(close.isna().sum()[close.isna().sum() <= 244].index) # 大于一年的
-close = close[stock_list_days]
-
+high = pd.read_csv('~/Desktop/dataset/high.csv', index_col='Unnamed: 0', date_parser=dateparse)
+low = pd.read_csv('~/Desktop/dataset/low.csv', index_col='Unnamed: 0', date_parser=dateparse)
+volume = pd.read_csv('~/Desktop/dataset/volume.csv', index_col='Unnamed: 0',date_parser=dateparse)
 high = high[close.columns]
 low = low[close.columns]
-open = open[close.columns]
 volume = volume[close.columns]
 money = close * volume * 10 ** (-8)
 
-market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv', index_col='Unnamed: 0',date_parser=dateparse)
-roe_yeayly = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/roe_yearly.csv', index_col='statDate')
-pe = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv', index_col='Unnamed: 0',date_parser=dateparse)
-net_profit = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/net_profit_yearly.csv', index_col='statDate')
-
+market_cap = pd.read_csv('~/Desktop/dataset/market_cap.csv', index_col='Unnamed: 0',date_parser=dateparse)
+roe_yeayly = pd.read_csv('~/Desktop/dataset/roe_yearly.csv', index_col='statDate')# 2924个
+pe = pd.read_csv('~/Desktop/dataset/pe_ratio.csv', index_col='Unnamed: 0',date_parser=dateparse) # 2924个
+net_profit = pd.read_csv('~/Desktop/dataset/net_profit_yearly.csv', index_col='statDate')# 2924个
 market_cap = market_cap[close.columns]
-roe_yeayly = roe_yeayly[close.columns]
 pe = pe[close.columns]
-net_profit = net_profit[close.columns]
 
-net_profit_growth = net_profit.pct_change(1)
-
-# # 单向波动率，上行减下行
-# vol_df = (high - open)/open - (open-low)/open
-# vol_df_n = vol_df.rolling(60).mean()
-#
-#RPS
-rps_n = 250
-close_n_min = close.rolling(rps_n).min()
-close_n_max = close.rolling(rps_n).max()
-rps_5 = ((close - close_n_min)/(close_n_max - close_n_min)).rolling(5).mean() * 100
-rps_10 = ((close - close_n_min)/(close_n_max - close_n_min)).rolling(10).mean()* 100
-rps_20 = ((close - close_n_min)/(close_n_max - close_n_min)).rolling(20).mean()* 100
-
-rps_stocks = list(set(rps_5.iloc[-1][rps_5.iloc[-1]>=85].index).intersection(rps_10.iloc[-1][rps_10.iloc[-1]>=85].index,
-                                                                       rps_20.iloc[-1][rps_20.iloc[-1]>=85].index))
-# ST
-st_df = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/is_st.csv', index_col='Unnamed: 0',date_parser=dateparse)
-
-rps_stocks = list(set(rps_stocks).difference(st_df.iloc[-1,][st_df.iloc[-1,]==True].index))
-# 停牌的 
-rps_df = pd.DataFrame(index=rps_stocks)
-
-rps_df[5] = rps_5.iloc[-1][rps_stocks]
-rps_df[10] = rps_10.iloc[-1,][rps_stocks]
-rps_df[20] = rps_20.iloc[-1,][rps_stocks]
-rps_df['name'] = all_name['short_name'][rps_df.index]
-rps_df['daily_rts'] = close_rts_1.iloc[-1][rps_stocks]
-rps_df = rps_df.sort_values(by='daily_rts')
-rps_df.to_excel('/Users/caichaohong/Desktop/rps_df.xlsx')
-
-# 股息率
+#股息率
 df_bank = finance.run_query(query(finance.SW1_DAILY_VALUATION).filter(finance.SW1_DAILY_VALUATION.code=='801780'))
 # 回购
 df_bond = bond.run_query(query(bond.REPO_DAILY_PRICE).filter(bond.REPO_DAILY_PRICE.name=='GC182').limit(2000))
@@ -115,11 +69,6 @@ df_repo = pd.DataFrame(columns=['licha'],index = close.index)
 datelist = list(set(df_t1.index).intersection(set(df_repo.index)))
 df_repo['licha'].loc[datelist] = df_t1['licha'].loc[datelist]
 df_repo = df_repo.fillna(method='ffill')
-
-
-# close_rsi = get_rsi_df(close,n=20)
-# hs300['rsi_20'] = talib.RSI(hs300['close'],timeperiod=20)
-
 
 # 每天财务选股
 
@@ -145,9 +94,6 @@ for i in range(market_cap.shape[0]):
 
 # 择时
 hs300['short_ma'] = get_short_ma_order(hs300['close'], n1=5,n2=90,n3=180)
-
-# rsrs
-# rs_df = pd.read_csv('/Users/caichaohong/Desktop/Zenki/rsrs_120_20.csv',index_col='Unnamed: 0',date_parser=dateparse)
 
 
 def std_rts_select_dp_zs(close, hs300, std_n1=20, std_n2=90, std1=0.2, std2=0.3,
@@ -251,6 +197,74 @@ plot_rts(value_rts=daily_rts['daily_rts'], benchmark_df=hs300, comm_fee=0.0, hol
 
 
 
+daily_rts.to_excel('~/Desktop/dataset/daily_holdings_new.xlsx')
+# 换名字
+daily_rts = pd.read_excel('~/Desktop/dataset/daily_holdings.xlsx')
+
+for i in tqdm(range(1,daily_rts.shape[0])):
+    if len(daily_rts['hold_daily'][i])==0:
+        daily_rts['hold_daily'][i] = 'none'
+    else:
+        daily_rts['hold_daily'][i] = all_name['short_name'][daily_rts['hold_daily'][i]]
+
+
+daily_rts.to_excel('~/Desktop/dataset/daily_holdings.xlsx')
+
+
+
+def get_latest_holds(date=close.index[-2],rts_n1=10, rts_n2=40, rts_n3=60, rts_n4=120, rts_n5=250, rts_n6=500,
+                     rts1=-0.1, rts2=-0.1, rts3=-0.1, rts4=-0.12, rts5=-0.15, rts6=-0.3,
+                     weight_n1=10, weight_n2=20, weight_n3=180, weight_n4=250,
+                     weight1=-2, weight2=0, weight3=2, weight4=4):
+    std_l1 = close_rts_1.rolling(10).std() * sqrt(10)
+    std_l2 = close_rts_1.rolling(60).std() * sqrt(60)
+    tmp1 = list(std_l1.loc[date][std_l1.loc[date] < 0.2].index)
+    tmp2 = list(std_l2.loc[date][std_l2.loc[date] < 0.2].index)
+    std_list = list(set(tmp1).intersection(tmp2))  # 每一天股票池
+
+    close_rts1 = close.pct_change(rts_n1).sub(hs300['close'].pct_change(rts_n1), axis=0)
+    close_rts2 = close.pct_change(rts_n2).sub(hs300['close'].pct_change(rts_n2), axis=0)
+    close_rts3 = close.pct_change(rts_n3).sub(hs300['close'].pct_change(rts_n3), axis=0)
+    close_rts4 = close.pct_change(rts_n4).sub(hs300['close'].pct_change(rts_n4), axis=0)
+    close_rts5 = close.pct_change(rts_n5).sub(hs300['close'].pct_change(rts_n5), axis=0)
+    close_rts6 = close.pct_change(rts_n6).sub(hs300['close'].pct_change(rts_n6), axis=0)
+
+    r1 = list(close_rts1.loc[date][close_rts1.loc[date] > rts1].index)
+    r2 = list(close_rts2.loc[date][close_rts2.loc[date] > rts2].index)
+    r3 = list(close_rts3.loc[date][close_rts3.loc[date] > rts3].index)
+    r4 = list(close_rts4.loc[date][close_rts4.loc[date] > rts4].index)
+    r5 = list(close_rts5.loc[date][close_rts5.loc[date] > rts5].index)
+    r6 = list(close_rts6.loc[date][close_rts6.loc[date] > rts6].index)
+    rts_list = list(set(r1).intersection(r2, r3, r4, r5, r6))  # 每一天股票池
+
+    rts_f1 = close.pct_change(weight_n1).sub(hs300['close'].pct_change(weight_n1), axis=0)
+    rts_f2 = close.pct_change(weight_n2).sub(hs300['close'].pct_change(weight_n2), axis=0)
+    rts_f3 = close.pct_change(weight_n3).sub(hs300['close'].pct_change(weight_n3), axis=0)
+    rts_f4 = close.pct_change(weight_n4).sub(hs300['close'].pct_change(weight_n4), axis=0)
+    weight = weight1 * rts_f1.rank(axis=1) + weight2 * rts_f2.rank(axis=1) + \
+             weight3 * rts_f3.rank(axis=1) + weight4 * rts_f4.rank(axis=1)
+
+    stocklist_financial = list(set(std_list).intersection(rts_list, stock_list_panel[date]))
+    stocklist_weighted = list(weight[stocklist_financial].loc[date].sort_values(ascending=False).index)[:10]  # 买入的股票
+
+    return stocklist_weighted
+
+
+
+
+new_holds = get_latest_holds(date=close.index[-3],rts_n1=10, rts_n2=40, rts_n3=60, rts_n4=120, rts_n5=250, rts_n6=500,
+                     rts1=-0.1, rts2=-0.1, rts3=-0.1, rts4=-0.12, rts5=-0.15, rts6=-0.3,
+                     weight_n1=10, weight_n2=20, weight_n3=180, weight_n4=250,
+                     weight1=-2, weight2=0, weight3=2, weight4=4)
+
+new_holds = all_name['short_name'][new_holds]
+# new_holds.to_excel('~/Desktop/dataset//new_holdings.xlsx')
+
+zz = pd.read_excel('~/Desktop/dataset/new_holdings.xlsx')
+
+week_rts = close_rts_1.iloc[-10:,][zz['code']]
+week_rts.columns = zz['short_name']
+week_rts.to_excel('~/Desktop/最新持仓周报.xlsx')
 
 
 

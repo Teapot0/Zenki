@@ -90,9 +90,9 @@ def plot_hold_position(data, risk_free_rate=0.03):
     ax2.plot(df['nv_max_draw'], 'red', linestyle='-.',linewidth=1, label='port_max_draw')
     ax1.legend()
     ax2.legend()
-    annual_rts = df['net_value'].values[-1] ** (1 / (round(df.shape[0] / (N), 2))) - 1
+    annual_rts = df['net_value'].values[-1] ** (1 / (round(df.shape[0] / N, 2))) - 1
     plt.title('years_={} Max_Drawdown={} \n total_rts={} annualized rts ={}\n Sharpe={}'.format(
-        round(df.shape[0] / (N), 2),
+        round(df.shape[0] / N, 2),
         np.round(MaxDrawdown(list(df['net_value'].dropna())).max(),4),
         np.round(df['net_value'].values[-1],2),
         np.round(annual_rts,4),
@@ -141,6 +141,47 @@ def get_top_value_factor_rts(factor, rts, top_number=10, hold_time=3, weight="av
             temp_stock_list = list(temp_factor.index[:top_number])  # 未来hold_time的股票池
 
         temp_rts_daily = rts.loc[date_1][temp_stock_list]
+        holdings.loc[date_1] = str(temp_stock_list)
+
+        if weight == 'avg':  # 每天收益率均值
+            out.loc[date_1] = temp_rts_daily.mean()
+
+    if return_holdings_list == False:
+        return out
+    else:
+        return out, holdings
+
+
+def get_top_value_factor_rts_open(factor, close,open, top_number=10, hold_time=3, weight="avg", return_holdings_list=False):
+    # 用开盘价作为买入价
+    # factor的值是numbers 不是signal；
+    # factor是time index, stocks columns的df
+    # top number is the number of top biggest factor values each day
+    # Factor and rts must have same time index, default type is timestamp from read_excel
+
+    rts = close.pct_change(1)
+    # 去掉每天开盘价影响
+    rts_open = close/open - 1
+    out = pd.DataFrame(np.nan, index=factor.index, columns=['daily_rts'])  # 日收益率
+    holdings = pd.DataFrame(np.nan, index=factor.index, columns=['holdings'])
+
+    NA_rows = rts.isna().all(axis=1).sum()  # 判断是否只有第一行全NA
+    if NA_rows != 1:
+        print('na_rows Not one')
+    out.iloc[:NA_rows, ] = np.nan
+    holdings.iloc[:NA_rows, ] = np.nan
+    temp_stock_list = []
+
+    for i in tqdm(range(NA_rows, len(factor.index) - 1)):  # 每hold_time换仓
+        date = factor.index[i]
+        date_1 = factor.index[i + 1]
+
+        temp_ii = (i - NA_rows) % hold_time  # 判断是否换仓
+        if temp_ii == 0:
+            temp_factor = factor.loc[date].dropna().sort_values(ascending=False)  # 每天从大到小
+            temp_stock_list = list(temp_factor.index[:top_number])  # 未来hold_time的股票池
+
+        temp_rts_daily = rts_open.loc[date_1][temp_stock_list]
         holdings.loc[date_1] = str(temp_stock_list)
 
         if weight == 'avg':  # 每天收益率均值
@@ -432,6 +473,7 @@ def get_rsrs(high,low,N,n):
     rsrs['signal'] = (rsrs['rsrs'] - rsrs['rsrs_mu']) / rsrs['rsrs_std']
     return rsrs
 
+
 def get_rsi_df(close,n):
     #close is dataframe of all stock, not series
     out = pd.DataFrame(columns=close.columns, index = close.index)
@@ -468,3 +510,92 @@ def get_standard_df(df,n=False):
         df_n = df.rolling(n).mean()
         df_std = df.rolling(n).std()
         return (df-df_n)/df_std
+
+
+def get_rsi_df(close,n):
+    #close is dataframe of all stock, not series
+    out = pd.DataFrame(columns=close.columns, index = close.index)
+    for s in tqdm(close.columns):
+        out[s] = talib.RSI(close[s], timeperiod=n)
+    return out
+
+
+def get_rsrs(high,low,N,n):
+    rsrs=pd.DataFrame(index=high.index, columns=['rsrs', 'rsrs_mu','rsrs_std', 'signal'])
+    for i in range(n,len(high)):
+        tmp_high = high[i-n:i].dropna()
+        tmp_low = low[i-n:i].dropna()
+
+        if len(tmp_high)==0:
+            rsrs['rsrs'].loc[high.index[i]] = np.nan
+        else :
+            m = LinearRegression()
+            m.fit(X=tmp_high.values.reshape(-1,1), y=tmp_low.values.reshape(-1,1))
+            rsrs['rsrs'].loc[high.index[i]] = m.coef_[0,0]
+    rsrs['rsrs_mu'] = rsrs['rsrs'].rolling(N).mean()
+    rsrs['rsrs_std'] = rsrs['rsrs'].rolling(N).std()
+    # rsrs_high = rsrs['rsrs_mu'] + rsrs['rsrs_std']
+    # rsrs_low = rsrs['rsrs_mu'] - rsrs['rsrs_std']
+    # rsrs['signal'] = (rsrs['rsrs'] > rsrs_high)*1 + (rsrs['rsrs'] < rsrs_low)*-1
+    rsrs['signal'] = (rsrs['rsrs'] - rsrs['rsrs_mu']) / rsrs['rsrs_std']
+    return rsrs
+
+
+
+def get_short_ma_order(close, n1, n2, n3):
+    ma1 = close.rolling(n1).mean()
+    ma2 = close.rolling(n2).mean()
+    ma3 = close.rolling(n3).mean()
+    return (ma1 < ma2) & (ma2 < ma3) & (ma1 < ma3)
+
+
+def get_close_ma_stock(close,n1,n2,ma_n):
+    ma_stock = {}
+    close_ma1 = close.rolling(n1).mean()
+    close_ma2 = close.rolling(n2).mean()
+    close_ma_order = ((close_ma1 > close_ma2) * 1).rolling(ma_n).sum()
+    for i in range(close.shape[0]):
+        date = close.index[i]
+        # 均线连续n日多
+        ma_stock[date] = list(close_ma_order.loc[date][close_ma_order.loc[date] == ma_n].index)
+    return ma_stock
+
+
+def get_financial_stock_list(market_cap,roe_5,pe,money,roe_mean,mc_min, pe_min,money_min):
+    stock_list_panel = {}
+
+    for i in range(market_cap.shape[0]):
+        date = market_cap.index[i]
+        # 5年平均roe大于12%
+        tmp_year = '{}-12-31'.format(market_cap.index[i].year - 1)
+        roe_list = list((roe_5.loc[tmp_year][roe_5.loc[tmp_year] > roe_mean]).index)
+        # 市值大于100 pe大于25
+        mc_100 = list(market_cap.iloc[i, :][market_cap.iloc[i, :] > mc_min].index)
+        pe_25 = list(pe.iloc[i, :][pe.iloc[i, :] > pe_min].index)
+        # 成交额大于1000万
+        money_list = list(money.iloc[i, :][money.iloc[i, :] > money_min].index)
+        tmp_list = list(set(roe_list).intersection(set(mc_100), set(pe_25), set(money_list)))
+        stock_list_panel[date] = tmp_list
+    return stock_list_panel
+
+
+def get_std_list(close_rts_1,std_n_list,std_list):
+    std_stock = {}
+    df_list = [close_rts_1.rolling(std_n).std() * sqrt(std_n) for std_n in std_n_list]
+    for date in close_rts_1.index:
+        tmp = [list(df_list[i].loc[date][df_list[i].loc[date] < std_list[i]].index) for i in range(len(std_list))]
+        std_stock[date] = list(set.intersection(*map(set,tmp))) # 每一天股票池,map(set,a) simply converts it to a list of sets
+    return std_stock
+
+
+def get_alpha_list(close,hs300,rts_n_list,rts_list):
+    rts_stock = {}
+    df_list = [close.pct_change(rts_n).sub(hs300['close'].pct_change(rts_n), axis=0) for rts_n in rts_n_list]
+
+    for date in close.index:  # 去掉NA
+        tmp =[list(df_list[i].loc[date][df_list[i].loc[date] > rts_list[i]].index) for i in range(len(rts_n_list))]
+        rts_stock[date] = list(set.intersection(*map(set,tmp)))
+    return rts_stock
+
+
+

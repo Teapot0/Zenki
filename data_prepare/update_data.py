@@ -15,13 +15,11 @@ dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 auth('15951961478', '961478')
 get_query_count()
 
-
-all_stock = pd.read_excel('/Users/caichaohong/Desktop/Zenki/all_stock_names.xlsx')
-
-hs300 = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/510300.XSHG.xlsx', index_col='Unnamed: 0')
-
 # hs300
-p = get_price('510300.XSHG', start_date='2014-01-01', end_date='2021-06-18',
+
+New_end_date = '2021-06-25'
+
+p = get_price('510300.XSHG', start_date='2014-01-01', end_date=New_end_date,
                              fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
 p.to_excel('/Users/caichaohong/Desktop/Zenki/price/510300.XSHG.xlsx')
 
@@ -33,17 +31,20 @@ high_limit = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high_limi
 low_limit = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low_limit.csv', index_col='Unnamed: 0', date_parser=dateparse)
 volume = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv', index_col='Unnamed: 0', date_parser=dateparse)
 
-
 # 市场行情
-
-update_daily_prices(new_end_date='2021-06-18', new_start_date='2014-01-01', close=close, open=open, high=high, low=low,
+update_daily_prices(new_end_date = New_end_date, new_start_date='2014-01-01', close=close, open=open, high=high, low=low,
                     high_limit=high_limit, low_limit=low_limit, volume=volume)
+
+# ST
+st_df = get_extras('is_st', list(close.columns), start_date='2014-01-01', end_date=New_end_date)
+st_df.to_csv('/Users/caichaohong/Desktop/Zenki/price/is_st.csv')
+
 
 # market_cap
 
 market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv', index_col='Unnamed: 0', date_parser=dateparse)
 
-update_market_cap(new_start_date='2014-01-01',new_end_date='2021-06-17',market_cap=market_cap, close=close)
+update_market_cap(new_start_date='2014-01-01',new_end_date='2021-06-24',market_cap=market_cap, close=close)
 
 
 # financials pe
@@ -51,7 +52,7 @@ circulating_market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financial
 pe_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv', index_col='Unnamed: 0', date_parser=dateparse)
 ps_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/ps_ratio.csv', index_col='Unnamed: 0', date_parser=dateparse)
 
-update_financials(new_end_date='2021-06-17', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
+update_financials(new_end_date='2021-06-24', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
 
 
 
