@@ -77,13 +77,11 @@ datelist = list(set(df_t1.index).intersection(set(df_repo.index)))
 df_repo['licha'].loc[datelist] = df_t1['licha'].loc[datelist]
 df_repo = df_repo.fillna(method='ffill')
 
-# 每天财务选股
 
-# # 5年ROE
+# 每天财务选股
 roe_5 = roe_yeayly.rolling(5,min_periods=1).mean()
 
 
-# 每天财务选股
 def get_financial_stock_list(market_cap,roe_5,pe,money,roe_mean,mc_min, pe_min,money_min):
     stock_list_panel = {}
 
@@ -105,19 +103,6 @@ def get_financial_stock_list(market_cap,roe_5,pe,money,roe_mean,mc_min, pe_min,m
 stock_list_panel = get_financial_stock_list(market_cap,roe_5, pe, money,
                                             roe_mean=12, mc_min=300, pe_min=20, money_min=1)
 
-# 缩量
-hs300_vol = hs300['volume'].pct_change(1)
-vol_diff = volume.pct_change(1)
-vol_list = {}
-for date in tqdm(close.index):
-    # if hs300_vol.loc[date] > 0.1:
-    #     vol_list[date] = list(vol_diff.loc[date][vol_diff.loc[date] < 0.15].index)
-    # if hs300_vol.loc[date] < -0.1:
-    #     vol_list[date] = list(vol_diff.loc[date][vol_diff.loc[date] > -0.2].index)
-    if hs300_vol.loc[date] < -0.3:
-        vol_list[date] = list(vol_diff.loc[date][vol_diff.loc[date] > -0.2])
-    else:
-        vol_list[date] = []
 
 # 异常下跌
 down_list = {}
@@ -137,8 +122,6 @@ for i in tqdm(range(close.shape[0]-1)):
     if tmp_week != week1:
         down_list[date] = tmp_list
         tmp_list = []
-
-
 
 
 #停牌
@@ -194,7 +177,7 @@ def std_rts_select_dp_zs(close, hs300, std_n1=20, std_n2=90, std1=0.2, std2=0.3,
 
     buy_list = []
     initial_cost = [1]
-    tmp_vol_list = []   # 缩量，每周五重置
+
     for i in tqdm(range(max_N + 1, close_rts_1.shape[0] - 1)):  # 去掉最后一天
         date = close_rts_1.index[i]
         date1 = close_rts_1.index[i + 1]
@@ -203,15 +186,13 @@ def std_rts_select_dp_zs(close, hs300, std_n1=20, std_n2=90, std1=0.2, std2=0.3,
 
         stocklist_financial = list(set(std_list[date]).intersection(rts_list[date], stock_list_panel[date]))
         stocklist_weighted = list(weight[stocklist_financial].loc[date].sort_values(ascending=False).index)[:top_number]
-        tmp_vol_list = tmp_vol_list + vol_list[date]
 
         if tmp_week != week1:  # 每周五
             if len(stocklist_weighted) <= 3:
                 buy_list = []
             else:
-                buy_list = list(set(stocklist_weighted).difference(set(tmp_vol_list),set(pause_list[date]), set(down_list[date])))
+                buy_list = list(set(stocklist_weighted).difference(set(pause_list[date]), set(down_list[date])))
             initial_cost = close.loc[date][buy_list]  # 成本
-            tmp_vol_list = []
 
         acc_rts = close.loc[date][buy_list] / initial_cost - 1  # 累计收益小于5% 则卖出
         sell_list = list(acc_rts[acc_rts < -max_down].index)
@@ -244,13 +225,15 @@ daily_rts = std_rts_select_dp_zs(close, hs300, std_n1=10, std_n2=60, std1=0.2, s
                                  weight1=-2, weight2=0, weight3=2, weight4=4,
                                  top_number=10, comm_fee=0.003, max_down=0.1)
 
+
 plot_rts(value_rts=daily_rts['daily_rts'], benchmark_df=hs300, comm_fee=0.0, hold_time=5)
 
 
 
 
 
-def get_latest_holds(date=close.index[-1],
+# 最新持仓
+def get_latest_holds(date=close.index[-2],
                      rts_n1=10, rts_n2=40, rts_n3=60, rts_n4=120, rts_n5=250, rts_n6=500,
                      rts1=-0.1, rts2=-0.1, rts3=-0.1, rts4=-0.12, rts5=-0.15, rts6=-0.3,
                      weight_n1=10, weight_n2=20, weight_n3=180, weight_n4=250,
@@ -283,24 +266,31 @@ def get_latest_holds(date=close.index[-1],
     weight = weight1 * rts_f1.rank(axis=1) + weight2 * rts_f2.rank(axis=1) + \
              weight3 * rts_f3.rank(axis=1) + weight4 * rts_f4.rank(axis=1)
 
-    vol_s = []
-    for date in close.index[-5:]:
-        vol_s = vol_s + vol_list[date]
-
     stocklist_financial = list(set(std_list).intersection(rts_list, stock_list_panel[date]))
     stocklist_weighted = list(weight[stocklist_financial].loc[date].sort_values(ascending=False).index)[:10]  # 买入的股票
 
-    holds = list(set(stocklist_weighted).difference(set(vol_s), set(pause_list[date]), set(down_list[date])))
+    holds = list(set(stocklist_weighted).difference(set(pause_list[date]), set(down_list[date])))
     if (hs300['short_ma'].loc[date] == True) & (df_repo['licha'].loc[date] < 0):
         holds=[]
         print ('SHORT SIGNAL NO HOLDINGS')
     return holds
 
 
-new_holds = get_latest_holds(date=close.index[-1],rts_n1=10, rts_n2=40, rts_n3=60, rts_n4=120, rts_n5=250, rts_n6=500,
+
+new_holds = get_latest_holds(date=close.index[-3],rts_n1=10, rts_n2=40, rts_n3=60, rts_n4=120, rts_n5=250, rts_n6=500,
                      rts1=-0.1, rts2=-0.1, rts3=-0.1, rts4=-0.12, rts5=-0.15, rts6=-0.3,
                      weight_n1=10, weight_n2=20, weight_n3=180, weight_n4=250,
                      weight1=-2, weight2=0, weight3=2, weight4=4)
+
+new_holds = all_name['short_name'][new_holds]
+# new_holds.to_excel('/Users/caichaohong/Desktop/Zenki/new_holdings_v2.xlsx')
+
+zz = pd.read_excel('/Users/caichaohong/Desktop/Zenki/new_holdings_v2.xlsx')
+
+week_rts = close_rts_1.iloc[-10:,][zz['code']]
+week_rts.columns = zz['short_name']
+week_rts.to_excel('/Users/caichaohong/Desktop/最新持仓周报-v2.xlsx')
+
 
 
 

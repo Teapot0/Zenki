@@ -17,7 +17,7 @@ get_query_count()
 
 # hs300
 
-New_end_date = '2021-06-25'
+New_end_date = '2021-07-02'
 
 p = get_price('510300.XSHG', start_date='2014-01-01', end_date=New_end_date,
                              fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
@@ -44,7 +44,7 @@ st_df.to_csv('/Users/caichaohong/Desktop/Zenki/price/is_st.csv')
 
 market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv', index_col='Unnamed: 0', date_parser=dateparse)
 
-update_market_cap(new_start_date='2014-01-01',new_end_date='2021-06-24',market_cap=market_cap, close=close)
+update_market_cap(new_start_date='2014-01-01',new_end_date='2021-07-01',market_cap=market_cap, close=close)
 
 
 # financials pe
@@ -52,7 +52,7 @@ circulating_market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financial
 pe_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv', index_col='Unnamed: 0', date_parser=dateparse)
 ps_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/ps_ratio.csv', index_col='Unnamed: 0', date_parser=dateparse)
 
-update_financials(new_end_date='2021-06-24', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
+update_financials(new_end_date='2021-07-01', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
 
 
 

@@ -47,32 +47,44 @@ def update_daily_prices(new_end_date, new_start_date, close, open, high, low, hi
 
 
     stock_list = list(close.columns)
-    for s in tqdm(stock_list):
-        if len(future_trade_days) > 0:
-            temp = get_price(s, start_date=future_trade_days[0], end_date=future_trade_days[-1],
-                             fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
-            close[s].loc[future_trade_days] = temp['close'].values
-            open[s].loc[future_trade_days] = temp['open'].values
-            high[s].loc[future_trade_days] = temp['high'].values
-            low[s].loc[future_trade_days] = temp['low'].values
-            volume[s].loc[future_trade_days] = temp['volume'].values
-            high_limit[s].loc[future_trade_days] = temp['high_limit'].values
-            low_limit[s].loc[future_trade_days] = temp['low_limit'].values
-        else:
-            print('NO future trade days to update')
 
-        if len(old_trade_days) > 0:
-            temp = get_price(s, start_date=old_trade_days[0], end_date=old_trade_days[-1],
+    for s in tqdm(stock_list):
+        yesterday_price = get_price(s, end_date=close.index[-2], count=1,
+                                    fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
+        # 是否除权
+        if yesterday_price['close'].values != close[s].iloc[-2,]:
+            temp = get_price(s, start_date=close.index[0], end_date=new_end_date,
                              fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
-            close[s].loc[old_trade_days] = temp['close'].values
-            open[s].loc[old_trade_days] = temp['open'].values
-            high[s].loc[old_trade_days] = temp['high'].values
-            low[s].loc[old_trade_days] = temp['low'].values
-            volume[s].loc[old_trade_days] = temp['volume'].values
-            high_limit[s].loc[old_trade_days] = temp['high_limit'].values
-            low_limit[s].loc[old_trade_days] = temp['low_limit'].values
-        else:
-            print('NO old trade days to update')
+            close[s] = temp['close'].values
+            open[s] = temp['open'].values
+            high[s] = temp['high'].values
+            low[s] = temp['low'].values
+            volume[s] = temp['volume'].values
+            high_limit[s] = temp['high_limit'].values
+            low_limit[s] = temp['low_limit'].values
+
+        else :
+            if len(future_trade_days) > 0:
+                temp = get_price(s, start_date=future_trade_days[0], end_date=future_trade_days[-1],
+                                 fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
+                close[s].loc[future_trade_days] = temp['close'].values
+                open[s].loc[future_trade_days] = temp['open'].values
+                high[s].loc[future_trade_days] = temp['high'].values
+                low[s].loc[future_trade_days] = temp['low'].values
+                volume[s].loc[future_trade_days] = temp['volume'].values
+                high_limit[s].loc[future_trade_days] = temp['high_limit'].values
+                low_limit[s].loc[future_trade_days] = temp['low_limit'].values
+
+            if len(old_trade_days) > 0:
+                temp = get_price(s, start_date=old_trade_days[0], end_date=old_trade_days[-1],
+                                 fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
+                close[s].loc[old_trade_days] = temp['close'].values
+                open[s].loc[old_trade_days] = temp['open'].values
+                high[s].loc[old_trade_days] = temp['high'].values
+                low[s].loc[old_trade_days] = temp['low'].values
+                volume[s].loc[old_trade_days] = temp['volume'].values
+                high_limit[s].loc[old_trade_days] = temp['high_limit'].values
+                low_limit[s].loc[old_trade_days] = temp['low_limit'].values
 
     close.index = pd.to_datetime(close.index)
     open.index = pd.to_datetime(open.index)
@@ -182,28 +194,6 @@ def update_financials(new_start_date, new_end_date, cir_mc,pe,ps):
     pe.to_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv')
     ps.to_csv('/Users/caichaohong/Desktop/Zenki/financials/ps_ratio.csv')
 
-
-def update_st(st_df, new_end_date, new_start_date):
-    future_trade_days = get_trade_days(start_date=st_df.index[-1], end_date=new_end_date)[1:]  # 第一天重复
-    old_trade_days = get_trade_days(start_date=new_start_date, end_date=st_df.index[0])[:-1]  # 最后一天重复
-    new_trade_days = list(future_trade_days) + list(old_trade_days)
-
-
-    if len(new_trade_days) > 0:
-        for date in new_trade_days:
-            st_df.loc[date] = np.nan
-
-            get_extras(info, security_list, start_date='2015-01-01', end_date='2015-12-31', df=True, count=None)
-
-            st_df.loc[date][df['code']] = df['circulating_market_cap'].values
-    else:
-        print("No need to Update")
-
-    st_df.index = pd.to_datetime(st_df.index)
-    st_df = st_df.sort_index(axis=0)
-    st_df = st_df.sort_index(axis=1)  # 按股票代码排序
-    st_df = st_df.dropna(how='all', axis=0)
-    st_df.to_csv('/Users/caichaohong/Desktop/Zenki/price/is_st.csv')
 
 
 

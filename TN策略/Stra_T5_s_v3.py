@@ -77,7 +77,8 @@ roe_5 = roe_yeayly.rolling(5, min_periods=1).mean()
 
 # 每天财务、均线选股
 stock_list_panel = get_financial_stock_list(market_cap,roe_5, pe, money,
-                                            roe_mean=12, mc_min=300, pe_min=20, money_min=1)
+                                            roe_mean=12, mc_min=100, pe_min=20, money_min=0.5)
+
 # 波动率
 std_list = get_std_list(close_rts_1, std_n_list=[10,60],std_list=[0.2,0.2])
 # 超额收益
@@ -111,54 +112,50 @@ for i in tqdm(range(close.shape[0])):
             down_list[date] = tmp_down_list
             tmp_down_list = []
 
+
 # 3个合并，每天的股票
 stock_list = {}
 for date in tqdm(close_rts_1.index):
-    tmp_list = list(set(std_list[date]).intersection(rts_list[date], stock_list_panel[date]))
+    tmp_list = list(set(rts_list[date]).intersection(std_list[date],stock_list_panel[date]))
     stock_list[date] = list(set(tmp_list).difference(set(pause_list.loc[date]),set(st_df.loc[date]), set(down_list[date])))
 
 
-# 缩量
-hs300_vol = hs300['volume'].rolling(5).mean().pct_change(5)
-vol_diff = volume.rolling(5).mean().pct_change(5)
-excess_vol = vol_diff.sub(hs300_vol,axis=0)*np.sign(close.pct_change(1))
-vol_list = {}
-for date in tqdm(close.index):
-    # if hs300_vol.loc[date] > 0.2:
-    #     vol_list[date] = list(vol_diff.loc[date][vol_diff.loc[date] < 0].index)
-    if hs300_vol.loc[date] < -0.3:
-        vol_list[date] = list(vol_diff.loc[date][vol_diff.loc[date] > -0.2])
-    else:
-        vol_list[date] = []
-
+# factors
 weight_n1 = 10
 weight_n2 = 180
 weight_n3 = 250
-weight1 = -2
-weight2 = 2
-weight3 = 4
-weight4 = 0
 rts_f1 = close.pct_change(weight_n1).sub(hs300['close'].pct_change(weight_n1), axis=0)
 rts_f2 = close.pct_change(weight_n2).sub(hs300['close'].pct_change(weight_n2), axis=0)
 rts_f3 = close.pct_change(weight_n3).sub(hs300['close'].pct_change(weight_n3), axis=0)
 
+
+f1_factor = 244
+f1 = (close_rts_1.rolling(f1_factor).mean() / close_rts_1.rolling(f1_factor).std()) * sqrt(f1_factor)
+sharpe_df = f1.rolling(40).mean()
+
+vol_n1 = 10
+vol_f1 = volume.rolling(vol_n1).mean().pct_change(vol_n1)
+
+# weights
+weight1 = -2
+weight2 = 2
+weight3 = 4
+weight4 = 2
+weight5 = -2
+
 weight = weight1 * rts_f1.rank(axis=1) + weight2 * rts_f2.rank(axis=1) + \
-         weight3 * rts_f3.rank(axis=1) + weight4 * excess_vol.rank(axis=1)
+         weight3 * rts_f3.rank(axis=1) + weight4 * sharpe_df.rank(axis=1) +\
+         weight5 * vol_f1.rank(axis=1)
 
 
 def std_rts_select_dp_zs(close, hs300,
                          top_number=10, comm_fee=0.002, max_down=0.1):
     max_N = 500
 
-    while len(rts_list) != len(std_list):
-        print('std list and rts list same length')
-        break
-
     out_df = pd.DataFrame(columns=['daily_rts', 'hold_daily', 'net_value'], index=close_rts_1.index[max_N + 1:])
 
     buy_list = []
     initial_cost = [1]
-    tmp_vol_list = []   # 缩量，每周五重置
 
     for i in tqdm(range(max_N + 1, close_rts_1.shape[0] - 1)):  # 去掉最后一天
         date = close_rts_1.index[i]
@@ -168,17 +165,15 @@ def std_rts_select_dp_zs(close, hs300,
 
         stocklist_financial = stock_list[date]
         stocklist_weighted = list(weight[stocklist_financial].loc[date].sort_values(ascending=False).index)[:top_number]
-        tmp_vol_list = tmp_vol_list + vol_list[date]
 
         if tmp_week != week1:  # 每周五
-            stocks = list(set(stocklist_weighted).difference(set(tmp_vol_list),set(vol_list[date])))
+            stocks = list(set(stocklist_weighted))
 
             if len(stocks) <= 3:
                 buy_list = []
             else:
                 buy_list = stocks
             initial_cost = close.loc[date][buy_list]  # 成本
-            tmp_vol_list = []
 
         acc_rts = close.loc[date][buy_list] / initial_cost - 1  # 累计收益小于5% 则卖出
         sell_list = list(acc_rts[acc_rts < -max_down].index)
@@ -206,6 +201,19 @@ def std_rts_select_dp_zs(close, hs300,
 
 daily_rts = std_rts_select_dp_zs(close, hs300, top_number=10, comm_fee=0.003, max_down=0.1)
 plot_rts(value_rts=daily_rts['daily_rts'], benchmark_df=hs300, comm_fee=0.0, hold_time=5)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

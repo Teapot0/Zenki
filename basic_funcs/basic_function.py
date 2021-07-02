@@ -76,7 +76,7 @@ def MaxDrawdown(return_list):  # 必须是净值的list，返回array
     return (np.maximum.accumulate(return_list) - return_list) / np.maximum.accumulate(return_list)
 
 
-def plot_hold_position(data, risk_free_rate=0.03):
+def plot_hold_position(data, risk_free_rate=0.04):
     # data_prepare must have net_value, rts , and benchmark的net_value
     df = data.copy(deep=True)
     df['year'] = [x.year for x in df.index]
@@ -96,7 +96,7 @@ def plot_hold_position(data, risk_free_rate=0.03):
         np.round(MaxDrawdown(list(df['net_value'].dropna())).max(),4),
         np.round(df['net_value'].values[-1],2),
         np.round(annual_rts,4),
-        (annual_rts - risk_free_rate) / (np.std(df['rts']) * np.sqrt(N))))
+        ((df['rts'] - risk_free_rate/N).mean() / df['rts'].std()) * np.sqrt(N) ))
     plt.show()
 
 
@@ -112,7 +112,7 @@ def plot_rts(value_rts, benchmark_df,comm_fee=0.003, hold_time=1):
     out_df['nv_max_draw'] = list(MaxDrawdown(list(out_df['net_value'])).reshape(-1))
     out_df['benchmark_rts'] = benchmark_df.loc[out_df.index]['close'].pct_change(1)
     out_df['benchmark_net_value'] = (1 + out_df['benchmark_rts'].fillna(0)).cumprod()
-    plot_hold_position(data=out_df, risk_free_rate=0.03)
+    plot_hold_position(data=out_df, risk_free_rate=0.04)
 
 
 def get_top_value_factor_rts(factor, rts, top_number=10, hold_time=3, weight="avg", return_holdings_list=False):

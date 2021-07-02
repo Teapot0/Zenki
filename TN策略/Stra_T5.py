@@ -201,8 +201,6 @@ for i in tqdm(range(1,daily_rts.shape[0])):
         daily_rts['hold_daily'][i] = 'none'
     else:
         daily_rts['hold_daily'][i] = all_name['short_name'][daily_rts['hold_daily'][i]]
-
-
 daily_rts.to_excel('/Users/caichaohong/Desktop/Zenki/daily_holdings.xlsx')
 
 

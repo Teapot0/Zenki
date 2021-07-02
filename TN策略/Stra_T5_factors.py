@@ -40,7 +40,7 @@ hs300['net_value'] = (1+hs300['rts_1']).cumprod()
 close = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
 close = close.dropna(how='all', axis=1) # 某列全NA
 close_rts_1 = close.pct_change(1)
-close_max_5 = close.rolling(5).max()
+# close_max_5 = close.rolling(5).max()
 high = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high.csv', index_col='Unnamed: 0', date_parser=dateparse)
 low = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low.csv', index_col='Unnamed: 0', date_parser=dateparse)
 volume = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv', index_col='Unnamed: 0',date_parser=dateparse)
@@ -72,30 +72,69 @@ net_profit_growth = net_profit.pct_change(1)
 # # 单向波动率，上行减下行
 # vol_df = (high - open)/open - (open-low)/open
 # vol_df_n = vol_df.rolling(60).mean()
-#
-#RPS
-rps_n = 250
-close_n_min = close.rolling(rps_n).min()
-close_n_max = close.rolling(rps_n).max()
-rps_5 = ((close - close_n_min)/(close_n_max - close_n_min)).rolling(5).mean() * 100
-rps_10 = ((close - close_n_min)/(close_n_max - close_n_min)).rolling(10).mean()* 100
-rps_20 = ((close - close_n_min)/(close_n_max - close_n_min)).rolling(20).mean()* 100
 
-rps_stocks = list(set(rps_5.iloc[-1][rps_5.iloc[-1]>=85].index).intersection(rps_10.iloc[-1][rps_10.iloc[-1]>=85].index,
-                                                                       rps_20.iloc[-1][rps_20.iloc[-1]>=85].index))
+#RPS
+# 一二三个月
+rps_n1 = 120
+rps_n2 = 250
+
+
+def get_rps_df(rps_n):
+    close_n_min = close.rolling(rps_n).min()
+    close_n_max = close.rolling(rps_n).max()
+    rps = ((close - close_n_min)/(close_n_max - close_n_min)) * 100
+    return rps
+
+rps1 = get_rps_df(rps_n1)
+rps2 = get_rps_df(rps_n2)
+
+stock_120_1m = list(rps1.iloc[-20:,].mean()[rps1.iloc[-20:,].mean() >= 85].index)
+stock_120_2m = list(rps1.iloc[-40:,].mean()[rps1.iloc[-40:,].mean() >= 85].index)
+stock_120_3m = list(rps1.iloc[-60:,].mean()[rps1.iloc[-60:,].mean() >= 85].index)
+stock_250_1m = list(rps2.iloc[-20:,].mean()[rps2.iloc[-20:,].mean() >= 85].index)
+stock_250_2m = list(rps2.iloc[-40:,].mean()[rps2.iloc[-40:,].mean() >= 85].index)
+stock_250_3m = list(rps2.iloc[-60:,].mean()[rps2.iloc[-60:,].mean() >= 85].index)
 # ST
 st_df = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/is_st.csv', index_col='Unnamed: 0',date_parser=dateparse)
 
-rps_stocks = list(set(rps_stocks).difference(st_df.iloc[-1,][st_df.iloc[-1,]==True].index))
-# 停牌的 
-rps_df = pd.DataFrame(index=rps_stocks)
+stock_120_1m = list(set(stock_120_1m).difference(st_df.iloc[-1,][st_df.iloc[-1,]==True].index))
+stock_120_2m = list(set(stock_120_2m).difference(st_df.iloc[-1,][st_df.iloc[-1,]==True].index))
+stock_120_3m = list(set(stock_120_3m).difference(st_df.iloc[-1,][st_df.iloc[-1,]==True].index))
+stock_250_1m = list(set(stock_250_1m).difference(st_df.iloc[-1,][st_df.iloc[-1,]==True].index))
+stock_250_2m = list(set(stock_250_2m).difference(st_df.iloc[-1,][st_df.iloc[-1,]==True].index))
+stock_250_3m = list(set(stock_250_3m).difference(st_df.iloc[-1,][st_df.iloc[-1,]==True].index))
 
-rps_df[5] = rps_5.iloc[-1][rps_stocks]
-rps_df[10] = rps_10.iloc[-1,][rps_stocks]
-rps_df[20] = rps_20.iloc[-1,][rps_stocks]
-rps_df['name'] = all_name['short_name'][rps_df.index]
-rps_df['daily_rts'] = close_rts_1.iloc[-1][rps_stocks]
-rps_df = rps_df.sort_values(by='daily_rts')
+stock_len = max(len(stock_120_1m), len(stock_250_1m),len(stock_250_3m),len(stock_120_3m))
+# 停牌的
+rps_df = pd.DataFrame(index= list(range(stock_len)))
+rps_df['rps120_1month'] = np.nan
+rps_df['1month_120_rts'] = np.nan
+rps_df['rps120_2month'] = np.nan
+rps_df['2month_120_rts'] = np.nan
+rps_df['rps120_3month'] = np.nan
+rps_df['3month_120_rts'] = np.nan
+
+rps_df['rps250_1month'] = np.nan
+rps_df['1month_250_rts'] = np.nan
+rps_df['rps250_2month'] = np.nan
+rps_df['2month_250_rts'] = np.nan
+rps_df['rps250_3month'] = np.nan
+rps_df['3month_250_rts'] = np.nan
+
+rps_df['rps120_1month'][:len(stock_120_1m)] = list(all_name['short_name'][stock_120_1m])
+rps_df['1month_120_rts'][:len(stock_120_1m)] = list(close_rts_1.iloc[-1][stock_120_1m])
+rps_df['rps120_2month'][:len(stock_120_2m)] = list(all_name['short_name'][stock_120_2m])
+rps_df['2month_120_rts'][:len(stock_120_2m)] = list(close_rts_1.iloc[-1][stock_120_2m])
+rps_df['rps120_3month'][:len(stock_120_3m)] = list(all_name['short_name'][stock_120_3m])
+rps_df['3month_120_rts'][:len(stock_120_3m)] = list(close_rts_1.iloc[-1][stock_120_3m])
+
+rps_df['rps250_1month'][:len(stock_250_1m)] = list(all_name['short_name'][stock_250_1m])
+rps_df['1month_250_rts'][:len(stock_250_1m)] = list(close_rts_1.iloc[-1][stock_250_1m])
+rps_df['rps250_2month'][:len(stock_250_2m)] = list(all_name['short_name'][stock_250_2m])
+rps_df['2month_250_rts'][:len(stock_250_2m)] = list(close_rts_1.iloc[-1][stock_250_2m])
+rps_df['rps250_3month'][:len(stock_250_3m)] = list(all_name['short_name'][stock_250_3m])
+rps_df['3month_250_rts'][:len(stock_250_3m)] = list(close_rts_1.iloc[-1][stock_250_3m])
+
 rps_df.to_excel('/Users/caichaohong/Desktop/rps_df.xlsx')
 
 # 股息率

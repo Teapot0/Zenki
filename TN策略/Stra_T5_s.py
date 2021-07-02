@@ -77,7 +77,7 @@ roe_5 = roe_yeayly.rolling(5, min_periods=1).mean()
 
 # 每天财务、均线选股
 stock_list_panel = get_financial_stock_list(market_cap,roe_5, pe, money,
-                                            roe_mean=12, mc_min=100, pe_min=20, money_min=0.1)
+                                            roe_mean=12, mc_min=300, pe_min=20, money_min=1)
 # 波动率
 std_list = get_std_list(close_rts_1, std_n_list=[10,60],std_list=[0.2,0.2])
 # 超额收益
@@ -111,39 +111,26 @@ for i in tqdm(range(close.shape[0])):
             down_list[date] = tmp_down_list
             tmp_down_list = []
 
+
 # 3个合并，每天的股票
 stock_list = {}
 for date in tqdm(close_rts_1.index):
     tmp_list = list(set(std_list[date]).intersection(rts_list[date], stock_list_panel[date]))
     stock_list[date] = list(set(tmp_list).difference(set(pause_list.loc[date]),set(st_df.loc[date]), set(down_list[date])))
 
-
-# 缩量
-hs300_vol = hs300['volume'].rolling(5).mean().pct_change(5)
-vol_diff = volume.rolling(5).mean().pct_change(5)
-excess_vol = vol_diff.sub(hs300_vol,axis=0)*np.sign(close.pct_change(5))
-vol_list = {}
-for date in tqdm(close.index):
-    # if hs300_vol.loc[date] > 0.2:
-    #     vol_list[date] = list(vol_diff.loc[date][vol_diff.loc[date] < 0].index)
-    if hs300_vol.loc[date] < -0.3:
-        vol_list[date] = list(vol_diff.loc[date][vol_diff.loc[date] > -0.1])
-    else:
-        vol_list[date] = []
-
 weight_n1 = 10
-weight_n2 = 20
-weight_n3 = 30
-weight1 = -3
+weight_n2 = 180
+weight_n3 = 250
+weight1 = -2
 weight2 = 2
-weight3 = 2
-weight4 = 3
+weight3 = 4
+
 rts_f1 = close.pct_change(weight_n1).sub(hs300['close'].pct_change(weight_n1), axis=0)
 rts_f2 = close.pct_change(weight_n2).sub(hs300['close'].pct_change(weight_n2), axis=0)
 rts_f3 = close.pct_change(weight_n3).sub(hs300['close'].pct_change(weight_n3), axis=0)
 
 weight = weight1 * rts_f1.rank(axis=1) + weight2 * rts_f2.rank(axis=1) + \
-         weight3 * rts_f3.rank(axis=1) + weight4 * excess_vol.rank(axis=1)
+         weight3 * rts_f3.rank(axis=1)
 
 
 def std_rts_select_dp_zs(close, hs300,
@@ -169,7 +156,7 @@ def std_rts_select_dp_zs(close, hs300,
         stocklist_weighted = list(weight[stocklist_financial].loc[date].sort_values(ascending=False).index)[:top_number]
 
         if tmp_week != week1:  # 每周五
-            stocks = list(set(stocklist_weighted).difference(set(vol_list[date])))
+            stocks = list(set(stocklist_weighted))
 
             if len(stocks) <= 3:
                 buy_list = []
@@ -208,8 +195,6 @@ plot_rts(value_rts=daily_rts['daily_rts'], benchmark_df=hs300, comm_fee=0.0, hol
 
 # z = weight.loc[close.index[-9]][stock_list[close.index[-9]]].sort_values(ascending=False)
 # z_1 = weight.loc[close.index[-9]]['600460.XSHG']
-
-
 
 
 
