@@ -1,8 +1,9 @@
+
 import pandas as pd
 import numpy as np
 import jqdatasdk as jq
 from jqdatasdk import auth, get_query_count, get_price, opt, query, get_fundamentals, finance, get_trade_days, \
-    valuation, get_security_info, get_mtss
+    valuation, get_security_info, get_mtss,get_money_flow
 from tqdm import tqdm
 from datetime import datetime, time, timedelta
 import matplotlib.pyplot as plt
@@ -13,15 +14,18 @@ from basic_funcs.update_data_funcs import *
 dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 
 auth('15951961478', '961478')
+# auth('13382017213', 'Aasd120120')
 get_query_count()
 
 # hs300
 
-New_end_date = '2021-07-02'
+New_end_date = '2021-07-16'
 
-p = get_price('510300.XSHG', start_date='2014-01-01', end_date=New_end_date,
+index_code = ['510300.XSHG','510050.XSHG', '510500.XSHG','159948.XSHE']
+for code in index_code:
+    p = get_price(code, start_date='2014-01-01', end_date=New_end_date,
                              fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
-p.to_excel('/Users/caichaohong/Desktop/Zenki/price/510300.XSHG.xlsx')
+    p.to_excel('/Users/caichaohong/Desktop/Zenki/price/{}.xlsx'.format(code))
 
 close = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
 open = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/open.csv', index_col='Unnamed: 0', date_parser=dateparse)
@@ -35,16 +39,37 @@ volume = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv', 
 update_daily_prices(new_end_date = New_end_date, new_start_date='2014-01-01', close=close, open=open, high=high, low=low,
                     high_limit=high_limit, low_limit=low_limit, volume=volume)
 
+
 # ST
 st_df = get_extras('is_st', list(close.columns), start_date='2014-01-01', end_date=New_end_date)
 st_df.to_csv('/Users/caichaohong/Desktop/Zenki/price/is_st.csv')
 
 
-# market_cap
 
+# 大单
+net_amount_main = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_main.csv', index_col='Unnamed: 0')
+net_pct_main = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_main.csv', index_col='Unnamed: 0')
+net_amount_xl = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_xl.csv', index_col='Unnamed: 0')
+net_pct_xl = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_xl.csv', index_col='Unnamed: 0')
+net_amount_l = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_l.csv', index_col='Unnamed: 0')
+net_pct_l = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_l.csv', index_col='Unnamed: 0')
+net_amount_m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_m.csv', index_col='Unnamed: 0')
+net_pct_m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_m.csv', index_col='Unnamed: 0')
+net_amount_s = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_s.csv', index_col='Unnamed: 0')
+net_pct_s = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_s.csv', index_col='Unnamed: 0')
+
+
+update_money_flow(New_end_date=New_end_date,
+                  net_amount_main=net_amount_main,net_pct_main=net_pct_main,
+                  net_amount_xl=net_amount_xl,net_pct_xl=net_pct_xl,
+                  net_amount_l=net_amount_l,net_pct_l=net_pct_l,
+                  net_amount_m=net_amount_m, net_pct_m=net_pct_m, net_amount_s=net_amount_s,net_pct_s=net_pct_s)
+
+
+# market_cap
 market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv', index_col='Unnamed: 0', date_parser=dateparse)
 
-update_market_cap(new_start_date='2014-01-01',new_end_date='2021-07-01',market_cap=market_cap, close=close)
+update_market_cap(new_start_date='2014-01-01',new_end_date='2021-07-16',market_cap=market_cap, close=close)
 
 
 # financials pe
@@ -52,7 +77,7 @@ circulating_market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financial
 pe_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv', index_col='Unnamed: 0', date_parser=dateparse)
 ps_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/ps_ratio.csv', index_col='Unnamed: 0', date_parser=dateparse)
 
-update_financials(new_end_date='2021-07-01', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
+update_financials(new_end_date='2021-07-16', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
 
 
 
@@ -160,8 +185,9 @@ def update_margin_buy(new_start_date, new_end_date, margin_df):
     else:
         print("No need to Update")
 
-new_start_date='2017-03-17'
-new_end_date='2021-05-10'
+
+new_start_date = '2017-03-17'
+new_end_date = '2021-05-10'
 
 
 update_margin_buy(new_start_date='2017-03-17', new_end_date='2021-05-10', margin_df=margin_buy_value)
@@ -193,6 +219,10 @@ all_stock = finance.run_query(query(finance.STK_COMPANY_INFO.code,
     finance.STK_COMPANY_INFO.code.in_(close.columns)))
 
 all_stock.to_excel('/Users/caichaohong/Desktop/Zenki/all_stock_names.xlsx')
+
+
+
+
 
 
 

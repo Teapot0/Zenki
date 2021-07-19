@@ -3,7 +3,7 @@ from numpy import sqrt, pi, e
 import pandas as pd
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-from jqdatasdk import get_industries, get_industry_stocks,get_extras
+from jqdatasdk import get_industries, get_industry_stocks,get_extras, finance, query, bond
 from sklearn.linear_model import LinearRegression
 import talib
 
@@ -391,25 +391,41 @@ def resample_data_weekly(df, df_type):
     return out
 
 
+
 def clean_close(close_df, low_df, high_limit_df):
-    #去掉新股上市未开板的一字无量涨停板
+    # 去掉新股上市未开板的一字无量涨停板
     all_new_stock = []
+
+    # 每天上市新股
+    new_stocks = {}
     for i in tqdm(range(1, close_df.shape[0])):
+        date = close_df.index[i]
+        yesterday_date = close_df.index[i - 1]
+        new_stocks[date] = list(
+            set(close_df.loc[date].dropna().index).difference(set(close_df.loc[yesterday_date].dropna().index)))
+
+    # 上市第一天涨停，44% 最低价不等于涨停价
+    for i in tqdm(range(1, close_df.shape[0])):
+        tmp_date = close_df.index[i]
         tmp_close = close_df.iloc[i,]
-        yesterday_close = close_df.iloc[i - 1,]
-        new_stock = list(set(tmp_close.dropna().index).difference(set(yesterday_close.dropna().index)))  # 每天新股名单
-        for ss in new_stock:
-            if close_df.iloc[i,][ss] == high_limit_df.iloc[i,][ss]:
-                close_df.iloc[i,][ss] = np.nan  # 第一天上市等于涨停价则去掉
-        # 加上第一天上市涨停的
-        all_new_stock = list(set(all_new_stock).union(
-            set(close_df.iloc[i,][new_stock][close_df.iloc[i,][new_stock] == high_limit_df.iloc[i,][new_stock]].index)))
+        tmp_high_limit = high_limit_df.iloc[i,]
+        tmp_new_stock = new_stocks[tmp_date]  # 每天新股名单
+        first_day_zt = list(tmp_close[tmp_new_stock][tmp_close[tmp_new_stock] == tmp_high_limit[tmp_new_stock]].index)
+        close_df.loc[tmp_date][first_day_zt] = np.nan
+
+    for i in tqdm(range(1, close_df.shape[0])):
+        tmp_date = close_df.index[i]
+        tmp_new_stock = new_stocks[tmp_date]  # 每天新股名单
+
+        all_new_stock = list(set(all_new_stock).union(set(tmp_new_stock)))
+
         # 去掉开板的
-        new_stock_kai = list(low_df.iloc[i,][all_new_stock][low_df.iloc[i,][all_new_stock] != high_limit_df.iloc[i,][all_new_stock]].index)
-        # 所有未开板新股
-        new_stock_not_kai = list(set(all_new_stock).difference(set(new_stock_kai)))
+        kaiban = list(low_df.iloc[i,][all_new_stock][
+                          low_df.iloc[i,][all_new_stock] != high_limit_df.iloc[i,][all_new_stock]].index)
+        all_new_stock = list(set(all_new_stock).difference(kaiban))
+
         # 未开板新股去掉
-        close_df.iloc[i,][new_stock_not_kai] = np.nan
+        close_df.iloc[i,][all_new_stock] = np.nan
 
     return close_df
 
@@ -596,6 +612,48 @@ def get_alpha_list(close,hs300,rts_n_list,rts_list):
         tmp =[list(df_list[i].loc[date][df_list[i].loc[date] > rts_list[i]].index) for i in range(len(rts_n_list))]
         rts_stock[date] = list(set.intersection(*map(set,tmp)))
     return rts_stock
+
+
+def get_rps(close,rps_n):
+    min = close.rolling(rps_n).min()
+    max = close.rolling(rps_n).max()
+    rps = (close-min)/(max-min) * 100
+    return rps
+
+
+def get_down_list(close,hs300,bench_rts=0.005,down_rts=-0.02):
+    down_list = {}
+    tmp_down_list = []
+    close_rts_1 = close.pct_change(1)
+    for i in tqdm(range(close.shape[0])):
+        if i == close.shape[0]-1:
+            down_list[close.index[-1]] = []
+        else:
+            date = close.index[i]
+            date1 = close.index[i+1]
+            tmp_week = date.week
+            week1 = date1.week
+            if hs300['rts_1'].loc[date] > bench_rts:
+                cp = list(close_rts_1.loc[date][close_rts_1.loc[date] <= down_rts].index)
+                tmp_down_list = tmp_down_list + cp
+                down_list[date] = cp
+            else:
+                down_list[date] = []
+
+            if tmp_week != week1:
+                down_list[date] = tmp_down_list
+                tmp_down_list = []
+    return down_list
+
+
+def get_licha():
+    df_bank = finance.run_query(query(finance.SW1_DAILY_VALUATION).filter(finance.SW1_DAILY_VALUATION.code == '801780'))
+    # 回购
+    df_bond = bond.run_query(query(bond.REPO_DAILY_PRICE).filter(bond.REPO_DAILY_PRICE.name == 'GC182'))
+    df_t1 = pd.merge(df_bond, df_bank, on='date')
+    df_t1 = df_t1[['date', 'close', 'dividend_ratio']]
+    df_t1.index = pd.to_datetime(df_t1['date'])
+    return df_t1
 
 
 

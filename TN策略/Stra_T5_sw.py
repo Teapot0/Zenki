@@ -277,7 +277,7 @@ def get_latest_holds(date=close.index[-2],
 
 
 
-new_holds = get_latest_holds(date=close.index[-3],rts_n1=10, rts_n2=40, rts_n3=60, rts_n4=120, rts_n5=250, rts_n6=500,
+new_holds = get_latest_holds(date=close.index[-2],rts_n1=10, rts_n2=40, rts_n3=60, rts_n4=120, rts_n5=250, rts_n6=500,
                      rts1=-0.1, rts2=-0.1, rts3=-0.1, rts4=-0.12, rts5=-0.15, rts6=-0.3,
                      weight_n1=10, weight_n2=20, weight_n3=180, weight_n4=250,
                      weight1=-2, weight2=0, weight3=2, weight4=4)

@@ -2,12 +2,12 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-from jqfactor_analyzer import analyze_factor
-from alphalens.utils import get_clean_factor_and_forward_returns
-from sklearn.linear_model import LinearRegression
 import seaborn as sns
 from datetime import datetime,date
 from basic_funcs.basic_function import *
+import jqdatasdk as jq
+from jqdatasdk import auth, get_query_count, get_price, opt, query, get_fundamentals, finance, get_trade_days, \
+    valuation, get_security_info, get_mtss,get_money_flow
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -46,6 +46,54 @@ for i in tqdm(range(1, close.shape[0])):
     new_stock_not_kai = list(set(all_new_stock).difference(set(new_stock_kai)))
     # 未开板新股去掉
     close.iloc[i, ][new_stock_not_kai] = np.nan
+
+
+
+# 大单
+net_amount_main = pd.DataFrame(columns=close.columns, index=close.index)
+net_pct_main = pd.DataFrame(columns=close.columns, index=close.index)
+net_amount_xl = pd.DataFrame(columns=close.columns, index=close.index)
+net_pct_xl = pd.DataFrame(columns=close.columns, index=close.index)
+net_amount_l = pd.DataFrame(columns=close.columns, index=close.index)
+net_pct_l = pd.DataFrame(columns=close.columns, index=close.index)
+net_amount_m = pd.DataFrame(columns=close.columns, index=close.index)
+net_pct_m = pd.DataFrame(columns=close.columns, index=close.index)
+net_amount_s = pd.DataFrame(columns=close.columns, index=close.index)
+net_pct_s = pd.DataFrame(columns=close.columns, index=close.index)
+
+for s in tqdm(list(close.columns)):
+    tmp = get_money_flow(s, start_date='2014-01-01', end_date='2021-07-07',
+                                fields=['date','sec_code','net_amount_main','net_pct_main',
+                                        'net_amount_xl','net_pct_xl',
+                                        'net_amount_l','net_pct_l',
+                                        'net_amount_m','net_pct_m',
+                                        'net_amount_s','net_pct_s'])
+    tmp.index = tmp['date']
+    net_amount_main[s].loc[tmp.index] = tmp['net_amount_main']
+    net_pct_main[s].loc[tmp.index] = tmp['net_pct_main']
+    net_amount_xl[s].loc[tmp.index] = tmp['net_amount_xl']
+    net_pct_xl[s].loc[tmp.index] = tmp['net_pct_xl']
+    net_amount_l[s].loc[tmp.index] = tmp['net_amount_l']
+    net_pct_l[s].loc[tmp.index] = tmp['net_pct_l']
+    net_amount_m[s].loc[tmp.index] = tmp['net_amount_m']
+    net_pct_m[s].loc[tmp.index] = tmp['net_pct_m']
+    net_amount_s[s].loc[tmp.index] = tmp['net_amount_s']
+    net_pct_s[s].loc[tmp.index] = tmp['net_pct_s']
+
+net_amount_main.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_main.csv')
+net_pct_main.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_main.csv')
+net_amount_xl.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_xl.csv')
+net_pct_xl.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_xl.csv')
+net_amount_l.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_l.csv')
+net_pct_l.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_l.csv')
+net_amount_m.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_m.csv')
+net_pct_m.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_m.csv')
+net_amount_s.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_s.csv')
+net_pct_s.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_s.csv')
+
+
+
+
 
 
 

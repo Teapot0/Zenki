@@ -11,16 +11,22 @@ from basic_funcs.basic_function import *
 plt.rcParams['font.sans-serif'] = ['Songti SC']
 plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
-auth('15951961478', '961478')
-get_query_count()
+import warnings
+warnings.filterwarnings('ignore')
+dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 
-quarter_roe = pd.read_excel('/Users/caichaohong/Desktop/Zenki/roe_quarters.xlsx',index_col='Unnamed: 0')
-
-quarter_price = pd.read_excel('/Users/caichaohong/Desktop/Zenki/quarterly_price.xlsx', index_col='Unnamed: 0')
-quarter_rts = quarter_price.pct_change(1)
-
-quarter_roe.index =quarter_price.index[1:]
-
+net_amount_main = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_main.csv',
+                              index_col='Unnamed: 0')
+net_pct_main = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_main.csv', index_col='Unnamed: 0')
+net_amount_xl = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_xl.csv',
+                            index_col='Unnamed: 0')
+net_pct_xl = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_xl.csv', index_col='Unnamed: 0')
+net_amount_l = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_l.csv', index_col='Unnamed: 0')
+net_pct_l = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_l.csv', index_col='Unnamed: 0')
+net_amount_m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_m.csv', index_col='Unnamed: 0')
+net_pct_m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_m.csv', index_col='Unnamed: 0')
+net_amount_s = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_s.csv', index_col='Unnamed: 0')
+net_pct_s = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_s.csv', index_col='Unnamed: 0')
 
 def quantile_factor_test_plot(factor, rts, benchmark_rts, quantiles, hold_time, plot_title, weight="avg", comm_fee=0.003):
     # factor是time index, stocks columns的df
@@ -72,10 +78,19 @@ def quantile_factor_test_plot(factor, rts, benchmark_rts, quantiles, hold_time, 
 
 hs300 = pd.read_excel('/Users/caichaohong/Desktop/Zenki/quarterly_price_300.xlsx', index_col='Unnamed: 0')
 hs300['rts'] = hs300['close'].pct_change(1)
-hs300.index = quarter_price.index
 
-z = quantile_factor_test_plot(quarter_roe, quarter_rts, benchmark_rts=hs300['rts'].iloc[1:,],
-                          quantiles=10, hold_time=1, plot_title='ROE因子分层回测')
+close = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
+low = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low.csv', index_col='Unnamed: 0', date_parser=dateparse)
+high_limit = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high_limit.csv', index_col='Unnamed: 0', date_parser=dateparse)
+close = clean_close(close, low, high_limit)  # 新股一字板
+close_rts = close.pct_change(1)
+
+z = quantile_factor_test_plot(factor = net_pct_main, rts=close_rts, benchmark_rts=hs300['rts'], quantiles=10,
+                             hold_time=30, plot_title='Default', weight="avg",comm_fee=0.003)
+
+
+
+
 
 
 

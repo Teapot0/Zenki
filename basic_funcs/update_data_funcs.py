@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import jqdatasdk as jq
 from jqdatasdk import auth, get_query_count, get_price, opt, query, get_fundamentals, finance, get_trade_days, \
-    valuation, get_security_info, get_mtss
+    valuation, get_security_info, get_mtss,get_money_flow
 from tqdm import tqdm
 from datetime import datetime, time, timedelta
 import matplotlib.pyplot as plt
@@ -194,6 +194,91 @@ def update_financials(new_start_date, new_end_date, cir_mc,pe,ps):
     pe.to_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv')
     ps.to_csv('/Users/caichaohong/Desktop/Zenki/financials/ps_ratio.csv')
 
+
+
+
+def update_money_flow(New_end_date,net_amount_main,net_pct_main, net_amount_xl,net_pct_xl, net_amount_l,net_pct_l,
+                      net_amount_m, net_pct_m, net_amount_s,net_pct_s):
+
+    future_trade_days = get_trade_days(start_date=net_amount_main.index[-1], end_date=New_end_date)[1:]  # 第一天重复
+    if len(future_trade_days) > 0:
+        for date in future_trade_days:
+            net_amount_main.loc[date] = np.nan
+            net_pct_main.loc[date] = np.nan
+            net_amount_xl.loc[date] = np.nan
+            net_pct_xl.loc[date] = np.nan
+            net_amount_l.loc[date] = np.nan
+            net_pct_l.loc[date] = np.nan
+            net_amount_m.loc[date] = np.nan
+            net_pct_m.loc[date] = np.nan
+            net_amount_s.loc[date] = np.nan
+            net_pct_s.loc[date] = np.nan
+
+    stock_list = list(net_pct_main.columns)
+
+    for date in future_trade_days:
+        temp = get_money_flow(stock_list, end_date=date,count=1,
+                                fields=['date','sec_code','net_amount_main','net_pct_main',
+                                        'net_amount_xl','net_pct_xl',
+                                        'net_amount_l','net_pct_l',
+                                        'net_amount_m','net_pct_m',
+                                        'net_amount_s','net_pct_s'])
+        temp.index = temp['sec_code']
+
+        net_amount_main.loc[date][stock_list] = temp['net_amount_main'][stock_list]
+        net_pct_main.loc[date][stock_list] = temp['net_pct_main'][stock_list]
+        net_amount_xl.loc[date][stock_list] = temp['net_amount_xl'][stock_list]
+        net_pct_xl.loc[date][stock_list] = temp['net_pct_xl'][stock_list]
+        net_amount_l.loc[date][stock_list] = temp['net_amount_l'][stock_list]
+        net_pct_l.loc[date][stock_list] = temp['net_pct_l'][stock_list]
+        net_amount_m.loc[date][stock_list] = temp['net_amount_m'][stock_list]
+        net_pct_m.loc[date][stock_list] = temp['net_pct_m'][stock_list]
+        net_amount_s.loc[date][stock_list] = temp['net_amount_s'][stock_list]
+        net_pct_s.loc[date][stock_list] = temp['net_pct_s'][stock_list]
+
+    net_amount_main.index = pd.to_datetime(net_amount_main.index)
+    net_pct_main.index = pd.to_datetime(net_amount_main.index)
+    net_amount_xl.index = pd.to_datetime(net_amount_main.index)
+    net_pct_xl.index = pd.to_datetime(net_amount_main.index)
+    net_amount_l.index = pd.to_datetime(net_amount_main.index)
+    net_pct_l.index = pd.to_datetime(net_amount_main.index)
+    net_amount_m.index = pd.to_datetime(net_amount_main.index)
+    net_pct_m.index = pd.to_datetime(net_amount_main.index)
+    net_amount_s.index = pd.to_datetime(net_amount_main.index)
+    net_pct_s.index = pd.to_datetime(net_amount_main.index)
+
+    net_amount_main = net_amount_main.sort_index(axis=0)
+    net_pct_main = net_pct_main.sort_index(axis=0)
+    net_amount_xl = net_amount_xl.sort_index(axis=0)
+    net_pct_xl = net_pct_xl.sort_index(axis=0)
+    net_amount_l = net_amount_l.sort_index(axis=0)
+    net_pct_l = net_pct_l.sort_index(axis=0)
+    net_amount_m = net_amount_m.sort_index(axis=0)
+    net_pct_m = net_pct_m.sort_index(axis=0)
+    net_amount_s = net_amount_s.sort_index(axis=0)
+    net_pct_s = net_pct_s.sort_index(axis=0)
+
+    net_amount_main = net_amount_main.sort_index(axis=1)
+    net_pct_main = net_pct_main.sort_index(axis=1)
+    net_amount_xl = net_amount_xl.sort_index(axis=1)
+    net_pct_xl = net_pct_xl.sort_index(axis=1)
+    net_amount_l = net_amount_l.sort_index(axis=1)
+    net_pct_l = net_pct_l.sort_index(axis=1)
+    net_amount_m = net_amount_m.sort_index(axis=1)
+    net_pct_m = net_pct_m.sort_index(axis=1)
+    net_amount_s = net_amount_s.sort_index(axis=1)
+    net_pct_s = net_pct_s.sort_index(axis=1)
+
+    net_amount_main.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_main.csv')
+    net_pct_main.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_main.csv')
+    net_amount_xl.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_xl.csv')
+    net_pct_xl.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_xl.csv')
+    net_amount_l.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_l.csv')
+    net_pct_l.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_l.csv')
+    net_amount_m.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_m.csv')
+    net_pct_m.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_m.csv')
+    net_amount_s.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_s.csv')
+    net_pct_s.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_s.csv')
 
 
 

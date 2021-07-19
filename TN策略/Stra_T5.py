@@ -62,7 +62,7 @@ pe = pe[close.columns]
 #股息率
 df_bank = finance.run_query(query(finance.SW1_DAILY_VALUATION).filter(finance.SW1_DAILY_VALUATION.code=='801780'))
 # 回购
-df_bond = bond.run_query(query(bond.REPO_DAILY_PRICE).filter(bond.REPO_DAILY_PRICE.name=='GC182').limit(2000))
+df_bond = bond.run_query(query(bond.REPO_DAILY_PRICE).filter(bond.REPO_DAILY_PRICE.name=='GC182'))
 df_t1 = pd.merge(df_bond, df_bank, on='date')
 df_t1 = df_t1[['date','close','dividend_ratio']]
 df_t1.index = pd.to_datetime(df_t1['date'])
@@ -88,6 +88,16 @@ roe_5 = roe_yeayly.rolling(5,min_periods=1).mean()
 stock_list_panel = get_financial_stock_list(market_cap,roe_5, pe, money,
                                             roe_mean=12, mc_min=100, pe_min=20, money_min=0.1)
 
+
+# 每天停牌的
+pause_list = volume.apply(lambda x: list(x[x == 0].index), axis=1)
+# ST
+st_df = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/is_st.csv', index_col='Unnamed: 0',date_parser=dateparse)
+
+# 3个合并，每天的股票
+stock_list = {}
+for date in tqdm(close_rts_1.index):
+    stock_list[date] = list(set(stock_list_panel).difference(set(pause_list.loc[date]),set(st_df.loc[date]), set(pause_list[date])))
 
 
 
@@ -290,4 +300,10 @@ week_rts.to_excel('/Users/caichaohong/Desktop/最新持仓周报.xlsx')
 # 排名
 
 test_rts = daily_rts.sort_values(by='daily_rts')
+
+
+
+
+
+
 

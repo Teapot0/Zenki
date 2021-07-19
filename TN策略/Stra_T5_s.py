@@ -69,13 +69,9 @@ datelist = list(set(df_t1.index).intersection(set(df_repo.index)))
 df_repo['licha'].loc[datelist] = df_t1['licha'].loc[datelist]
 df_repo = df_repo.fillna(method='ffill')
 
-# 每天财务选股
-
-# # 5年ROE
-roe_5 = roe_yeayly.rolling(5, min_periods=1).mean()
-
 
 # 每天财务、均线选股
+roe_5 = roe_yeayly.rolling(5, min_periods=1).mean()
 stock_list_panel = get_financial_stock_list(market_cap,roe_5, pe, money,
                                             roe_mean=12, mc_min=300, pe_min=20, money_min=1)
 # 波动率
@@ -117,6 +113,22 @@ stock_list = {}
 for date in tqdm(close_rts_1.index):
     tmp_list = list(set(std_list[date]).intersection(rts_list[date], stock_list_panel[date]))
     stock_list[date] = list(set(tmp_list).difference(set(pause_list.loc[date]),set(st_df.loc[date]), set(down_list[date])))
+
+# 大小市值切换
+small_big = pd.DataFrame(index=close.index,columns=['big', 'small','big_stock', 'small_stock'])
+for date in tqdm(close_rts_1.index):
+    tmp_list = list(market_cap[stock_list[date]].loc[date].sort_values(ascending=True).dropna().index)
+    small_cap_list = tmp_list[:5]
+    big_cap_list = tmp_list[-5:]
+    small_big.loc[date]['small'] = close_rts_1.loc[date][small_cap_list].mean()
+    small_big.loc[date]['big'] = close_rts_1.loc[date][big_cap_list].mean()
+    small_big.loc[date]['small_stock'] = small_cap_list
+    small_big.loc[date]['big_stock'] = big_cap_list
+
+plt.plot((1+small_big['big']).cumprod(), label='big')
+plt.plot((1+small_big['small']).cumprod())
+plt.legend()
+
 
 weight_n1 = 10
 weight_n2 = 180
