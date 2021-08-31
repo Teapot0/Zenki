@@ -2,83 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cecfbeec-0420-4871-b54c-912bf3919c91" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Factor_Test/101/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/101_022.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/191/191_005.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/191/191_032.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/191/191_036.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/191/191_054.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/191/191_062.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/191/191_064.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/191/191_074.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/191/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/191_008.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/191_083.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/191_179.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/5m_factors/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/5m_factors/download_factor.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/5m_factors/日内动量.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/5m_factors/量价关系.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/AmtRatioEntropy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/Fix_MinAbnCorr.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/Industry_Reverse.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/Minute_highlow_rtnvol_diff.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/RtnVolGrowthRankDiff.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/Turnrankinglist.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/big_player.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/close_vol_corr_min.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/close_vol_stdcorr.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/closevol_momentum_5d.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/extremeturn_std.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/factor_new/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/factor_new/closevol_mom_5d.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/gtja042.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/id_rankinglist.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/intra_amount.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/jqfactor_analyze.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/longvolumegrowthshape60d.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/low_vol_shape.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/machine_learning/ML_Factors.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/machine_learning/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/median_down_ratio.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/minute30_close_vol_corr.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/rankinglist.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/small_player.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/smallplayer_turnover.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/transform_miaodong.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/up_volatilityRatio.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/vol_Surge_sharpe.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/vol_swing.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Factor_Test/舆情因子_new.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Other_Analysis/feather.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Other_Analysis/遗传规划.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/TN策略/multi_factor.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/basic_funcs/basic_funcs_open.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/basic_funcs/h5.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code22222/22222.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code22222/Big-Player.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code22222/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code22222/rps_22.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code22222/test1111.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_prepare/industry.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_prepare/price_30m.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_prepare/price_5m.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_prepare/update_alphas.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_prepare/update_data/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_prepare/update_data/update_5m.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Factor_Test/舆情因子.py" beforeDir="false" afterPath="$PROJECT_DIR$/Factor_Test/舆情因子.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TN策略/Stra_T5.py" beforeDir="false" afterPath="$PROJECT_DIR$/TN策略/Stra_T5.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TN策略/Stra_T5_factors.py" beforeDir="false" afterPath="$PROJECT_DIR$/TN策略/Stra_T5_factors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TN策略/Stra_T5_sw.py" beforeDir="false" afterPath="$PROJECT_DIR$/TN策略/Stra_T5_sw.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TN策略/update_data_123.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/basic_funcs/basic_function.py" beforeDir="false" afterPath="$PROJECT_DIR$/basic_funcs/basic_function.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/basic_funcs/update_data_funcs.py" beforeDir="false" afterPath="$PROJECT_DIR$/basic_funcs/update_data_funcs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_prepare/data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_prepare/data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_prepare/index_holds.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_prepare/index_holds.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_prepare/update_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_prepare/update_data.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -113,8 +38,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/basic_funcs/basic_funcs_open.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="41">
-              <caret line="109" lean-forward="true" selection-start-line="109" selection-end-line="109" />
+            <state relative-caret-position="2646">
+              <caret line="109" selection-start-line="109" selection-end-line="109" />
               <folding>
                 <element signature="e#291#616#0" />
               </folding>
@@ -125,11 +50,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Factor_Test/AmtRatioEntropy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="71" column="70" lean-forward="true" selection-start-line="71" selection-start-column="70" selection-end-line="71" selection-end-column="70" />
-              <folding>
-                <element signature="e#2520#3000#0" />
-              </folding>
+            <state relative-caret-position="31">
+              <caret line="63" column="64" lean-forward="true" selection-start-line="63" selection-start-column="64" selection-end-line="63" selection-end-column="64" />
             </state>
           </provider>
         </entry>
@@ -137,7 +59,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Factor_Test/closevol_momentum_5d.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="384">
+            <state relative-caret-position="1404">
               <caret line="60" column="29" selection-start-line="60" selection-start-column="29" selection-end-line="60" selection-end-column="29" />
             </state>
           </provider>
@@ -327,7 +249,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="656" />
+    <option name="x" value="686" />
     <option name="y" value="23" />
     <option name="width" value="1611" />
     <option name="height" value="1027" />
@@ -451,7 +373,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="244" y="23" width="1611" height="1027" extended-state="0" />
+    <frame x="686" y="23" width="1611" height="1027" extended-state="0" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16603774" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -466,7 +388,7 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32867885" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.2567132" />
       <window_info anchor="bottom" id="DB Execution Console" order="8" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.39849624" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.6766917" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5012987" side_tool="true" weight="0.46831363" />
       <window_info anchor="bottom" id="Python Console" order="11" sideWeight="0.4987013" weight="0.39205155" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -828,6 +750,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/basic_funcs/basic_funcs_open.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2646">
+          <caret line="109" selection-start-line="109" selection-end-line="109" />
+          <folding>
+            <element signature="e#291#616#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/closevol_momentum_5d.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1404">
+          <caret line="60" column="29" selection-start-line="60" selection-start-column="29" selection-end-line="60" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/data_prepare/index_holds.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="459">
@@ -866,30 +805,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/basic_funcs/basic_funcs_open.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="41">
-          <caret line="109" lean-forward="true" selection-start-line="109" selection-end-line="109" />
-          <folding>
-            <element signature="e#291#616#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/closevol_momentum_5d.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="60" column="29" selection-start-line="60" selection-start-column="29" selection-end-line="60" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Factor_Test/AmtRatioEntropy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="71" column="70" lean-forward="true" selection-start-line="71" selection-start-column="70" selection-end-line="71" selection-end-column="70" />
-          <folding>
-            <element signature="e#2520#3000#0" />
-          </folding>
+        <state relative-caret-position="31">
+          <caret line="63" column="64" lean-forward="true" selection-start-line="63" selection-start-column="64" selection-end-line="63" selection-end-column="64" />
         </state>
       </provider>
     </entry>
