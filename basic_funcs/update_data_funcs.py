@@ -16,16 +16,18 @@ dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 
 
 
-def update_daily_prices(new_end_date, new_start_date, close, open, high, low, high_limit, low_limit, volume):
+def update_daily_prices(new_end_date, new_start_date, close, open, high, low, high_limit, low_limit, volume,money):
 
     # 判断是否同日期开始和结束
-    start_same = ((close.index[0] == open.index[0]) & (open.index[0] == high.index[0]) &
-                  (high.index[0] == low.index[0]) & (low.index[0] == high_limit.index[0]) &
-                  (high_limit.index[0] == low_limit.index[0]) & (low_limit.index[0] == volume.index[0]))*1
+    start_same = ((close.index[0] == open.index[0]) & (close.index[0] == high.index[0]) &
+                  (close.index[0] == low.index[0]) & (close.index[0] == high_limit.index[0]) &
+                  (close.index[0] == low_limit.index[0]) & (close.index[0] == volume.index[0]) &
+                  (close.index[0] == money.index[0]))*1
 
     end_same = ((close.index[-1] == open.index[-1]) & (open.index[-1] == high.index[-1]) &
                (high.index[-1] == low.index[-1]) & (low.index[-1] == high_limit.index[-1]) &
-               (high_limit.index[-1] == low_limit.index[-1]) & (low_limit.index[-1] == volume.index[-1]))*1
+               (high_limit.index[-1] == low_limit.index[-1]) & (low_limit.index[-1] == volume.index[-1]) &
+                (volume.index[-1] == money.index[-1]))*1
 
     while ((start_same ==1) & (end_same==1))==False:
         break
@@ -42,6 +44,7 @@ def update_daily_prices(new_end_date, new_start_date, close, open, high, low, hi
         high.loc[date] = np.nan
         low.loc[date] = np.nan
         volume.loc[date] = np.nan
+        money.loc[date] = np.nan
         high_limit.loc[date] = np.nan
         low_limit.loc[date] = np.nan
 
@@ -50,39 +53,42 @@ def update_daily_prices(new_end_date, new_start_date, close, open, high, low, hi
 
     for s in tqdm(stock_list):
         yesterday_price = get_price(s, end_date=close.index[-2], count=1,
-                                    fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
+                                    fields=['open', 'close', 'high', 'low', 'volume', 'money','high_limit', 'low_limit'])
         # 是否除权
         if yesterday_price['close'].values != close[s].iloc[-2,]:
             temp = get_price(s, start_date=close.index[0], end_date=new_end_date,
-                             fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
+                             fields=['open', 'close', 'high', 'low', 'volume', 'money','high_limit', 'low_limit'])
             close[s] = temp['close'].values
             open[s] = temp['open'].values
             high[s] = temp['high'].values
             low[s] = temp['low'].values
             volume[s] = temp['volume'].values
+            money[s] = temp['money'].values
             high_limit[s] = temp['high_limit'].values
             low_limit[s] = temp['low_limit'].values
 
         else :
             if len(future_trade_days) > 0:
                 temp = get_price(s, start_date=future_trade_days[0], end_date=future_trade_days[-1],
-                                 fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
+                                 fields=['open', 'close', 'high', 'low', 'volume','money' ,'high_limit', 'low_limit'])
                 close[s].loc[future_trade_days] = temp['close'].values
                 open[s].loc[future_trade_days] = temp['open'].values
                 high[s].loc[future_trade_days] = temp['high'].values
                 low[s].loc[future_trade_days] = temp['low'].values
                 volume[s].loc[future_trade_days] = temp['volume'].values
+                money[s].loc[future_trade_days] = temp['money'].values
                 high_limit[s].loc[future_trade_days] = temp['high_limit'].values
                 low_limit[s].loc[future_trade_days] = temp['low_limit'].values
 
             if len(old_trade_days) > 0:
                 temp = get_price(s, start_date=old_trade_days[0], end_date=old_trade_days[-1],
-                                 fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
+                                 fields=['open', 'close', 'high', 'low', 'volume', 'money','high_limit', 'low_limit'])
                 close[s].loc[old_trade_days] = temp['close'].values
                 open[s].loc[old_trade_days] = temp['open'].values
                 high[s].loc[old_trade_days] = temp['high'].values
                 low[s].loc[old_trade_days] = temp['low'].values
                 volume[s].loc[old_trade_days] = temp['volume'].values
+                money[s].loc[old_trade_days] = temp['money'].values
                 high_limit[s].loc[old_trade_days] = temp['high_limit'].values
                 low_limit[s].loc[old_trade_days] = temp['low_limit'].values
 
@@ -93,12 +99,14 @@ def update_daily_prices(new_end_date, new_start_date, close, open, high, low, hi
     high_limit.index = pd.to_datetime(high_limit.index)
     low_limit.index = pd.to_datetime(low_limit.index)
     volume.index = pd.to_datetime(volume.index)
+    money.index = pd.to_datetime(money.index)
 
     close = close.sort_index(axis=0)  # index时间排序
     open = open.sort_index(axis=0)  # index时间排序
     high = high.sort_index(axis=0)  # index时间排序
     low = low.sort_index(axis=0)  # index时间排序
     volume = volume.sort_index(axis=0)  # index时间排序
+    money = money.sort_index(axis=0)  # index时间排序
     high_limit = high_limit.sort_index(axis=0)  # index时间排序
     low_limit = low_limit.sort_index(axis=0)  # index时间排序
 
@@ -109,6 +117,7 @@ def update_daily_prices(new_end_date, new_start_date, close, open, high, low, hi
     high_limit.to_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high_limit.csv')
     low_limit.to_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low_limit.csv')
     volume.to_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv')
+    money.to_csv('/Users/caichaohong/Desktop/Zenki/price/daily/money.csv')
 
 
 
@@ -197,7 +206,7 @@ def update_financials(new_start_date, new_end_date, cir_mc,pe,ps):
 
 
 
-def update_money_flow(New_end_date,net_amount_main,net_pct_main, net_amount_xl,net_pct_xl, net_amount_l,net_pct_l,
+def update_money_flow(New_end_date,close,net_amount_main,net_pct_main, net_amount_xl,net_pct_xl, net_amount_l,net_pct_l,
                       net_amount_m, net_pct_m, net_amount_s,net_pct_s):
 
     future_trade_days = get_trade_days(start_date=net_amount_main.index[-1], end_date=New_end_date)[1:]  # 第一天重复
@@ -235,6 +244,27 @@ def update_money_flow(New_end_date,net_amount_main,net_pct_main, net_amount_xl,n
         net_pct_m.loc[date][stock_list] = temp['net_pct_m'][stock_list]
         net_amount_s.loc[date][stock_list] = temp['net_amount_s'][stock_list]
         net_pct_s.loc[date][stock_list] = temp['net_pct_s'][stock_list]
+
+    stock_add = list(set(close.columns).difference(net_amount_main.columns))
+    if len(stock_add) > 0:
+        for s in stock_add:
+            tmp = get_money_flow(s, start_date=net_amount_main.index[0], end_date=net_amount_main.index[-1],
+                                 fields=['date', 'sec_code', 'net_amount_main', 'net_pct_main',
+                                         'net_amount_xl', 'net_pct_xl',
+                                         'net_amount_l', 'net_pct_l',
+                                         'net_amount_m', 'net_pct_m',
+                                         'net_amount_s', 'net_pct_s'])
+            tmp.index = tmp['date']
+            net_amount_main[s].loc[tmp.index] = tmp['net_amount_main']
+            net_pct_main[s].loc[tmp.index] = tmp['net_pct_main']
+            net_amount_xl[s].loc[tmp.index] = tmp['net_amount_xl']
+            net_pct_xl[s].loc[tmp.index] = tmp['net_pct_xl']
+            net_amount_l[s].loc[tmp.index] = tmp['net_amount_l']
+            net_pct_l[s].loc[tmp.index] = tmp['net_pct_l']
+            net_amount_m[s].loc[tmp.index] = tmp['net_amount_m']
+            net_pct_m[s].loc[tmp.index] = tmp['net_pct_m']
+            net_amount_s[s].loc[tmp.index] = tmp['net_amount_s']
+            net_pct_s[s].loc[tmp.index] = tmp['net_pct_s']
 
     net_amount_main.index = pd.to_datetime(net_amount_main.index)
     net_pct_main.index = pd.to_datetime(net_amount_main.index)
@@ -279,6 +309,12 @@ def update_money_flow(New_end_date,net_amount_main,net_pct_main, net_amount_xl,n
     net_pct_m.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_m.csv')
     net_amount_s.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_s.csv')
     net_pct_s.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_s.csv')
+
+
+
+
+
+
 
 
 

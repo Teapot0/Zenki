@@ -15,8 +15,8 @@ color_list = ['grey', 'rosybrown', 'saddlebrown', 'orange', 'goldenrod',
 
 
 def read_csv_select(path, start_time=False, end_time=False, stock_list=False):
-    dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
-    df = pd.read_csv(path,index_col='Unnamed: 0', date_parser=dateparse)
+    # dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
+    df = pd.read_csv(path,index_col='Unnamed: 0')
     df = df[(df.index>=start_time) & (df.index<=end_time)]
     if stock_list == False:
         return df
@@ -31,6 +31,7 @@ def read_excel_select(path, start_date, end_date, stocks=False):
         return temp_df
     else:
         return temp_df[stocks]
+
 
 def normal_pdf(x):
     return (1 / sqrt(2 * pi)) * e^((-x ^ 2) / 2)
@@ -301,6 +302,62 @@ def quantile_factor_test_plot(factor, rts, benchmark_rts, quantiles, hold_time, 
     # top number is the number of top biggest factor values each day
     # Factor and rts must have same time index, default type is timestamp from read_excel
 
+    NA_rows = rts.isna().all(axis=1).sum()  # 判断是否只有第一行全NA
+
+    plt.figure(figsize=(9, 9))
+    plt.plot((1 + benchmark_rts[factor.index]).cumprod(), color='black', label='benchmark_net_value')
+
+    quantile_df = pd.DataFrame(np.nan,index = factor.index, columns=range(quantiles))
+    hold_stock = {}
+    for q in range(quantiles):
+        hold_stock[q] = []
+
+    for i in tqdm(range(NA_rows, len(factor.index) - 1)):  # 每hold_time换仓
+
+        date = factor.index[i]
+        date_1 = factor.index[i + 1]
+
+        temp_ii = (i - NA_rows) % hold_time  # 判断是否换仓
+        if temp_ii == 0:  # 换仓日
+            temp_factor = factor.loc[date].sort_values(ascending=False).dropna()  # 每天从大到小
+            stock_number = len(temp_factor)  # 一直都na去掉
+            if len(temp_factor) > 0:  # 若无股票，则持仓不变
+                for q in range(quantiles):
+                    start_i = q * int(stock_number / quantiles)
+                    if q == quantiles - 1:  # 最后一层
+                        end_i = stock_number
+                    else:
+                        end_i = (q + 1) * int(stock_number / quantiles)
+                    temp_stock_list = list(temp_factor.index[start_i:end_i])  # 未来hold_time的股票池
+                    hold_stock[q] = temp_stock_list
+
+        for q in range(quantiles):
+            temp_rts_daily = rts.loc[date_1][hold_stock[q]]
+            if weight == 'avg':  # 每天收益率均值
+                quantile_df[q].loc[date_1] = temp_rts_daily.mean()
+
+    quantile_df.iloc[::hold_time] = quantile_df.iloc[::hold_time] - comm_fee
+    quantile_df = quantile_df.fillna(0)
+
+    for q in range(quantiles):
+        net_value = (1 + quantile_df[q]).cumprod()
+        plt.plot(net_value, color=color_list[q], label='Quantile{}'.format(q))
+
+    plt.legend(bbox_to_anchor=(1.015, 0), loc=3, borderaxespad=0, fontsize=7.5)
+    if plot_title == False:
+        plt.title('quantiles={}\n持股时间={}'.format(quantiles, hold_time))
+    else :
+        plt.title('{}\nquantiles={}\n持股时间={}'.format(plot_title, quantiles, hold_time))
+
+    return quantile_df
+
+
+def weekly_quantile_factor_test_plot(factor, rts, benchmark_rts, quantiles, buy_date_list,plot_title=False, weight="avg",
+                              comm_fee=0.003):
+    # factor是time index, stocks columns的df
+    # top number is the number of top biggest factor values each day
+    # Factor and rts must have same time index, default type is timestamp from read_excel
+
     out = pd.DataFrame(np.nan, index=factor.index, columns=['daily_rts'])  # daily 收益率的df
     NA_rows = rts.isna().all(axis=1).sum()  # 判断是否只有第一行全NA
     out.iloc[:NA_rows, ] = np.nan
@@ -309,9 +366,9 @@ def quantile_factor_test_plot(factor, rts, benchmark_rts, quantiles, hold_time, 
     stock_number = factor.dropna(axis=1, how='all').shape[1] # 一直都na去掉
 
     plt.figure(figsize=(9, 9))
-    plt.plot((1 + benchmark_rts).cumprod().values, color='black', label='benchmark_net_value')
+    plt.plot((1 + benchmark_rts[factor.index]).cumprod().values, color='black', label='benchmark_net_value')
 
-    for q in range(quantiles):
+    for q in tqdm(range(quantiles)):
         # 默认q取0-9，共10层
         start_i = q * int(stock_number / quantiles)
         if q == quantiles - 1:  # 最后一层
@@ -319,32 +376,32 @@ def quantile_factor_test_plot(factor, rts, benchmark_rts, quantiles, hold_time, 
         else:
             end_i = (q + 1) * int(stock_number / quantiles)
 
-        for i in tqdm(range(NA_rows, len(factor.index) - 1)):  # 每hold_time换仓
+        for i in range(NA_rows, len(factor.index) - 1):  # 每hold_time换仓
 
             date = factor.index[i]
             date_1 = factor.index[i + 1]
 
-            temp_ii = (i - NA_rows) % hold_time  # 判断是否换仓
-            if temp_ii == 0:  # 换仓日
+            if date in buy_date_list:  # 换仓日
                 temp_factor = factor.loc[date].sort_values(ascending=False).dropna()  # 每天从大到小
                 if len(temp_factor) > 0:  # 若无股票，则持仓不变
                     temp_stock_list = list(temp_factor.index[start_i:end_i])  # 未来hold_time的股票池
             temp_rts_daily = rts.loc[date_1][temp_stock_list]
 
             if weight == 'avg':  # 每天收益率均值
-                out.loc[date_1] = temp_rts_daily.mean()
+                out['daily_rts'].loc[date_1] = temp_rts_daily.mean()
 
-        out['daily_rts'][::hold_time] = out['daily_rts'][::hold_time] - comm_fee  # 每隔 hold_time 减去手续费和滑点，其中有一些未交易日，NA值自动不动
+        out['daily_rts'].loc[buy_date_list] = out['daily_rts'].loc[buy_date_list] - comm_fee  # 每隔 hold_time 减去手续费和滑点，其中有一些未交易日，NA值自动不动
         out['daily_rts'] = out['daily_rts'].fillna(0)
         out['net_value'] = (1 + out['daily_rts']).cumprod()
         plt.plot(out['net_value'].values, color=color_list[q], label='Quantile{}'.format(q))
     plt.legend(bbox_to_anchor=(1.015, 0), loc=3, borderaxespad=0, fontsize=7.5)
     if plot_title == False:
-        plt.title('quantiles={}\n持股时间={}'.format(quantiles, hold_time))
+        plt.title('quantiles={}'.format(quantiles,))
     else :
-        plt.title('{}\nquantiles={}\n持股时间={}'.format(plot_title, quantiles, hold_time))
+        plt.title('{}\nquantiles={}'.format(plot_title, quantiles))
 
     return out
+
 
 
 def resample_data_weekly(df, df_type):
@@ -654,6 +711,33 @@ def get_licha():
     df_t1 = df_t1[['date', 'close', 'dividend_ratio']]
     df_t1.index = pd.to_datetime(df_t1['date'])
     return df_t1
+
+
+def get_ic_table(factor, rts, buy_date_list):
+    # buy list 是换仓日
+    out = pd.DataFrame(np.nan,index=buy_date_list,columns=['ic', 'rank_ic'])
+    for i in tqdm(range(1,len(buy_date_list))):
+        date = buy_date_list[i]
+        date1 = buy_date_list[i-1]
+        tmp = pd.concat([factor.loc[date1],rts.loc[date]],axis=1)
+        tmp.columns=['date1', 'date']
+        out['ic'].loc[date] = tmp.dropna().corr().iloc[0,1]
+        out['rank_ic'].loc[date] = tmp.rank().corr().iloc[0,1]
+    return out
+
+
+def get_single_ic_table(factor, rts):
+    out = pd.DataFrame(np.nan,index=factor.index,columns=['ic'])
+    for i in tqdm(range(1,factor.shape[0])):
+        date = factor.index[i]
+        date1 = factor.index[i-1]
+        tmp = pd.concat([factor.loc[date1],rts.loc[date]],axis=1)
+        tmp.columns=['date1', 'date']
+        out['ic'].loc[date] = tmp.dropna().corr().iloc[0,1]
+    return out
+
+
+
 
 
 

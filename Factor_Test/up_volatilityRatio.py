@@ -48,13 +48,13 @@ z_df = z_df.replace(False,1)
 # up_volatilityRatio
 
 ret_log = np.log(daily_rts)
-tmp = ret_log * ret_log * 1000
+tmp = ret_log * ret_log
 condition = tmp < 1
 ret_log[condition==True] = 0
 ret_log = ret_log.rolling(20, min_periods=1).sum()
 tmp = tmp.rolling(20).sum()
 factor = (ret_log / tmp).rolling(20).mean()
-factor = factor * z_df
+factor = factor * z_df.loc[factor.index]
 
 date_1 = factor.index
 date_5 = factor.index[::5]

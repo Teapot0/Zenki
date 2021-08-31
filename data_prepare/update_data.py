@@ -13,13 +13,13 @@ from basic_funcs.update_data_funcs import *
 
 dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 
-auth('15951961478', '961478')
-# auth('13382017213', 'Aasd120120')
+# auth('15951961478', '961478')
+auth('13382017213', 'Aasd120120')
 get_query_count()
 
 # hs300
 
-New_end_date = '2021-07-16'
+New_end_date = '2021-08-30'
 
 index_code = ['510300.XSHG','510050.XSHG', '510500.XSHG','159948.XSHE']
 for code in index_code:
@@ -34,16 +34,22 @@ low = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low.csv', index_
 high_limit = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high_limit.csv', index_col='Unnamed: 0', date_parser=dateparse)
 low_limit = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low_limit.csv', index_col='Unnamed: 0', date_parser=dateparse)
 volume = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv', index_col='Unnamed: 0', date_parser=dateparse)
+money = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/money.csv', index_col='Unnamed: 0', date_parser=dateparse)
 
 # 市场行情
-update_daily_prices(new_end_date = New_end_date, new_start_date='2014-01-01', close=close, open=open, high=high, low=low,
-                    high_limit=high_limit, low_limit=low_limit, volume=volume)
+update_daily_prices(new_end_date=New_end_date, new_start_date='2014-01-01', close=close, open=open, high=high, low=low,
+                    high_limit=high_limit, low_limit=low_limit, volume=volume, money=money)
 
 
 # ST
 st_df = get_extras('is_st', list(close.columns), start_date='2014-01-01', end_date=New_end_date)
 st_df.to_csv('/Users/caichaohong/Desktop/Zenki/price/is_st.csv')
 
+
+
+hs300_5m = get_price('510300.XSHG', start_date='2018-01-01', end_date='2021-08-13'+' 15:00:00',frequency='5m',
+                             fields=['open', 'close', 'high', 'low', 'volume'])
+hs300_5m.to_csv('/Users/caichaohong/Desktop/Zenki/price/5m/510300_5m.csv')
 
 
 # 大单
@@ -59,7 +65,7 @@ net_amount_s = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/ne
 net_pct_s = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_s.csv', index_col='Unnamed: 0')
 
 
-update_money_flow(New_end_date=New_end_date,
+update_money_flow(New_end_date='2021-08-26', close=close,
                   net_amount_main=net_amount_main,net_pct_main=net_pct_main,
                   net_amount_xl=net_amount_xl,net_pct_xl=net_pct_xl,
                   net_amount_l=net_amount_l,net_pct_l=net_pct_l,
@@ -69,7 +75,7 @@ update_money_flow(New_end_date=New_end_date,
 # market_cap
 market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv', index_col='Unnamed: 0', date_parser=dateparse)
 
-update_market_cap(new_start_date='2014-01-01',new_end_date='2021-07-16',market_cap=market_cap, close=close)
+update_market_cap(new_start_date='2014-01-01',new_end_date='2021-08-27',market_cap=market_cap, close=close)
 
 
 # financials pe
@@ -77,12 +83,12 @@ circulating_market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financial
 pe_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv', index_col='Unnamed: 0', date_parser=dateparse)
 ps_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/ps_ratio.csv', index_col='Unnamed: 0', date_parser=dateparse)
 
-update_financials(new_end_date='2021-07-16', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
+update_financials(new_end_date='2021-08-27', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
 
 
 
 
-#  南北向资金持仓-----------------------------
+#  南北向资金持仓 -----------------------------
 
 share = pd.read_csv('/Users/caichaohong/Desktop/Zenki/南北向资金/share.csv', index_col='Unnamed: 0', date_parser=dateparse)
 ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/南北向资金/ratio.csv', index_col='Unnamed: 0', date_parser=dateparse)

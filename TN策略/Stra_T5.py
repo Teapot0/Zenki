@@ -86,7 +86,7 @@ roe_5 = roe_yeayly.rolling(5,min_periods=1).mean()
 # 每天财务选股
 
 stock_list_panel = get_financial_stock_list(market_cap,roe_5, pe, money,
-                                            roe_mean=12, mc_min=100, pe_min=20, money_min=0.1)
+                                            roe_mean=12, mc_min=100, pe_min=25, money_min=0.1)
 
 
 # 每天停牌的
@@ -94,10 +94,32 @@ pause_list = volume.apply(lambda x: list(x[x == 0].index), axis=1)
 # ST
 st_df = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/is_st.csv', index_col='Unnamed: 0',date_parser=dateparse)
 
+
+# 异常下跌
+down_list = {}
+tmp_list = []
+for i in tqdm(range(close.shape[0]-1)):
+    date = close.index[i]
+    date1 = close.index[i+1]
+    tmp_week = date.week
+    week1 = date1.week
+    if hs300['rts_1'].loc[date] > 0.005:
+        cp = list(close_rts_1.loc[date][close_rts_1.loc[date] <= -0.02].index)
+        tmp_list = tmp_list + cp
+        down_list[date] = cp
+    else:
+        down_list[date] = []
+
+    if tmp_week != week1:
+        down_list[date] = tmp_list
+        tmp_list = []
+
+
 # 3个合并，每天的股票
 stock_list = {}
 for date in tqdm(close_rts_1.index):
-    stock_list[date] = list(set(stock_list_panel).difference(set(pause_list.loc[date]),set(st_df.loc[date]), set(pause_list[date])))
+    stock_list[date] = list(set(stock_list_panel).difference(set(pause_list.loc[date]),set(st_df.loc[date]),
+                                                             set(down_list)))
 
 
 
@@ -278,8 +300,6 @@ def get_latest_holds(date=close.index[-2],rts_n1=10, rts_n2=40, rts_n3=60, rts_n
     return stocklist_weighted
 
 
-
-
 new_holds = get_latest_holds(date=close.index[-2],rts_n1=10, rts_n2=40, rts_n3=60, rts_n4=120, rts_n5=250, rts_n6=500,
                      rts1=-0.1, rts2=-0.1, rts3=-0.1, rts4=-0.12, rts5=-0.15, rts6=-0.3,
                      weight_n1=10, weight_n2=20, weight_n3=180, weight_n4=250,
@@ -296,10 +316,6 @@ week_rts.to_excel('/Users/caichaohong/Desktop/最新持仓周报.xlsx')
 
 
 
-
-# 排名
-
-test_rts = daily_rts.sort_values(by='daily_rts')
 
 
 

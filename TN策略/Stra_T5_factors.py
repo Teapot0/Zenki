@@ -69,6 +69,7 @@ def get_rps_df(rps_n):
     rps = ((close - close_n_min)/(close_n_max - close_n_min)) * 100
     return rps
 
+
 rps1 = get_rps_df(rps_n1)
 rps2 = get_rps_df(rps_n2)
 

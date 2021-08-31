@@ -40,21 +40,21 @@ hs300['net_value'] = (1+hs300['rts_1']).cumprod()
 hs300['short_ma'] = get_short_ma_order(hs300['close'], n1=5,n2=90,n3=180)
 
 
-close = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
+close = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0')
 close = close.dropna(how='all', axis=1)  # 某列全NA
 close_rts_1 = close.pct_change(1)
 
-high = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high.csv', index_col='Unnamed: 0', date_parser=dateparse)
-low = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low.csv', index_col='Unnamed: 0', date_parser=dateparse)
-volume = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv', index_col='Unnamed: 0',date_parser=dateparse)
+high = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high.csv', index_col='Unnamed: 0')
+low = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low.csv', index_col='Unnamed: 0')
+volume = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv', index_col='Unnamed: 0')
 high = high[close.columns]
 low = low[close.columns]
 volume = volume[close.columns]
 money = close * volume * 10 ** (-8)
 
-market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv', index_col='Unnamed: 0',date_parser=dateparse)
+market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv', index_col='Unnamed: 0')
 roe_yeayly = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/roe_yearly.csv', index_col='statDate')# 2924个
-pe = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv', index_col='Unnamed: 0',date_parser=dateparse) # 2924个
+pe = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv', index_col='Unnamed: 0') # 2924个
 net_profit = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/net_profit_yearly.csv', index_col='statDate')# 2924个
 market_cap = market_cap[close.columns]
 pe = pe[close.columns]
@@ -270,9 +270,9 @@ def get_latest_holds(date=close.index[-2],
     stocklist_weighted = list(weight[stocklist_financial].loc[date].sort_values(ascending=False).index)[:10]  # 买入的股票
 
     holds = list(set(stocklist_weighted).difference(set(pause_list[date]), set(down_list[date])))
-    if (hs300['short_ma'].loc[date] == True) & (df_repo['licha'].loc[date] < 0):
-        holds=[]
-        print ('SHORT SIGNAL NO HOLDINGS')
+    # if (hs300['short_ma'].loc[date] == True) & (df_repo['licha'].loc[date] < 0):
+    #     holds=[]
+    #     print ('SHORT SIGNAL NO HOLDINGS')
     return holds
 
 

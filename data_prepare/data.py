@@ -13,6 +13,8 @@ import warnings
 warnings.filterwarnings('ignore')
 dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 
+auth('13382017213', 'Aasd120120')
+get_query_count()
 
 close = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
 open = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/open.csv', index_col='Unnamed: 0', date_parser=dateparse)
@@ -93,8 +95,54 @@ net_pct_s.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_s.cs
 
 
 
+# 金额5m
+trade_days = get_trade_days(start_date='2018-01-01', end_date='2021-08-02')
+close_daily = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
+
+all_name = pd.read_excel('/Users/caichaohong/Desktop/Zenki/all_stock_names.xlsx',index_col='Unnamed: 0')
+all_name.index = all_name['code']
+
+stock_list_days = list(close_daily.isna().sum()[close_daily.isna().sum() <= 244].index)  # 大于一年的
+close_daily = close_daily[stock_list_days]
+
+start = trade_days[0].strftime('%Y-%m-%d 09:00:00')
+end = trade_days[-1].strftime('%Y-%m-%d 15:00:00')
+
+tmp = get_price(close_daily.columns[0], start_date=start,end_date=end,frequency='5m',
+                                        fields=['money'])
+
+money_5m = pd.DataFrame(columns=close_daily.columns,index=tmp.index)
+
+for s in tqdm(close_daily.columns):
+    tmp = get_price(s, start_date=start, end_date=end, frequency='5m',
+                    fields=['money'])
+    money_5m[s] = tmp['money']
+money_5m.to_csv('/Users/caichaohong/Desktop/Zenki/price/5m/money_5m.csv')
 
 
+
+# 金额daily
+close_daily = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
+
+all_name = pd.read_excel('/Users/caichaohong/Desktop/Zenki/all_stock_names.xlsx',index_col='Unnamed: 0')
+all_name.index = all_name['code']
+
+stock_list_days = list(close_daily.isna().sum()[close_daily.isna().sum() <= 244].index)  # 大于一年的
+close_daily = close_daily[stock_list_days]
+
+start = close_daily.index[0]
+end = close_daily.index[-1]
+
+tmp = get_price(close_daily.columns[0], start_date=start,end_date=end,frequency='1d',
+                                        fields=['money'])
+
+money_daily = pd.DataFrame(columns=close_daily.columns,index=tmp.index)
+
+for s in tqdm(close_daily.columns):
+    tmp = get_price(s, start_date=start, end_date=end, frequency='1d',
+                    fields=['money'])
+    money_daily[s] = tmp['money']
+money_daily.to_csv('/Users/caichaohong/Desktop/Zenki/price/daily/money.csv')
 
 
 
