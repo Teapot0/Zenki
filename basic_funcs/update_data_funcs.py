@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import jqdatasdk as jq
 from jqdatasdk import auth, get_query_count, get_price, opt, query, get_fundamentals, finance, get_trade_days, \
-    valuation, get_security_info, get_mtss,get_money_flow
+    valuation, get_security_info, get_mtss,get_money_flow, get_index_stocks
 from tqdm import tqdm
 from datetime import datetime, time, timedelta
 import matplotlib.pyplot as plt
@@ -309,6 +309,34 @@ def update_money_flow(New_end_date,close,net_amount_main,net_pct_main, net_amoun
     net_pct_m.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_m.csv')
     net_amount_s.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_amount_s.csv')
     net_pct_s.to_csv('/Users/caichaohong/Desktop/Zenki/price/money_flow/net_pct_s.csv')
+
+
+
+def update_index_holds(hs300_holds, zz500_holds, zz1000_holds, close):
+    new_date_list = list(set(close.index).difference(set(hs300_holds.index)))
+
+    for tmp_date in new_date_list:
+        hs300_holds.loc[tmp_date] = 0
+        zz500_holds.loc[tmp_date] = 0
+        zz1000_holds.loc[tmp_date] = 0
+
+    for tmp_date in new_date_list:
+        hs300_list = get_index_stocks('000300.XSHG', date=tmp_date)
+        zz500_list = get_index_stocks('000905.XSHG', date=tmp_date)
+        zz1000_list = get_index_stocks('000852.XSHG', date=tmp_date)
+
+        tmp_300 = list(set(hs300_list).intersection(close.columns))
+        tmp_500 = list(set(zz500_list).intersection(close.columns))
+        tmp_1000 = list(set(zz1000_list).intersection(close.columns))
+
+        hs300_holds.loc[tmp_date][tmp_300] = 1
+        zz500_holds.loc[tmp_date][tmp_500] = 1
+        zz1000_holds.loc[tmp_date][tmp_1000] = 1
+
+        hs300_holds.to_csv('/Users/caichaohong/Desktop/Zenki/hs300_holds.csv')
+        zz500_holds.to_csv('/Users/caichaohong/Desktop/Zenki/zz500_holds.csv')
+        zz1000_holds.to_csv('/Users/caichaohong/Desktop/Zenki/zz1000_holds.csv')
+
 
 
 

@@ -28,7 +28,7 @@ def get_ic_table_open_index(factor, open_rts, buy_date_list, index_pool):
 
     rts = open_rts.shift(-1)
     out = pd.DataFrame(np.nan,index=buy_date_list,columns=['ic', 'rank_ic'])
-    for i in tqdm(range(len(buy_date_list)-1)):
+    for i in range(len(buy_date_list)-1):
         date = buy_date_list[i]
         date1 = buy_date_list[i+1]
         tmp_hold = list(index_holds.loc[date].dropna().index)
@@ -39,7 +39,6 @@ def get_ic_table_open_index(factor, open_rts, buy_date_list, index_pool):
         out['ic'].loc[date] = tmp.dropna().corr().iloc[0,1]
         out['rank_ic'].loc[date] = tmp.rank().corr().iloc[0,1]
     return out
-
 
 
 def get_single_ic_table_open(factor, open_rts):
@@ -55,7 +54,7 @@ def get_single_ic_table_open(factor, open_rts):
     return out
 
 
-def quantile_factor_test_plot_open(factor, open_rts, benchmark_rts, quantiles, hold_time,
+def quantile_factor_test_plot_open_index(factor, open_rts, benchmark_rts, quantiles, hold_time,
                                    index_pool, plot_title=False, weight="avg", comm_fee=0.003):
     # factor是time index, stocks columns的df
     # top number is the number of top biggest factor values each day

@@ -75,7 +75,7 @@ date_10 = factor.index[::10]
 date_list = [date_1, date_5, date_10]
 for i in range(len(date_list)):
     d = date_list[i]
-    z1 = get_ic_table_open(factor=factor, open_rts=open_rts, buy_date_list=d)
+    z1 = get_ic_table_open_index(factor=factor, open_rts=open_rts, buy_date_list=d, index_pool='zz1000')
     plt.plot(z1['ic'].values)
     plt.title('IC')
     plt.savefig('/Users/caichaohong/Desktop/{}.png'.format(i+1))
@@ -89,8 +89,8 @@ for i in range(len(date_list)):
     print ('IC={}, IC_STD={}'.format(z1['ic'].mean(), z1['ic'].std()))
 
 
-z = quantile_factor_test_plot_open(factor=factor, open_rts=open_rts, benchmark_rts=hs300['rts'], quantiles=10, hold_time=1, plot_title=False, weight="avg",
-                              comm_fee=0.00)
+z = quantile_factor_test_plot_open_index(factor=factor, open_rts=open_rts, benchmark_rts=hs300['rts'], quantiles=10,
+                                         hold_time=1, plot_title=False, weight="avg",index_pool='hs300',comm_fee=0.003)
 
 
 

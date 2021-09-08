@@ -44,8 +44,8 @@ a = pd.DataFrame(index=close.index, columns=close.columns)
 
 stocks = list(close.columns)
 for date in tqdm(close.index):
-    tmp = alpha191.alpha_002(stocks, date,fq='pre')
+    tmp = alpha191.alpha_105(stocks, date,fq='pre')
     a.loc[date] = tmp.values
-a.to_csv('/Users/caichaohong/Desktop/Zenki/factors/191/alpha_002.csv')
+a.to_csv('/Users/caichaohong/Desktop/Zenki/factors/191/alpha_105.csv')
 
 

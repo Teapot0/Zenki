@@ -88,7 +88,8 @@ def get_financial_stock_list(market_cap,roe_5,pe,money,roe_mean,mc_min, pe_min,m
     for i in range(market_cap.shape[0]):
         date = market_cap.index[i]
         # 5年平均roe大于12%
-        tmp_year = '{}-12-31'.format(market_cap.index[i].year - 1)
+        yy =  datetime.strptime(market_cap.index[i],'%Y-%m-%d')
+        tmp_year = '{}-12-31'.format(yy.year - 1)
         roe_list = list((roe_5.loc[tmp_year][roe_5.loc[tmp_year] > roe_mean]).index)
         # 市值大于100 pe大于25
         mc_100 = list(market_cap.iloc[i, :][market_cap.iloc[i, :] > mc_min].index)
@@ -104,14 +105,16 @@ stock_list_panel = get_financial_stock_list(market_cap,roe_5, pe, money,
                                             roe_mean=12, mc_min=300, pe_min=20, money_min=1)
 
 
+
+close_time = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
 # 异常下跌
 down_list = {}
 tmp_list = []
 for i in tqdm(range(close.shape[0]-1)):
     date = close.index[i]
     date1 = close.index[i+1]
-    tmp_week = date.week
-    week1 = date1.week
+    tmp_week = close_time.index[i].week
+    week1 = close_time.index[i+1].week
     if hs300['rts_1'].loc[date] > 0.005:
         cp = list(close_rts_1.loc[date][close_rts_1.loc[date] <= -0.02].index)
         tmp_list = tmp_list + cp

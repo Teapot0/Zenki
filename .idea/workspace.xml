@@ -2,8 +2,30 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cecfbeec-0420-4871-b54c-912bf3919c91" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Factor_Test/191/191_007.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Factor_Test/191/191_105.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Factor_Test/AutoCorrAmt_20.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Factor_Test/CorrDownVolumeSharpe.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Factor_Test/MinCorrMaAmtLast3H.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Factor_Test/last_minCloseCallAmtRatio.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Factor_Test/long_short_powet.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Factor_Test/minute_corr/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Factor_Test/minute_corr/minute_corr1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Factor_Test/smart_money.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Factor_Test/smart_money_beta.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Factor_Test/smart_money_beta2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data_prepare/price_1m.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Factor_Test/Industry_Reverse.py" beforeDir="false" afterPath="$PROJECT_DIR$/Factor_Test/Industry_Reverse.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Factor_Test/closevol_momentum_5d.py" beforeDir="false" afterPath="$PROJECT_DIR$/Factor_Test/closevol_momentum_5d.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Factor_Test/extremeturn_std.py" beforeDir="false" afterPath="$PROJECT_DIR$/Factor_Test/extremeturn_std.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TN策略/Stra_T5_sw.py" beforeDir="false" afterPath="$PROJECT_DIR$/TN策略/Stra_T5_sw.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/basic_funcs/basic_funcs_open.py" beforeDir="false" afterPath="$PROJECT_DIR$/basic_funcs/basic_funcs_open.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/basic_funcs/update_data_funcs.py" beforeDir="false" afterPath="$PROJECT_DIR$/basic_funcs/update_data_funcs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_prepare/price_5m.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_prepare/price_5m.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_prepare/update_alphas.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_prepare/update_alphas.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_prepare/update_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_prepare/update_data.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,64 +36,51 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TN策略/Stra_T5_factors.py">
+        <entry file="file://$PROJECT_DIR$/Factor_Test/last_minCloseCallAmtRatio.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="22" column="34" selection-start-line="22" selection-start-column="34" selection-end-line="22" selection-end-column="34" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/basic_funcs/basic_function.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="26" column="4" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="4" />
+            <state relative-caret-position="189">
+              <caret line="15" column="33" selection-start-line="15" selection-start-column="33" selection-end-line="15" selection-end-column="33" />
               <folding>
-                <element signature="e#291#616#0" />
-                <element signature="e#702#956#0" />
+                <element signature="e#2111#2864#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/basic_funcs/basic_funcs_open.py">
+        <entry file="file://$PROJECT_DIR$/Factor_Test/AutoCorrAmt_20.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2646">
-              <caret line="109" selection-start-line="109" selection-end-line="109" />
-              <folding>
-                <element signature="e#291#616#0" />
-              </folding>
+            <state relative-caret-position="1728">
+              <caret line="72" selection-end-line="92" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Factor_Test/191/191_105.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1053">
+              <caret line="47" selection-start-line="47" selection-end-line="47" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Factor_Test/MinCorrMaAmtLast3H.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1269">
+              <caret line="55" column="54" selection-start-line="55" selection-start-column="54" selection-end-line="55" selection-end-column="54" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Factor_Test/AmtRatioEntropy.py">
+        <entry file="file://$PROJECT_DIR$/Factor_Test/minute_corr/minute_corr1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="31">
-              <caret line="63" column="64" lean-forward="true" selection-start-line="63" selection-start-column="64" selection-end-line="63" selection-end-column="64" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Factor_Test/closevol_momentum_5d.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1404">
-              <caret line="60" column="29" selection-start-line="60" selection-start-column="29" selection-end-line="60" selection-end-column="29" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data_prepare/index_holds.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+            <state relative-caret-position="261">
+              <caret line="54" selection-start-line="54" selection-end-line="54" />
               <folding>
-                <element signature="e#1024#1539#0" />
+                <element signature="e#2111#2864#0" />
               </folding>
             </state>
           </provider>
@@ -80,35 +89,30 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data_prepare/update_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="972">
-              <caret line="46" lean-forward="true" selection-start-line="46" selection-end-line="46" />
+            <state relative-caret-position="864">
+              <caret line="42" selection-start-line="42" selection-end-line="42" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/code22222/test1111.py">
+        <entry file="file://$PROJECT_DIR$/data_prepare/price_5m.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1566">
-              <caret line="65" column="22" selection-start-line="65" selection-start-column="22" selection-end-line="65" selection-end-column="22" />
+            <state relative-caret-position="1377">
+              <caret line="61" column="103" selection-start-line="61" selection-end-line="61" selection-end-column="103" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+                <element signature="e#3485#3819#0" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data_prepare/price_minute.py">
+        <entry file="file://$PROJECT_DIR$/data_prepare/update_alphas.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="20" column="47" selection-start-line="20" selection-start-column="47" selection-end-line="20" selection-end-column="47" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="15" selection-start-line="4" selection-end-line="15" />
+            <state relative-caret-position="1053">
+              <caret line="50" selection-start-line="50" selection-end-line="50" />
             </state>
           </provider>
         </entry>
@@ -124,11 +128,8 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>quantile</find>
-      <find>$USER_HOME$</find>
       <find>out_2</find>
       <find>$USER_HOME$/</find>
-      <find>5m</find>
       <find>.to</find>
       <find>price/daily</find>
       <find>~</find>
@@ -154,10 +155,11 @@
       <find>False</find>
       <find>$USER_HOME$/Desktop/Zenki/factors</find>
       <find>$USER_HOME$/Desktop/Zenki/price/daily</find>
+      <find>5m</find>
+      <find>close_daily.columns</find>
+      <find>, date_parser=dateparse</find>
     </findStrings>
     <replaceStrings>
-      <replace>.sort_index(axis=0)</replace>
-      <replace>New_end_date</replace>
       <replace>,index_col='Unnamed: 0)</replace>
       <replace>,index_col='Unnamed: 0')</replace>
       <replace>e][stock_]</replace>
@@ -186,6 +188,8 @@
       <replace>,start_time='2018-01-01', end_time='2021-08-26', stock_list=False</replace>
       <replace>zz_list</replace>
       <replace>.</replace>
+      <replace>1m</replace>
+      <replace>all_s</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -194,18 +198,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Factor_Test/close_vol_stdcorr.py" />
-        <option value="$PROJECT_DIR$/Factor_Test/close_vol_corr_min.py" />
-        <option value="$PROJECT_DIR$/Factor_Test/longvolumegrowthshape60d.py" />
-        <option value="$PROJECT_DIR$/Factor_Test/191/191_074.py" />
-        <option value="$PROJECT_DIR$/Factor_Test/median_down_ratio.py" />
-        <option value="$PROJECT_DIR$/Other_Analysis/feather.py" />
-        <option value="$PROJECT_DIR$/data_prepare/industtry.py" />
-        <option value="$PROJECT_DIR$/Factor_Test/up_std.py" />
-        <option value="$PROJECT_DIR$/Factor_Test/up_volatilityRatio.py" />
-        <option value="$PROJECT_DIR$/Factor_Test/id_rankinglist.py" />
-        <option value="$PROJECT_DIR$/Factor_Test/minute30_close_vol_corr.py" />
-        <option value="$PROJECT_DIR$/Factor_Test/Minute_highlow_rtnvol_diff.py" />
         <option value="$PROJECT_DIR$/Factor_Test/191/191_005.py" />
         <option value="$PROJECT_DIR$/Factor_Test/191/191_036.py" />
         <option value="$PROJECT_DIR$/data_prepare/data.py" />
@@ -215,14 +207,11 @@
         <option value="$PROJECT_DIR$/data_prepare/industry.py" />
         <option value="$PROJECT_DIR$/Factor_Test/RtnVolGrowthRankDiff.py" />
         <option value="$PROJECT_DIR$/Factor_Test/Fix_MinAbnCorr.py" />
-        <option value="$PROJECT_DIR$/basic_funcs/update_data_funcs.py" />
         <option value="$PROJECT_DIR$/Factor_Test/191/191_062.py" />
         <option value="$PROJECT_DIR$/Factor_Test/Turnrankinglist.py" />
         <option value="$PROJECT_DIR$/basic_funcs/h5.py" />
         <option value="$PROJECT_DIR$/data_prepare/update_data/update_5m.py" />
-        <option value="$PROJECT_DIR$/data_prepare/price_5m.py" />
         <option value="$PROJECT_DIR$/Factor_Test/small_player.py" />
-        <option value="$PROJECT_DIR$/data_prepare/update_alphas.py" />
         <option value="$PROJECT_DIR$/Factor_Test/machine_learning/8.24.py" />
         <option value="$PROJECT_DIR$/code22222/test1111.py" />
         <option value="$PROJECT_DIR$/Factor_Test/smallplayer_turnover.py" />
@@ -230,28 +219,43 @@
         <option value="$PROJECT_DIR$/code22222/22222.py" />
         <option value="$PROJECT_DIR$/Factor_Test/rankinglist.py" />
         <option value="$PROJECT_DIR$/Factor_Test/191_083.py" />
-        <option value="$PROJECT_DIR$/Factor_Test/Industry_Reverse.py" />
-        <option value="$PROJECT_DIR$/Factor_Test/extremeturn_std.py" />
         <option value="$PROJECT_DIR$/Factor_Test/factor_new/closevol_momentum_5d.py" />
         <option value="$PROJECT_DIR$/basic_funcs/basic_function.py" />
         <option value="$PROJECT_DIR$/TN策略/Stra_T5_factors.py" />
         <option value="$PROJECT_DIR$/code22222/rps_22.py" />
         <option value="$PROJECT_DIR$/TN策略/multi_factor.py" />
         <option value="$PROJECT_DIR$/Factor_Test/factor_new/closevol_mom_5d.py" />
-        <option value="$PROJECT_DIR$/data_prepare/update_data.py" />
+        <option value="$PROJECT_DIR$/data_prepare/index_holds.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/AmtRatioEntropy.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/closevol_momentum_5d.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/extremeturn_std.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/Industry_Reverse.py" />
+        <option value="$PROJECT_DIR$/data_prepare/price_1m.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/smart_money.py" />
+        <option value="$PROJECT_DIR$/basic_funcs/basic_funcs_open.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/smart_money_beta2.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/smart_money_beta.py" />
+        <option value="$PROJECT_DIR$/basic_funcs/update_data_funcs.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/CorrDownVolumeSharpe.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/AutoCorrAmt_20.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/191/191_007.py" />
         <option value="$PROJECT_DIR$/TN策略/Stra_T5.py" />
         <option value="$PROJECT_DIR$/TN策略/Stra_T5_sw.py" />
-        <option value="$PROJECT_DIR$/data_prepare/index_holds.py" />
-        <option value="$PROJECT_DIR$/basic_funcs/basic_funcs_open.py" />
-        <option value="$PROJECT_DIR$/Factor_Test/closevol_momentum_5d.py" />
-        <option value="$PROJECT_DIR$/Factor_Test/AmtRatioEntropy.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/last_minCloseCallAmtRatio.py" />
+        <option value="$PROJECT_DIR$/data_prepare/update_alphas.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/191/191_105.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/long_short_powet.py" />
+        <option value="$PROJECT_DIR$/data_prepare/price_5m.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/MinCorrMaAmtLast3H.py" />
+        <option value="$PROJECT_DIR$/Factor_Test/minute_corr/minute_corr1.py" />
+        <option value="$PROJECT_DIR$/data_prepare/update_data.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="686" />
+    <option name="x" value="13" />
     <option name="y" value="23" />
-    <option name="width" value="1611" />
+    <option name="width" value="1651" />
     <option name="height" value="1027" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -272,11 +276,6 @@
             <path>
               <item name="Zenki" type="b2602c69:ProjectViewProjectNode" />
               <item name="Zenki" type="462c0819:PsiDirectoryNode" />
-              <item name="basic_funcs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Zenki" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Zenki" type="462c0819:PsiDirectoryNode" />
               <item name="code22222" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -293,19 +292,7 @@
               <item name="Zenki" type="b2602c69:ProjectViewProjectNode" />
               <item name="Zenki" type="462c0819:PsiDirectoryNode" />
               <item name="Factor_Test" type="462c0819:PsiDirectoryNode" />
-              <item name="191" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Zenki" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Zenki" type="462c0819:PsiDirectoryNode" />
-              <item name="Factor_Test" type="462c0819:PsiDirectoryNode" />
-              <item name="factor_new" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Zenki" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Zenki" type="462c0819:PsiDirectoryNode" />
-              <item name="Factor_Test" type="462c0819:PsiDirectoryNode" />
-              <item name="machine_learning" type="462c0819:PsiDirectoryNode" />
+              <item name="minute_corr" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Zenki" type="b2602c69:ProjectViewProjectNode" />
@@ -373,9 +360,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="686" y="23" width="1611" height="1027" extended-state="0" />
+    <frame x="13" y="23" width="1651" height="1027" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16603774" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1619632" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="DB Browser" order="3" weight="0.32920793" />
@@ -388,153 +375,21 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32867885" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.2567132" />
       <window_info anchor="bottom" id="DB Execution Console" order="8" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.6766917" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.44468313" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5012987" side_tool="true" weight="0.46831363" />
-      <window_info anchor="bottom" id="Python Console" order="11" sideWeight="0.4987013" weight="0.39205155" />
+      <window_info active="true" anchor="bottom" id="Python Console" order="11" sideWeight="0.4987013" visible="true" weight="0.39205155" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Factor_Test/close_vol_corr_min.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="22" column="42" lean-forward="true" selection-start-line="22" selection-start-column="42" selection-end-line="22" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/longvolumegrowthshape60d.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="57" lean-forward="true" selection-start-line="57" selection-end-line="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/low_vol_shape.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="53" lean-forward="true" selection-start-line="53" selection-end-line="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/median_down_ratio.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1011">
-          <caret line="15" column="15" lean-forward="true" selection-start-line="15" selection-start-column="15" selection-end-line="15" selection-end-column="15" />
-          <folding>
-            <element signature="e#2851#3296#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/intra_amount.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="406">
-          <caret line="96" lean-forward="true" selection-end-line="102" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data_prepare/industry.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="10" column="33" selection-start-line="10" selection-start-column="33" selection-end-line="10" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/Minute_highlow_rtnvol_diff.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27">
-          <caret line="63" column="59" selection-start-line="63" selection-start-column="59" selection-end-line="63" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/RtnVolGrowthRankDiff.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1215">
-          <caret line="53" column="26" selection-end-line="94" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/Fix_MinAbnCorr.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2268">
-          <caret line="92" column="18" selection-end-line="113" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TN策略/Stra_T5_s.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5092">
-          <caret selection-end-line="35" selection-end-column="48" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../Deep learning/venv/lib/python3.7/site-packages/jqdatasdk/alpha191.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../Deep learning/venv/lib/python3.7/site-packages/jqdatasdk/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/191/191_064.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1137">
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/Turnrankinglist.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="433">
-          <caret line="86" column="38" lean-forward="true" selection-start-line="86" selection-start-column="38" selection-end-line="86" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TN策略/Stra_T5_dynamic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data_prepare/update_data/update_5m.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1296">
-          <caret line="52" column="22" selection-start-line="52" selection-start-column="22" selection-end-line="52" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/191/191_062.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-358">
-          <caret line="48" column="9" selection-start-line="48" selection-start-column="9" selection-end-line="48" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/code22222/code.py" />
     <entry file="file://$PROJECT_DIR$/data_prepare/融资融券数据.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-807">
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data_prepare/update_alphas.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
         </state>
       </provider>
     </entry>
@@ -558,29 +413,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data_prepare/price_5m.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27">
-          <caret line="1" column="18" selection-start-line="1" selection-start-column="18" selection-end-line="1" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TN策略/资金面策略.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="452">
           <caret line="85" column="151" selection-start-line="85" selection-start-column="19" selection-end-line="85" selection-end-column="151" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/basic_funcs/update_data_funcs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="120" selection-start-line="17" selection-end-line="120" />
-          <folding>
-            <element signature="e#751#6151#0" />
-            <element signature="e#6231#7947#0" />
-            <element signature="e#8022#9856#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -604,16 +440,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/Industry_Reverse.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="61" column="8" selection-start-line="61" selection-start-column="8" selection-end-line="61" selection-end-column="8" />
-          <folding>
-            <element signature="e#2698#3152#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Factor_Test/191_083.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="370">
@@ -628,39 +454,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret selection-end-line="4" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/extremeturn_std.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1755">
-          <caret line="73" selection-start-line="73" selection-end-line="73" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/basic_funcs/h5.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4239">
-          <caret line="157" lean-forward="true" selection-start-line="157" selection-end-line="157" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data_prepare/data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
-          <folding>
-            <element signature="e#1489#1547#0" />
-            <element signature="e#1707#2486#0" />
-            <element signature="e#1916#2021#0" />
-            <element signature="e#3229#4251#0" />
-            <element signature="e#3340#3666#0" />
-            <element signature="e#5997#6132#0" />
-            <element signature="e#6949#7087#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -681,24 +474,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TN策略/multi_factor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="373">
-          <caret line="109" selection-start-line="105" selection-end-line="109" />
-          <folding>
-            <element signature="e#2323#2324#0" />
-            <element signature="e#3741#4195#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/factor_new/closevol_mom_5d.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="19" column="62" selection-start-line="19" selection-start-column="62" selection-end-line="19" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TN策略/Stra_T5_new.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -708,79 +483,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TN策略/Stra_T5.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="32" column="80" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="80" />
-          <folding>
-            <element signature="e#655#806#0" />
-            <element signature="e#4367#4415#0" />
-            <element signature="e#5175#9216#0" />
-            <element signature="e#12114#14201#0" />
-          </folding>
+    <entry file="file://$PROJECT_DIR$/first_figure.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/未命名.ipynb">
+      <provider selected="true" editor-type-id="ipnb-editor">
+        <state>
+          <selected id="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TN策略/Stra_T5_sw.py">
+    <entry file="file://$PROJECT_DIR$/Factor_Test/AmtRatioEntropy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6480">
-          <caret line="292" selection-start-line="286" selection-end-line="292" />
-          <folding>
-            <element signature="e#655#806#0" />
-            <element signature="e#10581#12900#0" />
-          </folding>
+        <state relative-caret-position="1863">
+          <caret line="77" selection-start-line="77" selection-end-line="77" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TN策略/Stra_T5_factors.py">
+    <entry file="file://$PROJECT_DIR$/Factor_Test/extremeturn_std.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="22" column="34" selection-start-line="22" selection-start-column="34" selection-end-line="22" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/basic_funcs/basic_function.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="26" column="4" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="4" />
-          <folding>
-            <element signature="e#291#616#0" />
-            <element signature="e#702#956#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/basic_funcs/basic_funcs_open.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2646">
-          <caret line="109" selection-start-line="109" selection-end-line="109" />
-          <folding>
-            <element signature="e#291#616#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/closevol_momentum_5d.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1404">
-          <caret line="60" column="29" selection-start-line="60" selection-start-column="29" selection-end-line="60" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data_prepare/index_holds.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
-          <folding>
-            <element signature="e#1024#1539#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data_prepare/update_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="972">
-          <caret line="46" lean-forward="true" selection-start-line="46" selection-end-line="46" />
+        <state relative-caret-position="2079">
+          <caret line="85" column="13" selection-start-line="85" selection-start-column="13" selection-end-line="85" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -791,13 +514,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data_prepare/price_minute.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="20" column="47" selection-start-line="20" selection-start-column="47" selection-end-line="20" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
@@ -805,10 +521,400 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Factor_Test/AmtRatioEntropy.py">
+    <entry file="file://$PROJECT_DIR$/Factor_Test/factor_new/closevol_mom_5d.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="31">
-          <caret line="63" column="64" lean-forward="true" selection-start-line="63" selection-start-column="64" selection-end-line="63" selection-end-column="64" />
+        <state relative-caret-position="297">
+          <caret line="19" column="62" selection-start-line="19" selection-start-column="62" selection-end-line="19" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/closevol_momentum_5d.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1539">
+          <caret line="65" column="8" selection-start-line="65" selection-start-column="8" selection-end-line="65" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_prepare/price_1m.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1215">
+          <caret line="55" column="73" lean-forward="true" selection-start-line="54" selection-end-line="55" selection-end-column="73" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basic_funcs/h5.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3537">
+          <caret line="131" selection-start-line="131" selection-end-line="131" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_prepare/price_minute.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="20" column="47" selection-start-line="20" selection-start-column="47" selection-end-line="20" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basic_funcs/basic_function.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
+          <folding>
+            <element signature="e#291#616#0" />
+            <element signature="e#702#956#0" />
+            <element signature="e#1028#1251#0" />
+            <element signature="e#1277#1321#0" />
+            <element signature="e#1344#1371#0" />
+            <element signature="e#1391#1449#0" />
+            <element signature="e#1481#1512#0" />
+            <element signature="e#1562#1902#0" />
+            <element signature="e#1946#2026#0" />
+            <element signature="e#2085#2179#0" />
+            <element signature="e#2237#3354#0" />
+            <element signature="e#3428#4139#0" />
+            <element signature="e#3428#3499#0" />
+            <element signature="e#4259#5561#0" />
+            <element signature="e#4259#4287#0" />
+            <element signature="e#4946#5464#0" />
+            <element signature="e#5098#5261#0" />
+            <element signature="e#5693#7093#0" />
+            <element signature="e#5693#5704#0" />
+            <element signature="e#6472#6996#0" />
+            <element signature="e#6624#6788#0" />
+            <element signature="e#7195#8470#0" />
+            <element signature="e#7195#7219#0" />
+            <element signature="e#7878#8373#0" />
+            <element signature="e#8030#8170#0" />
+            <element signature="e#8644#9875#0" />
+            <element signature="e#8644#8682#0" />
+            <element signature="e#9174#9778#0" />
+            <element signature="e#9320#9550#0" />
+            <element signature="e#9970#11233#0" />
+            <element signature="e#10191#11119#0" />
+            <element signature="e#10228#11119#0" />
+            <element signature="e#11399#13622#0" />
+            <element signature="e#11399#11437#0" />
+            <element signature="e#12040#13038#0" />
+            <element signature="e#12199#12832#0" />
+            <element signature="e#12400#12832#0" />
+            <element signature="e#12447#12832#0" />
+            <element signature="e#12881#13038#0" />
+            <element signature="e#13197#13318#0" />
+            <element signature="e#13798#15893#0" />
+            <element signature="e#13798#13836#0" />
+            <element signature="e#14464#15637#0" />
+            <element signature="e#14763#15293#0" />
+            <element signature="e#14889#15118#0" />
+            <element signature="e#15940#17499#0" />
+            <element signature="e#15940#15953#0" />
+            <element signature="e#16126#17347#0" />
+            <element signature="e#16243#16769#0" />
+            <element signature="e#16473#16562#0" />
+            <element signature="e#16833#17347#0" />
+            <element signature="e#16888#17347#0" />
+            <element signature="e#17557#18887#0" />
+            <element signature="e#17690#17907#0" />
+            <element signature="e#17993#18335#0" />
+            <element signature="e#18393#18866#0" />
+            <element signature="e#18920#19381#0" />
+            <element signature="e#19425#19790#0" />
+            <element signature="e#19571#19775#0" />
+            <element signature="e#19840#20124#0" />
+            <element signature="e#20178#20466#0" />
+            <element signature="e#20502#21356#0" />
+            <element signature="e#20629#20973#0" />
+            <element signature="e#20809#20973#0" />
+            <element signature="e#21084#21132#0" />
+            <element signature="e#21388#21599#0" />
+            <element signature="e#21634#22488#0" />
+            <element signature="e#21761#22105#0" />
+            <element signature="e#21941#22105#0" />
+            <element signature="e#22216#22264#0" />
+            <element signature="e#22528#22697#0" />
+            <element signature="e#22601#22697#0" />
+            <element signature="e#22729#22940#0" />
+            <element signature="e#22975#23829#0" />
+            <element signature="e#23102#23446#0" />
+            <element signature="e#23282#23446#0" />
+            <element signature="e#23557#23605#0" />
+            <element signature="e#23880#24031#0" />
+            <element signature="e#24080#24446#0" />
+            <element signature="e#24291#24426#0" />
+            <element signature="e#24544#25256#0" />
+            <element signature="e#24616#25228#0" />
+            <element signature="e#25314#25707#0" />
+            <element signature="e#25459#25686#0" />
+            <element signature="e#25767#26130#0" />
+            <element signature="e#25938#26109#0" />
+            <element signature="e#26163#26285#0" />
+            <element signature="e#26355#27124#0" />
+            <element signature="e#26481#27103#0" />
+            <element signature="e#26577#27103#0" />
+            <element signature="e#26769#26930#0" />
+            <element signature="e#27037#27103#0" />
+            <element signature="e#27148#27548#0" />
+            <element signature="e#27601#28050#0" />
+            <element signature="e#27750#28035#0" />
+            <element signature="e#28095#28444#0" />
+            <element signature="e#28209#28429#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/vol_Surge_sharpe.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="756">
+          <caret line="28" column="102" selection-start-line="27" selection-end-line="28" selection-end-column="102" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TN策略/multi_factor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1647">
+          <caret line="109" selection-start-line="105" selection-end-line="109" />
+          <folding>
+            <element signature="e#2323#2324#0" />
+            <element signature="e#3741#4195#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_prepare/index_holds.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="337">
+          <caret line="43" column="72" lean-forward="true" selection-start-line="40" selection-end-line="43" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/smart_money.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="945">
+          <caret line="43" selection-start-line="43" selection-end-line="43" />
+          <folding>
+            <element signature="e#2330#3885#0" />
+            <element signature="e#4041#4743#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/Industry_Reverse.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1863">
+          <caret line="77" column="26" selection-end-line="103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basic_funcs/basic_funcs_open.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="567">
+          <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="56" selection-end-column="4" />
+          <folding>
+            <element signature="e#291#616#0" />
+            <element signature="e#697#1843#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basic_funcs/update_data_funcs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8694">
+          <caret line="334" lean-forward="true" selection-start-line="334" selection-end-line="334" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/smart_money_beta2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="144" lean-forward="true" selection-start-line="118" selection-end-line="144" />
+          <folding>
+            <element signature="e#1724#1866#0" />
+            <element signature="e#2778#4384#0" />
+            <element signature="e#4557#5259#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/191/191_005.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1855">
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/191/191_064.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1134">
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/191/191_036.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1183">
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/smart_money_beta.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="81">
+          <caret line="11" selection-end-line="149" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_prepare/data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="26" lean-forward="true" selection-start-line="26" selection-end-line="26" />
+          <folding>
+            <element signature="e#1489#1547#0" />
+            <element signature="e#1707#2486#0" />
+            <element signature="e#1916#2021#0" />
+            <element signature="e#3229#4251#0" />
+            <element signature="e#3340#3666#0" />
+            <element signature="e#5997#6132#0" />
+            <element signature="e#6949#7087#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/191/191_007.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="452">
+          <caret line="41" column="34" selection-end-line="89" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/long_short_powet.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="81">
+          <caret line="44" column="28" lean-forward="true" selection-end-line="95" />
+          <folding>
+            <element signature="e#2093#2846#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/CorrDownVolumeSharpe.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1377">
+          <caret line="78" column="80" selection-start-line="78" selection-start-column="80" selection-end-line="78" selection-end-column="80" />
+          <folding>
+            <element signature="e#2506#3208#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TN策略/Stra_T5.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="315" lean-forward="true" selection-start-line="309" selection-end-line="315" />
+          <folding>
+            <element signature="e#655#806#0" />
+            <element signature="e#4367#4415#0" />
+            <element signature="e#5175#9216#0" />
+            <element signature="e#10326#11761#1" />
+            <element signature="e#12114#14201#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TN策略/Stra_T5_sw.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="447">
+          <caret line="294" column="62" lean-forward="true" selection-start-line="289" selection-end-line="294" selection-end-column="62" />
+          <folding>
+            <element signature="e#655#806#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TN策略/Stra_T5_factors.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="90" lean-forward="true" selection-start-line="90" selection-end-line="90" />
+          <folding>
+            <element signature="e#655#806#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/last_minCloseCallAmtRatio.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="15" column="33" selection-start-line="15" selection-start-column="33" selection-end-line="15" selection-end-column="33" />
+          <folding>
+            <element signature="e#2111#2864#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/AutoCorrAmt_20.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1728">
+          <caret line="72" selection-end-line="92" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/191/191_105.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1053">
+          <caret line="47" selection-start-line="47" selection-end-line="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/MinCorrMaAmtLast3H.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1269">
+          <caret line="55" column="54" selection-start-line="55" selection-start-column="54" selection-end-line="55" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_prepare/update_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="864">
+          <caret line="42" selection-start-line="42" selection-end-line="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_prepare/price_5m.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1377">
+          <caret line="61" column="103" selection-start-line="61" selection-end-line="61" selection-end-column="103" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#3485#3819#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_prepare/update_alphas.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1053">
+          <caret line="50" selection-start-line="50" selection-end-line="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Factor_Test/minute_corr/minute_corr1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="261">
+          <caret line="54" selection-start-line="54" selection-end-line="54" />
+          <folding>
+            <element signature="e#2111#2864#0" />
+          </folding>
         </state>
       </provider>
     </entry>

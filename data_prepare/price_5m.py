@@ -90,10 +90,11 @@ low_5m.to_csv('/Users/caichaohong/Desktop/Zenki/price/5m/low_5m.csv')
 volume_5m.to_csv('/Users/caichaohong/Desktop/Zenki/price/5m/volume_5m.csv')
 money_5m.to_csv('/Users/caichaohong/Desktop/Zenki/price/5m/money_5m.csv')
 
-# 补日期
 
-last_end_date = '2021-08-01' # 加一天
-new_end = '2021-08-17'
+
+# 补日期
+last_end_date = '2021-08-01' # 加一天，从第二天12点开始算
+new_end = '2021-09-07'
 
 tmp_close = pd.DataFrame(columns=close_daily.columns)
 tmp_open = pd.DataFrame(columns=close_daily.columns)
