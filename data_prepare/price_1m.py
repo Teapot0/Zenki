@@ -59,3 +59,50 @@ high_1m.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/high_1m.csv')
 low_1m.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/low_1m.csv')
 volume_1m.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/volume_1m.csv')
 money_1m.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/money_1m.csv')
+
+
+# update
+
+# update data
+close_1m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/1m/close_1m.csv',index_col='Unnamed: 0')
+open_1m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/1m/open_1m.csv',index_col='Unnamed: 0')
+high_1m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/1m/high_1m.csv',index_col='Unnamed: 0')
+low_1m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/1m/low_1m.csv',index_col='Unnamed: 0')
+volume_1m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/1m/volume_1m.csv',index_col='Unnamed: 0')
+money_1m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/1m/money_1m.csv',index_col='Unnamed: 0')
+
+
+# 补日期
+last_end_date = '2021-05-01' # 加一天，从第二天12点开始算
+new_end = '2021-09-01'
+
+tmp_close = pd.DataFrame(columns=close_1m.columns)
+tmp_open = pd.DataFrame(columns=close_1m.columns)
+tmp_high = pd.DataFrame(columns=close_1m.columns)
+tmp_low = pd.DataFrame(columns=close_1m.columns)
+tmp_volume = pd.DataFrame(columns=close_1m.columns)
+tmp_money = pd.DataFrame(columns=close_1m.columns)
+
+for s in tqdm(close_1m.columns):
+    tmp = get_price(s, start_date=last_end_date, end_date=new_end, frequency='1m',
+                    fields=['open', 'close', 'high', 'low', 'volume','money'])
+    tmp_close[s] = tmp['close']
+    tmp_open[s] = tmp['open']
+    tmp_high[s] = tmp['high']
+    tmp_low[s] = tmp['low']
+    tmp_volume[s] = tmp['volume']
+    tmp_money[s] = tmp['money']
+
+new_close = pd.concat([close_1m,tmp_close],axis=0,join='inner')
+new_open = pd.concat([open_1m,tmp_open],axis=0,join='inner')
+new_high = pd.concat([high_1m,tmp_high],axis=0,join='inner')
+new_low = pd.concat([low_1m,tmp_low],axis=0,join='inner')
+new_volume = pd.concat([volume_1m,tmp_volume],axis=0,join='inner')
+new_money = pd.concat([money_1m,tmp_money],axis=0,join='inner')
+
+new_close.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/close_1m.csv')
+new_open.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/open_1m.csv')
+new_high.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/high_1m.csv')
+new_low.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/low_1m.csv')
+new_volume.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/volume_1m.csv')
+new_money.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/money_1m.csv')

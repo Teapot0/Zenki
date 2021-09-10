@@ -316,11 +316,11 @@ def update_index_holds(hs300_holds, zz500_holds, zz1000_holds, close):
     new_date_list = list(set(close.index).difference(set(hs300_holds.index)))
 
     for tmp_date in new_date_list:
-        hs300_holds.loc[tmp_date] = 0
-        zz500_holds.loc[tmp_date] = 0
-        zz1000_holds.loc[tmp_date] = 0
+        hs300_holds.loc[tmp_date] = np.nan
+        zz500_holds.loc[tmp_date] = np.nan
+        zz1000_holds.loc[tmp_date] = np.nan
 
-    for tmp_date in new_date_list:
+    for tmp_date in tqdm(new_date_list):
         hs300_list = get_index_stocks('000300.XSHG', date=tmp_date)
         zz500_list = get_index_stocks('000905.XSHG', date=tmp_date)
         zz1000_list = get_index_stocks('000852.XSHG', date=tmp_date)
@@ -333,16 +333,17 @@ def update_index_holds(hs300_holds, zz500_holds, zz1000_holds, close):
         zz500_holds.loc[tmp_date][tmp_500] = 1
         zz1000_holds.loc[tmp_date][tmp_1000] = 1
 
-        hs300_holds.to_csv('/Users/caichaohong/Desktop/Zenki/hs300_holds.csv')
-        zz500_holds.to_csv('/Users/caichaohong/Desktop/Zenki/zz500_holds.csv')
-        zz1000_holds.to_csv('/Users/caichaohong/Desktop/Zenki/zz1000_holds.csv')
+    new_300 = hs300_holds.sort_index()
+    new_500 = zz500_holds.sort_index()
+    new_1000 = zz1000_holds.sort_index()
 
+    new_300 = new_300.dropna(how='all', axis=0)
+    new_500 = new_500.dropna(how='all', axis=0)
+    new_1000 = new_1000.dropna(how='all', axis=0)
 
-
-
-
-
-
+    new_300.to_csv('/Users/caichaohong/Desktop/Zenki/hs300_holds.csv')
+    new_500.to_csv('/Users/caichaohong/Desktop/Zenki/zz500_holds.csv')
+    new_1000.to_csv('/Users/caichaohong/Desktop/Zenki/zz1000_holds.csv')
 
 
 

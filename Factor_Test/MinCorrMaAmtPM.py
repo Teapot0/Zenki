@@ -43,13 +43,14 @@ z_df = z_df.replace(False,1)
 
 
 #
-close_5m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/5m/close_5m.csv',index_col='Unnamed: 0')
-money_5m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/5m/money_5m.csv',index_col='Unnamed: 0')
-close_5m_rts = close_5m.pct_change(1)
+close_1m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/1m/close_1m.csv',index_col='Unnamed: 0')
+money_1m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/1m/money_1m.csv',index_col='Unnamed: 0')
 
-a = close_5m_rts.rolling(36).corr(money_5m)
+money_1m_30 = money_1m.rolling(30).mean()
+close_1m_rts30 = close_1m.pct_change(30)
+corr = money_1m_30.rolling(180).corr(close_1m_rts30)
 
-factor = a.iloc[47::48,]
+factor = corr.iloc[239::240]
 factor.index = [x.split(' ')[0] for x in factor.index]
 
 
@@ -74,6 +75,7 @@ def ic_test(index_pool,factor):
         plt.close()
 
         print ('{}: IC={}, IC_STD={}'.format(i,z1['ic'].mean(), z1['ic'].std()))
+
 
 ic_test(index_pool='hs300', factor=factor)
 ic_test(index_pool='zz500', factor=factor)

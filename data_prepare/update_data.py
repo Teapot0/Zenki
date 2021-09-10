@@ -1,4 +1,3 @@
-
 import pandas as pd
 import numpy as np
 import jqdatasdk as jq
@@ -19,7 +18,7 @@ get_query_count()
 
 # hs300
 
-New_end_date = '2021-09-07'
+New_end_date = '2021-09-10'
 
 index_code = ['510300.XSHG','510050.XSHG', '510500.XSHG','159948.XSHE']
 for code in index_code:
@@ -45,8 +44,15 @@ update_daily_prices(new_end_date=New_end_date, new_start_date='2014-01-01', clos
 st_df = get_extras('is_st', list(close.columns), start_date='2014-01-01', end_date=New_end_date)
 st_df.to_csv('/Users/caichaohong/Desktop/Zenki/price/is_st.csv')
 
+# index_holds
+hs300_holds = pd.read_csv('/Users/caichaohong/Desktop/Zenki/hs300_holds.csv', index_col='Unnamed: 0')
+zz500_holds = pd.read_csv('/Users/caichaohong/Desktop/Zenki/zz500_holds.csv', index_col='Unnamed: 0')
+zz1000_holds = pd.read_csv('/Users/caichaohong/Desktop/Zenki/zz1000_holds.csv', index_col='Unnamed: 0')
+
+update_index_holds(hs300_holds=hs300_holds, zz500_holds=zz500_holds, zz1000_holds=zz1000_holds, close=close)
 
 
+# 5分钟
 hs300_5m = get_price('510300.XSHG', start_date='2018-01-01', end_date='2021-08-13'+' 15:00:00',frequency='5m',
                              fields=['open', 'close', 'high', 'low', 'volume'])
 hs300_5m.to_csv('/Users/caichaohong/Desktop/Zenki/price/5m/510300_5m.csv')
@@ -85,15 +91,7 @@ ps_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/ps_ratio.csv
 
 update_financials(new_end_date='2021-09-03', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
 
-# index_holds
-hs300_holds = pd.read_csv('/Users/caichaohong/Desktop/Zenki/hs300_holds.csv', index_col='Unnamed: 0')
-zz500_holds = pd.read_csv('/Users/caichaohong/Desktop/Zenki/zz500_holds.csv', index_col='Unnamed: 0')
-zz1000_holds = pd.read_csv('/Users/caichaohong/Desktop/Zenki/zz1000_holds.csv', index_col='Unnamed: 0')
-
-update_index_holds(hs300_holds=hs300_holds, zz500_holds=zz500_holds, zz1000_holds=zz1000_holds, close=close)
-
 #  南北向资金持仓 -----------------------------
-
 share = pd.read_csv('/Users/caichaohong/Desktop/Zenki/南北向资金/share.csv', index_col='Unnamed: 0', date_parser=dateparse)
 ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/南北向资金/ratio.csv', index_col='Unnamed: 0', date_parser=dateparse)
 value = pd.read_csv('/Users/caichaohong/Desktop/Zenki/南北向资金/value.csv', index_col='Unnamed: 0', date_parser=dateparse)

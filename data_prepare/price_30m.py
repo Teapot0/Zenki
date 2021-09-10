@@ -16,7 +16,7 @@ dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 auth('13382017213', 'Aasd120120')
 get_query_count()
 
-trade_days = get_trade_days(start_date='2017-01-01', end_date='2021-07-25')
+trade_days = get_trade_days(start_date='2017-01-01', end_date='2021-09-08')
 close_daily = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
 
 all_name = pd.read_excel('/Users/caichaohong/Desktop/Zenki/all_stock_names.xlsx',index_col='Unnamed: 0')
@@ -29,22 +29,24 @@ start = trade_days[0].strftime('%Y-%m-%d 09:00:00')
 end = trade_days[-1].strftime('%Y-%m-%d 15:00:00')
 
 tmp = get_price(close_daily.columns[0], start_date=start,end_date=end,frequency='30m',
-                                        fields=['open', 'close', 'high', 'low', 'volume'])
+                                        fields=['open', 'close', 'high', 'low', 'volume', 'money'])
 
 close_30m = pd.DataFrame(columns=close_daily.columns,index=tmp.index)
 open_30m = pd.DataFrame(columns=close_daily.columns,index=tmp.index)
 high_30m = pd.DataFrame(columns=close_daily.columns,index=tmp.index)
 low_30m = pd.DataFrame(columns=close_daily.columns,index=tmp.index)
 volume_30m = pd.DataFrame(columns=close_daily.columns,index=tmp.index)
+money_30m = pd.DataFrame(columns=close_daily.columns,index=tmp.index)
 
 for s in tqdm(close_daily.columns):
     tmp = get_price(s, start_date=start, end_date=end, frequency='30m',
-                    fields=['open', 'close', 'high', 'low', 'volume'])
+                    fields=['open', 'close', 'high', 'low', 'volume', 'money'])
     close_30m[s] = tmp['close']
     open_30m[s] = tmp['open']
     high_30m[s] = tmp['high']
     low_30m[s] = tmp['low']
     volume_30m[s] = tmp['volume']
+    money_30m[s] = tmp['money']
 
 
 close_30m.to_csv('/Users/caichaohong/Desktop/Zenki/price/30m/close_30m.csv')
@@ -52,6 +54,7 @@ open_30m.to_csv('/Users/caichaohong/Desktop/Zenki/price/30m/open_30m.csv')
 high_30m.to_csv('/Users/caichaohong/Desktop/Zenki/price/30m/high_30m.csv')
 low_30m.to_csv('/Users/caichaohong/Desktop/Zenki/price/30m/low_30m.csv')
 volume_30m.to_csv('/Users/caichaohong/Desktop/Zenki/price/30m/volume_30m.csv')
+money_30m.to_csv('/Users/caichaohong/Desktop/Zenki/price/30m/money_30m.csv')
 
 
 
@@ -63,30 +66,34 @@ open_30m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/30m/open_30m.csv'
 high_30m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/30m/high_30m.csv',index_col='Unnamed: 0')
 low_30m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/30m/low_30m.csv',index_col='Unnamed: 0')
 volume_30m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/30m/volume_30m.csv',index_col='Unnamed: 0')
+money_30m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/30m/money_30m.csv',index_col='Unnamed: 0')
 
-last_end_date = '2021-07-21'
-new_end = '2021-07-23'
+last_end_date = '2021-07-24' # 加一天
+new_end = '2021-09-08'
 
 tmp_close = pd.DataFrame(columns=close_daily.columns)
 tmp_open = pd.DataFrame(columns=close_daily.columns)
 tmp_high = pd.DataFrame(columns=close_daily.columns)
 tmp_low = pd.DataFrame(columns=close_daily.columns)
 tmp_volume = pd.DataFrame(columns=close_daily.columns)
+tmp_money = pd.DataFrame(columns=close_daily.columns)
 
 for s in tqdm(close_daily.columns):
     tmp = get_price(s, start_date=last_end_date, end_date=new_end, frequency='30m',
-                    fields=['open', 'close', 'high', 'low', 'volume'])
+                    fields=['open', 'close', 'high', 'low', 'volume','money'])
     tmp_close[s] = tmp['close']
     tmp_open[s] = tmp['open']
     tmp_high[s] = tmp['high']
     tmp_low[s] = tmp['low']
     tmp_volume[s] = tmp['volume']
+    tmp_money[s] = tmp['money']
 
 new_close = pd.concat([close_30m,tmp_close],axis=0,join='inner')
 new_open = pd.concat([open_30m,tmp_open],axis=0,join='inner')
 new_high = pd.concat([high_30m,tmp_high],axis=0,join='inner')
 new_low = pd.concat([low_30m,tmp_low],axis=0,join='inner')
 new_volume = pd.concat([volume_30m,tmp_volume],axis=0,join='inner')
+new_money = pd.concat([money_30m,tmp_money],axis=0,join='inner')
 
 # new_close = pd.concat([tmp_close,close_30m],axis=0,join='inner')
 # new_open = pd.concat([tmp_open,open_30m],axis=0,join='inner')
@@ -100,6 +107,7 @@ new_open.to_csv('/Users/caichaohong/Desktop/Zenki/price/30m/open_30m.csv')
 new_high.to_csv('/Users/caichaohong/Desktop/Zenki/price/30m/high_30m.csv')
 new_low.to_csv('/Users/caichaohong/Desktop/Zenki/price/30m/low_30m.csv')
 new_volume.to_csv('/Users/caichaohong/Desktop/Zenki/price/30m/volume_30m.csv')
+new_money.to_csv('/Users/caichaohong/Desktop/Zenki/price/30m/money_30m.csv')
 
 
 

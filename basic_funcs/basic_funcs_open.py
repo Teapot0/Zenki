@@ -36,6 +36,7 @@ def get_ic_table_open_index(factor, open_rts, buy_date_list, index_pool):
         tmp = pd.concat([factor.loc[date][tmp_hold],rts.loc[date1][tmp_hold] - tmp_mean],axis=1)
         tmp.columns = ['date', 'date1']
         tmp['date1'] = tmp['date1'] - tmp['date1'].mean()
+        tmp = tmp.astype('float')
         out['ic'].loc[date] = tmp.dropna().corr().iloc[0,1]
         out['rank_ic'].loc[date] = tmp.rank().corr().iloc[0,1]
     return out

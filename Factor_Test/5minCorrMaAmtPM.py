@@ -2,13 +2,10 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 from datetime import datetime, time, timedelta
-from jqdatasdk import auth, get_query_count,get_industries,get_industry_stocks
 import matplotlib.pyplot as plt
 import os
 from basic_funcs.basic_function import *
 from basic_funcs.basic_funcs_open import *
-
-auth('13382017213', 'Aasd120120')
 
 dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 
@@ -18,6 +15,8 @@ plt.rcParams['font.sans-serif'] = ['Songti SC']
 plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
 close_daily = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv',index_col='Unnamed: 0')
+high_daily = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/high.csv',index_col='Unnamed: 0')
+low_daily = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/low.csv',index_col='Unnamed: 0')
 open_daily = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/open.csv',index_col='Unnamed: 0')
 vol_daily = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/volume.csv',index_col='Unnamed: 0')
 open_rts = open_daily.pct_change(1)
@@ -43,18 +42,17 @@ z_df = close_daily.isna().replace(True,0)
 z_df = z_df.replace(False,1)
 
 
-close_1m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/1m/close_1m.csv', index_col='Unnamed: 0')
-vol_1m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/1m/volume_1m.csv', index_col='Unnamed: 0')
+#
+close_5m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/5m/close_5m.csv',index_col='Unnamed: 0')
+money_5m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/5m/money_5m.csv',index_col='Unnamed: 0')
 
-vol210 = vol_1m.rolling(210).sum()
+money_5m_ma = money_5m.rolling(6).mean()
+close_5m_rts_ma = close_5m.pct_change(6)
 
-a = vol_1m.iloc[239::240]
-a.index = [x.split(' ')[0] for x in a.index]
-b = vol210.iloc[209::240]
-b.index = [x.split(' ')[0] for x in b.index]
+corr = money_5m_ma.rolling(24).corr(close_5m_rts_ma)
 
-
-factor = b/a
+factor = corr.iloc[239::240]
+factor.index = [x.split(' ')[0] for x in factor.index]
 
 
 def ic_test(index_pool,factor):

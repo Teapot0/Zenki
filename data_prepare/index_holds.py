@@ -45,9 +45,3 @@ zz1000_holds.to_csv('/Users/caichaohong/Desktop/Zenki/zz1000_holds.csv')
 
 # a_file = open('/Users/caichaohong/Desktop/Zenki/price/index_holds/hs300.json', "r")
 # output = a_file.read()
-
-
-
-
-
-

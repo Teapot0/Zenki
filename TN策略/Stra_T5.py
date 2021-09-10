@@ -39,7 +39,6 @@ hs300['net_value'] = (1+hs300['rts_1']).cumprod()
 # 择时
 hs300['short_ma'] = get_short_ma_order(hs300['close'], n1=5,n2=90,n3=180)
 
-
 close = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
 close = close.dropna(how='all', axis=1)  # 某列全NA
 close_rts_1 = close.pct_change(1)
