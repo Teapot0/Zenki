@@ -71,6 +71,12 @@ low_1m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/1m/low_1m.csv',inde
 volume_1m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/1m/volume_1m.csv',index_col='Unnamed: 0')
 money_1m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/1m/money_1m.csv',index_col='Unnamed: 0')
 
+close_1m.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/close_1m.csv')
+open_1m.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/open_1m.csv')
+high_1m.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/high_1m.csv')
+low_1m.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/low_1m.csv')
+volume_1m.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/volume_1m.csv')
+money_1m.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/money_1m.csv')
 
 # 补日期
 last_end_date = '2021-05-01' # 加一天，从第二天12点开始算
@@ -99,6 +105,13 @@ new_high = pd.concat([high_1m,tmp_high],axis=0,join='inner')
 new_low = pd.concat([low_1m,tmp_low],axis=0,join='inner')
 new_volume = pd.concat([volume_1m,tmp_volume],axis=0,join='inner')
 new_money = pd.concat([money_1m,tmp_money],axis=0,join='inner')
+
+new_close = new_close.sort_index(axis=1)
+new_open = new_open.sort_index(axis=1)
+new_high = new_high.sort_index(axis=1)
+new_low = new_low.sort_index(axis=1)
+new_volume = new_volume.sort_values(axis=1)
+new_money = new_money.sort_values(axis=1)
 
 new_close.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/close_1m.csv')
 new_open.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/open_1m.csv')

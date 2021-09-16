@@ -67,11 +67,9 @@ volume_5m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/5m/volume_5m.csv
 money_5m = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/5m/money_5m.csv',index_col='Unnamed: 0')
 
 # 补新票
-new_stocks = list(set(close_daily.columns).difference(set(close_5m.dropna(axis=1, how='all').columns)))
+new_stocks = list(set(close_daily.columns).difference(set(close_5m.columns)))
 old_start = close_5m.index[0]
 old_end = close_5m.index[-1]
-close_5m = close_5m.reindex(columns=list(close_5m.columns) + new_stocks)
-close_5m = close_5m.sort_index(axis=1)
 
 for s in tqdm(new_stocks):
     tmp = get_price(s, start_date=old_start, end_date=old_end, frequency='5m',
@@ -82,6 +80,13 @@ for s in tqdm(new_stocks):
     low_5m[s] = tmp['low']
     volume_5m[s] = tmp['volume']
     money_5m[s] = tmp['money']
+
+close_5m = close_5m.sort_index()
+open_5m = open_5m.sort_index()
+high_5m = high_5m.sort_index()
+low_5m = low_5m.sort_index()
+volume_5m = volume_5m.sort_index()
+money_5m = money_5m.sort_index()
 
 close_5m.to_csv('/Users/caichaohong/Desktop/Zenki/price/5m/close_5m.csv')
 open_5m.to_csv('/Users/caichaohong/Desktop/Zenki/price/5m/open_5m.csv')

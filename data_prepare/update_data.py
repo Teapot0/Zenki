@@ -18,7 +18,7 @@ get_query_count()
 
 # hs300
 
-New_end_date = '2021-09-10'
+New_end_date = '2021-09-16'
 
 index_code = ['510300.XSHG','510050.XSHG', '510500.XSHG','159948.XSHE']
 for code in index_code:
@@ -44,18 +44,25 @@ update_daily_prices(new_end_date=New_end_date, new_start_date='2014-01-01', clos
 st_df = get_extras('is_st', list(close.columns), start_date='2014-01-01', end_date=New_end_date)
 st_df.to_csv('/Users/caichaohong/Desktop/Zenki/price/is_st.csv')
 
-# index_holds
+
+# 5分钟
+hs300_5m = get_price('510300.XSHG', start_date='2018-01-01', end_date='2021-07-30'+' 15:00:00',frequency='5m',
+                             fields=['open', 'close', 'high', 'low', 'volume', 'money'])
+hs300_5m.to_csv('/Users/caichaohong/Desktop/Zenki/price/5m/510300_5m.csv')
+
+
+# 1分钟
+hs300_1m = get_price('510300.XSHG', start_date='2021-01-01', end_date='2021-08-31'+' 15:00:00',frequency='1m',
+                             fields=['open', 'close', 'high', 'low', 'volume', 'money'])
+hs300_1m.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/510300_1m.csv')
+
+
+# index_holds, 只要更新完close就可以
 hs300_holds = pd.read_csv('/Users/caichaohong/Desktop/Zenki/hs300_holds.csv', index_col='Unnamed: 0')
 zz500_holds = pd.read_csv('/Users/caichaohong/Desktop/Zenki/zz500_holds.csv', index_col='Unnamed: 0')
 zz1000_holds = pd.read_csv('/Users/caichaohong/Desktop/Zenki/zz1000_holds.csv', index_col='Unnamed: 0')
 
 update_index_holds(hs300_holds=hs300_holds, zz500_holds=zz500_holds, zz1000_holds=zz1000_holds, close=close)
-
-
-# 5分钟
-hs300_5m = get_price('510300.XSHG', start_date='2018-01-01', end_date='2021-08-13'+' 15:00:00',frequency='5m',
-                             fields=['open', 'close', 'high', 'low', 'volume'])
-hs300_5m.to_csv('/Users/caichaohong/Desktop/Zenki/price/5m/510300_5m.csv')
 
 
 # 大单
@@ -81,7 +88,7 @@ update_money_flow(New_end_date='2021-08-26', close=close,
 # market_cap
 market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv', index_col='Unnamed: 0')
 
-update_market_cap(new_start_date='2014-01-01',new_end_date='2021-09-03',market_cap=market_cap, close=close)
+update_market_cap(new_start_date='2014-01-01',new_end_date='2021-09-10',market_cap=market_cap, close=close)
 
 
 # financials pe
@@ -89,7 +96,7 @@ circulating_market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financial
 pe_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv', index_col='Unnamed: 0')
 ps_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/ps_ratio.csv', index_col='Unnamed: 0')
 
-update_financials(new_end_date='2021-09-03', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
+update_financials(new_end_date='2021-09-10', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
 
 #  南北向资金持仓 -----------------------------
 share = pd.read_csv('/Users/caichaohong/Desktop/Zenki/南北向资金/share.csv', index_col='Unnamed: 0', date_parser=dateparse)
@@ -196,7 +203,6 @@ def update_margin_buy(new_start_date, new_end_date, margin_df):
 
 new_start_date = '2017-03-17'
 new_end_date = '2021-05-10'
-
 
 update_margin_buy(new_start_date='2017-03-17', new_end_date='2021-05-10', margin_df=margin_buy_value)
 
