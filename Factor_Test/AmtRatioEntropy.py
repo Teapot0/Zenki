@@ -72,8 +72,8 @@ for i in range(len(date_list)):
     print ('IC={}, IC_STD={}'.format(z1['ic'].mean(), z1['ic'].std()))
 
 
-z = quantile_factor_test_plot_open(factor=factor, open_rts=open_rts, benchmark_rts=hs300['rts'], quantiles=10, hold_time=5, plot_title=False, weight="avg",
-                              comm_fee=0.003)
+z = quantile_factor_test_plot_open_index(factor=factor, open_rts=open_rts, benchmark_rts=hs300['rts'], quantiles=10, hold_time=5, plot_title=False, weight="avg",
+                              index_pool='hs300',comm_fee=0.003)
 
 
 

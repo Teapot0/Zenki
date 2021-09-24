@@ -27,9 +27,15 @@ close_rts = close_daily.pct_change(1)
 open_rts = open_daily.pct_change(1)
 
 
-b = (vol_1m**0.1)[close_1m_rts < 0].rolling(240, min_periods=1).std()
+r2 = close_1m_rts**2
 
-factor = (b.iloc[239::240]).rolling(5).mean()
+rv = (r2.rolling(240, min_periods=1).sum()).iloc[239::240,]
+rv_pos = ((r2[close_1m_rts > 0]).rolling(240,min_periods=1).sum()).iloc[239::240,]
+rv_neg = ((r2[close_1m_rts < 0]).rolling(240,min_periods=1).sum()).iloc[239::240,]
+
+rsj = (rv_pos - rv_neg)/rv
+
+factor = rsj.rolling(5).mean()
 factor.index = [x.split(' ')[0] for x in factor.index]
 # factor.to_csv('/Users/caichaohong/Desktop/Zenki/factors/1min_neg_rts_volstd.csv')
 

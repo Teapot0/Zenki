@@ -12,31 +12,41 @@ from functools import reduce
 import seaborn as sns
 from basic_funcs.basic_funcs_open import *
 
-amtEntropy = pd.read_csv('/Users/caichaohong/Desktop/Zenki/factors/amtRatioEntropy.csv',index_col='Unnamed: 0')
-momentum_5d = pd.read_csv('/Users/caichaohong/Desktop/Zenki/factors/closevol_momentum_5d.csv',index_col='Unnamed: 0')
+plt.rcParams['font.sans-serif'] = ['Songti SC']
+plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
-# rankinglist = pd.read_csv('./rankinglist.csv',index_col='Unnamed: 0')
-# Turnrankinglist = pd.read_csv('./Turnrankinglist.csv',index_col='Unnamed: 0')
-#
-# extremevol_std = pd.read_csv('./extremevol_std.csv',index_col='Unnamed: 0')
-# alpha_083 = pd.read_csv('./191/alpha_083.csv',index_col='Unnamed: 0')
-# alpha_062 = pd.read_csv('./191/alpha_062.csv',index_col='Unnamed: 0')
-# alpha_064 = pd.read_csv('./191/alpha_064.csv',index_col='Unnamed: 0')
-# industry_reverse = pd.read_csv('./industry_reverse.csv',index_col='Unnamed: 0')
+min_exrts_volstd = pd.read_csv('/Users/caichaohong/Desktop/Zenki/factors/1min_exrts_volstd.csv', index_col='Unnamed: 0').dropna(how='all')
+min_neg_rts_volstd = pd.read_csv('/Users/caichaohong/Desktop/Zenki/factors/1min_neg_rts_volstd.csv', index_col='Unnamed: 0').dropna(how='all')
+smart_money = pd.read_csv('/Users/caichaohong/Desktop/Zenki/factors/smart_money_vwap_b0.1_low.csv', index_col='Unnamed: 0').dropna(how='all')
+
+# shape
+min_neg_rts_volstd = min_neg_rts_volstd.loc[min_exrts_volstd.index]
+
+amtEntropy = read_csv_select(path='/Users/caichaohong/Desktop/Zenki/factors/amtRatioEntropy.csv',
+                             start_time='2021-01-15', end_time='2021-08-31', stock_list=list(min_neg_rts_volstd.columns))
+
 close_daily = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv',index_col='Unnamed: 0')
 open_daily = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/open.csv',index_col='Unnamed: 0')
 daily_rts = close_daily.pct_change(1)
 open_rts = open_daily.pct_change(1)
+
 
 hs300 = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/510300.XSHG.xlsx', index_col='Unnamed: 0')
 hs300.index = [x.strftime('%Y-%m-%d') for x in hs300.index]
 hs300['rts'] = hs300['close'].pct_change(1)
 hs300['net_value'] = hs300['close'] / hs300['close'][0]
 
-# factor_df_list = [smallplayer_abs_turnover, amtEntropy, rankinglist, Turnrankinglist, extremevol_std,
-#                   alpha_083, alpha_062, alpha_064, industry_reverse]
 
-factor_df_list = [amtEntropy]
+zz500 = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/510500.XSHG.xlsx', index_col='Unnamed: 0')
+zz500.index = [x.strftime('%Y-%m-%d') for x in zz500.index]
+zz500['rts'] = zz500['close'].pct_change(1)
+
+zz1000 = pd.read_excel('/Users/caichaohong/Desktop/Zenki/price/512100.XSHG.xlsx', index_col='Unnamed: 0')
+zz1000.index = [x.strftime('%Y-%m-%d') for x in zz1000.index]
+zz1000['rts'] = zz1000['close'].pct_change(1)
+
+
+factor_df_list = [amtEntropy, min_exrts_volstd, min_neg_rts_volstd, smart_money]
 
 multi_corr = []
 for i in tqdm(range(len(factor_df_list))):
@@ -46,10 +56,8 @@ for i in tqdm(range(len(factor_df_list))):
     multi_corr.append(tmp)
 
 multi_corr_df = pd.concat(multi_corr,axis=1, join='inner')
-multi_corr_df_40 = multi_corr_df.rolling(20).mean()
 
 
-#
 # def get_multifactor_ic_table(daily_rts, factor_df_list):
 #     # same_index = set.intersection(set(x.index) for x in factor_df_list)
 #
@@ -78,40 +86,21 @@ multi_corr_df_40 = multi_corr_df.rolling(20).mean()
 final_factor_list = []
 for i in tqdm(range(len(factor_df_list))):
     tmp_factor = factor_df_list[i].loc[multi_corr_df.index]
-    final_factor_list.append((tmp_factor.rank(axis=1).mul(multi_corr_df_40.iloc[:,i], axis=0)))
+    final_factor_list.append((tmp_factor.rank(axis=1).mul(multi_corr_df.iloc[:,i], axis=0)))
 
 factor = reduce(lambda x, y: x + y, final_factor_list)
 
 
-date_1 = factor.index
-date_5 = factor.index[::5]
-date_10 = factor.index[::10]
-
-date_list = [date_1, date_5, date_10]
-for i in range(len(date_list)):
-    d = date_list[i]
-    z1 = get_ic_table_open(factor=factor, open_rts=open_rts, buy_date_list=d)
-    plt.plot(z1['ic'].values)
-    plt.title('IC')
-    plt.savefig('/Users/caichaohong/Desktop/{}.png'.format(i+1))
-    plt.close()
-
-    plt.plot(z1['ic'].cumsum().values)
-    plt.title('IC_CUMSUM')
-    plt.savefig('/Users/caichaohong/Desktop/{}_CUMSUM.png'.format(i + 1))
-    plt.close()
-
-    print ('IC={}, IC_STD={}'.format(z1['ic'].mean(), z1['ic'].std()))
+ic_test(index_pool='hs300', factor=factor, open_rts=open_rts)
+ic_test(index_pool='zz500', factor=factor, open_rts=open_rts)
+ic_test(index_pool='zz1000', factor=factor, open_rts=open_rts)
 
 
-z = quantile_factor_test_plot_open(factor=factor, open_rts=open_rts, benchmark_rts=hs300['rts'], quantiles=10,
-                                   hold_time=5, plot_title=False, weight="avg", comm_fee=0.003)
+z = quantile_factor_test_plot_open_index(factor=-factor, open_rts=open_rts, benchmark_rts=hs300['rts'], quantiles=10,
+                                   hold_time=10,index_pool='zz500', plot_title=False, weight="avg", comm_fee=0.003)
 
 
 
-
-
-
-
+plt.plot((z[0] - zz500['rts']).cumsum())
 
 

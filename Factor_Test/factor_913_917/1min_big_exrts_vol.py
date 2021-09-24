@@ -57,7 +57,7 @@ c2 = abs(b)[b < 0].rolling(240, min_periods=1).sum()
 factor = (c1/c2).iloc[239::240]
 factor = factor.rolling(10).mean()
 factor.index = [x.split(' ')[0] for x in factor.index]
-
+# factor.to_csv('/Users/caichaohong/Desktop/Zenki/factors/1min_exrts_volstd.csv')
 
 
 def ic_test(index_pool,factor):

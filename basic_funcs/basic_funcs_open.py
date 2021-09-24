@@ -200,5 +200,27 @@ def quantile_factor_test_plot_open_index(factor, open_rts, benchmark_rts, quanti
 #     return quantile_df
 
 
+def ic_test(index_pool,factor,open_rts):
+    date_1 = factor.index
+    date_5 = factor.index[::5]
+    date_10 = factor.index[::10]
+
+    date_list = [date_1, date_5, date_10]
+    print(index_pool + ' : - - - - - - - - - - -')
+    for i in range(len(date_list)):
+        d = date_list[i]
+        z1 = get_ic_table_open_index(factor=factor, open_rts=open_rts, buy_date_list=d, index_pool=index_pool)
+        plt.plot(z1['ic'].values)
+        plt.title('IC')
+        plt.savefig('/Users/caichaohong/Desktop/{}.png'.format(i+1))
+        plt.close()
+
+        plt.plot(z1['ic'].cumsum().values)
+        plt.title('IC_CUMSUM')
+        plt.savefig('/Users/caichaohong/Desktop/{}_CUMSUM.png'.format(i + 1))
+        plt.close()
+
+        print ('{}: IC={}, IC_STD={}'.format(i,z1['ic'].mean(), z1['ic'].std()))
+
 
 

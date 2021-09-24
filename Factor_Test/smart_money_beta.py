@@ -54,7 +54,7 @@ close_low_rts = close_1m / low_1m -1
 s1 = 1 / (abs(close_low_rts) / (((vol_1m)**0.1)))
 
 # factor
-date_list = close_daily.index[(close_daily.index>='2021-01-01') & (close_daily.index<='2021-04-30')]
+date_list = close_daily.index[(close_daily.index>='2021-01-01') & (close_daily.index<='2021-08-31')]
 
 
 def smart_money_test(type,interval_n):
@@ -103,7 +103,9 @@ def smart_money_test(type,interval_n):
 # factor.to_csv('/Users/caichaohong/Desktop/Zenki/factors/smart_money.csv')
 
 
-factor = smart_money_test(type='vwap', interval_n=1199)
+factor = smart_money_test(type='vwap', interval_n=2399)
+
+# factor.to_csv('/Users/caichaohong/Desktop/Zenki/factors/smart_money_vwap_b0.1_low.csv')
 
 
 def ic_test(index_pool,factor):
