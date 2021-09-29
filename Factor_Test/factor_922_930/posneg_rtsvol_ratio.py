@@ -27,28 +27,15 @@ close_rts = close_daily.pct_change(1)
 open_rts = open_daily.pct_change(1)
 
 
-# row_n = [237+240*i+j  for i in range(int(close_1m_rts.shape[0]/240)) for j in range(3)]
+r2 = close_1m_rts**2
 
-ret5 = close_1m_rts.rolling(5).mean()
-ret10_min = close_1m_rts.rolling(10).min()
+rv = (r2.rolling(240, min_periods=1).sum()).iloc[239::240,]
+rv_pos = ((r2[close_1m_rts > 0]).rolling(240,min_periods=1).sum()).iloc[239::240,]
+rv_neg = ((r2[close_1m_rts < 0]).rolling(240,min_periods=1).sum()).iloc[239::240,]
 
-pt1 = close_1m_rts - ret5
+rsj = (rv_pos - rv_neg)/rv
 
-pt1_threshold = pt1.rolling(237).quantile(0.5)
-pt1_df = pt1_threshold.iloc[236::240,]
-
-pt1_df2 = pt1_df.append([pt1_df]*239)
-pt1_df2 = pt1_df2.sort_index()
-pt1_df2.index = close_1m_rts.index
-std_df = pt1[pt1 <= pt1_df2].rolling(240,min_periods=1).std()
-pt1_std = std_df.iloc[239::240]
-
-pt2 = close_1m_rts - ret10_min
-pt2_std = pt2.rolling(240,min_periods=1).std().iloc[239::240]
-
-
-
-factor = pt1_std / pt2_std
+factor = rsj.rolling(5).mean()
 factor.index = [x.split(' ')[0] for x in factor.index]
 # factor.to_csv('/Users/caichaohong/Desktop/Zenki/factors/1min_neg_rts_volstd.csv')
 

@@ -18,7 +18,7 @@ get_query_count()
 
 # hs300
 
-New_end_date = '2021-09-23'
+New_end_date = '2021-09-29'
 
 index_code = ['510300.XSHG','510050.XSHG', '510500.XSHG','159948.XSHE', '512100.XSHG']
 code = '512100.XSHG'
@@ -89,7 +89,7 @@ update_money_flow(New_end_date='2021-08-26', close=close,
 # market_cap
 market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv', index_col='Unnamed: 0')
 
-update_market_cap(new_start_date='2014-01-01',new_end_date='2021-09-17',market_cap=market_cap, close=close)
+update_market_cap(new_start_date='2014-01-01',new_end_date='2021-09-24',market_cap=market_cap, close=close)
 
 
 # financials pe
@@ -97,7 +97,7 @@ circulating_market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financial
 pe_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv', index_col='Unnamed: 0')
 ps_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/ps_ratio.csv', index_col='Unnamed: 0')
 
-update_financials(new_end_date='2021-09-17', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
+update_financials(new_end_date='2021-09-24', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
 
 #  南北向资金持仓 -----------------------------
 share = pd.read_csv('/Users/caichaohong/Desktop/Zenki/南北向资金/share.csv', index_col='Unnamed: 0', date_parser=dateparse)
