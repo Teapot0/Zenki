@@ -54,8 +54,8 @@ out_1 = pd.read_csv('/Users/caichaohong/Desktop/Zenki/沪深300秒懂舆情因�
 out_2 = pd.read_csv('/Users/caichaohong/Desktop/Zenki/沪深300秒懂舆情因子/sentimentfactor2.csv', index_col='Unnamed: 0',date_parser=dateparse)
 out_012 = pd.read_csv('/Users/caichaohong/Desktop/Zenki/沪深300秒懂舆情因子/sentimentfactor012.csv', index_col='Unnamed: 0',date_parser=dateparse)
 
-margin_buy_value = pd.read_csv('/Users/caichaohong/Desktop/Zenki/融资融券/margin_buy_value.csv', index_col='Unnamed: 0',date_parser=dateparse)
-margin_total_value = pd.read_csv('/Users/caichaohong/Desktop/Zenki/融资融券/margin_total_value.csv', index_col='Unnamed: 0',date_parser=dateparse)
+margin_buy_value = pd.read_csv('/Users/caichaohong/Desktop/Zenki/rongzi/margin_buy_value.csv', index_col='Unnamed: 0',date_parser=dateparse)
+margin_total_value = pd.read_csv('/Users/caichaohong/Desktop/Zenki/rongzi/margin_total_value.csv', index_col='Unnamed: 0',date_parser=dateparse)
 
 #抗跌因子
 reverse_rts = ((close_rts_interval_1.sub(hs300['rts_interval_1'],axis=0)).mul(hs300['rts_interval_1']**2, axis=0))

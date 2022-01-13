@@ -6,47 +6,75 @@ import matplotlib.pyplot as plt
 import os
 from basic_funcs.basic_function import *
 from basic_funcs.basic_funcs_open import *
-from jqdatasdk import bond,query,attribute_history_engine
-
+from jqdatasdk import bond, auth, query
 import warnings
 warnings.filterwarnings('ignore')
 plt.rcParams['font.sans-serif'] = ['Songti SC']
 plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 
-def convert_premium_rate(context): #计算昨日收盘转债溢价率，从2018-09-13开始
-    '''查债券收盘价'''
-    df=bond.run_query(query(bond.CONBOND_DAILY_PRICE).filter(bond.CONBOND_DAILY_PRICE.code==context))
-    df.sort_values(by='date',ascending=False,inplace=True)  #按照日期降序排序
-    dfa=df.dropna() #删除有空值的行，剔除停牌债券
-    dfa.reset_index(inplace=True,drop=True) #重置索引
-    close=dfa.loc[0,'close'] #提取元素
-    '''查最新转股价'''
-    df2=bond.run_query(query(bond.CONBOND_CONVERT_PRICE_ADJUST).filter(bond.CONBOND_CONVERT_PRICE_ADJUST.code==context))
-    if df2.empty: #判断是否为空表
-        convert_price_now=1000000 #这个表存在BUG，权宜之计
-    else:
-        df2.sort_values(by='adjust_date',ascending=False,inplace=True) #按照日期降序排序
-        df2.reset_index(inplace=True,drop=True) #重置索引
-        convert_price_now=df2.loc[0,'new_convert_price']
-    '''查正股代码'''
-    df3=bond.run_query(query(bond.CONBOND_BASIC_INFO).filter(bond.CONBOND_BASIC_INFO.code==context))
-    stock_code=df3.loc[0,'company_code'] #提取元素
-    '''查正股收盘价'''
-    df4=attribute_history_engine(stock_code, 1, unit='1d',
-            fields=['close'],
-            skip_paused=True, df=True, fq='pre')
-    df4.reset_index(inplace=True,drop=True)
-    stock_close=df4.loc[0,'close'] #提取元素 loc只能通过index和columns来取,若不重设索引则不能这么提取
-    '''计算溢价率'''
-    convert_value=(100/convert_price_now)*stock_close #转股价值=（面值/转股价）*正股价
-    convert_premium_rate=(close-convert_value)/convert_value #转股溢价率=(转债价-转股价值)/转股价值
-    return convert_premium_rate
+auth('13382017213', 'Aasd120120')
 
-print(convert_premium_rate('123103'))
+#确定日期
+kzz_date = '2021-08-25'
+
+kzz_price = bond.run_query(query(bond.CONBOND_DAILY_PRICE.code,
+                           bond.CONBOND_DAILY_PRICE.name,
+                           bond.CONBOND_DAILY_PRICE.close,
+                          ).filter(bond.CONBOND_DAILY_PRICE.date==kzz_date,
+                                   bond.CONBOND_DAILY_PRICE.close > 0))
+
+#获取可转债的当天价格
+kzz_close = bond.run_query(query(bond.CONBOND_DAILY_PRICE.code,
+                           bond.CONBOND_DAILY_PRICE.name,
+                           bond.CONBOND_DAILY_PRICE.close,
+                          ).filter(bond.CONBOND_DAILY_PRICE.date == kzz_date,
+                                   bond.CONBOND_DAILY_PRICE.close > 0))
+
+kzz_close = kzz_close.sort_values(by=['close'], ascending=True)
+kzz_close = kzz_close.reset_index(drop = True)
+kzz_close['order_close']=kzz_close.index
 
 
+kzz_zg = bond.run_query(query(bond.CONBOND_DAILY_CONVERT.code,
+                                     bond.CONBOND_DAILY_CONVERT.convert_premium_rate)
+                               .filter(bond.CONBOND_DAILY_CONVERT.date==kzz_date))
+# 按溢价率排序
+kzz_zg = kzz_zg. sort_values(by=['convert_premium_rate'], ascending=True)
+kzz_zg = kzz_zg.reset_index(drop = True)
+# 记录溢价率序号
+kzz_zg['order_rate']=kzz_zg.index
 
 
+#
+kzz_df = pd.merge(kzz_close, kzz_zg, on="code")
+
+# 计算双低排序值
+kzz_df['double_low'] = kzz_df['order_close'] + kzz_df['order_rate']
+kzz_l1 = kzz_df. sort_values (by=['double_low'], ascending=True)[:10]
 
 
+# 数据： ---------------------------------------------------------------------------------
+close_daily = read_csv_select(path='/Users/caichaohong/Desktop/Zenki/price/daily/close.csv',
+                              start_time='2019-01-01', end_time='2021-09-29')
+date_list = list(close_daily.index)
+
+# price
+price_df = pd.DataFrame()
+
+d = date_list[0]
+
+for d in tqdm(date_list):
+    df = bond.run_query(query(bond.CONBOND_DAILY_PRICE).filter(bond.CONBOND_DAILY_PRICE.date == d))
+    df = df[df['money'] > 0]
+    df = df.drop(columns=['id'])
+
+    kzz_zg = bond.run_query(query(bond.CONBOND_DAILY_CONVERT.code,
+                                  bond.CONBOND_DAILY_CONVERT.convert_premium_rate)
+                            .filter(bond.CONBOND_DAILY_CONVERT.date == d))
+
+    tmp_df = pd.merge(df, kzz_zg, on="code")
+
+    price_df = price_df.append(tmp_df)
+
+price_df.to_csv('/Users/caichaohong/Desktop/Zenki/price/KZZ/price.csv')
 

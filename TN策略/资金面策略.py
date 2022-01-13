@@ -47,8 +47,8 @@ for i in range(hold_value_marketcap.shape[0]):
     holds.append(hold_value_marketcap.iloc[i,].sort_values(ascending=False).index[0])
 
 
-margin_buy_value = pd.read_excel('/Users/caichaohong/Desktop/Zenki/融资融券/margin_buy_value.xlsx')
-margin_sell_value= pd.read_excel('/Users/caichaohong/Desktop/Zenki/融资融券/margin_sell_value.xlsx')
+margin_buy_value = pd.read_excel('/Users/caichaohong/Desktop/Zenki/rongzi/margin_buy_value.xlsx')
+margin_sell_value= pd.read_excel('/Users/caichaohong/Desktop/Zenki/rongzi/margin_sell_value.xlsx')
 
 stock_list = list(hold_value.columns)
 # stock_list = get_index_stocks('000985.XSHG')

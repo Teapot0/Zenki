@@ -12,16 +12,21 @@ from basic_funcs.update_data_funcs import *
 
 dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 
-# auth('15951961478', '961478')
 auth('13382017213', 'Aasd120120')
+
 get_query_count()
 
-# hs300
+New_end_date = '2022-01-12'
 
-New_end_date = '2021-09-29'
+# 所有公司名称
+all_stocks = get_all_securities(types=['stock'], date=None)
+all_stock = finance.run_query(query(finance.STK_COMPANY_INFO.code,
+                                    finance.STK_COMPANY_INFO.short_name).filter(
+    finance.STK_COMPANY_INFO.code.in_(list(all_stocks.index))))
+
+all_stock.to_excel('/Users/caichaohong/Desktop/Zenki/all_stock_names.xlsx')
 
 index_code = ['510300.XSHG','510050.XSHG', '510500.XSHG','159948.XSHE', '512100.XSHG']
-code = '512100.XSHG'
 for code in index_code:
     p = get_price(code, start_date='2014-01-01', end_date=New_end_date,
                              fields=['open', 'close', 'high', 'low', 'volume', 'high_limit', 'low_limit'])
@@ -40,22 +45,23 @@ money = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/money.csv', in
 update_daily_prices(new_end_date=New_end_date, new_start_date='2014-01-01', close=close, open=open, high=high, low=low,
                     high_limit=high_limit, low_limit=low_limit, volume=volume, money=money)
 
-
 # ST
 st_df = get_extras('is_st', list(close.columns), start_date='2014-01-01', end_date=New_end_date)
 st_df.to_csv('/Users/caichaohong/Desktop/Zenki/price/is_st.csv')
 
 
+
+
 # 5分钟
-hs300_5m = get_price('510300.XSHG', start_date='2018-01-01', end_date='2021-07-30'+' 15:00:00',frequency='5m',
+hs300_5m = get_price('510300.XSHG', start_date='2018-01-01', end_date=New_end_date+' 15:00:00',frequency='5m',
                              fields=['open', 'close', 'high', 'low', 'volume', 'money'])
 hs300_5m.to_csv('/Users/caichaohong/Desktop/Zenki/price/5m/510300_5m.csv')
 
 
 # 1分钟
-hs300_1m = get_price('510300.XSHG', start_date='2021-01-01', end_date='2021-08-31'+' 15:00:00',frequency='1m',
+hs300_1m = get_price('510300.XSHG', start_date='2018-01-02', end_date='2021-06-29'+' 15:00:00',frequency='1m',
                              fields=['open', 'close', 'high', 'low', 'volume', 'money'])
-hs300_1m.to_csv('/Users/caichaohong/Desktop/Zenki/price/1m/510300_1m.csv')
+hs300_1m.to_parquet('/Users/caichaohong/Desktop/Zenki/price/1m/510300_1m.parquet')
 
 
 # index_holds, 只要更新完close就可以
@@ -89,7 +95,7 @@ update_money_flow(New_end_date='2021-08-26', close=close,
 # market_cap
 market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/market_cap.csv', index_col='Unnamed: 0')
 
-update_market_cap(new_start_date='2014-01-01',new_end_date='2021-09-24',market_cap=market_cap, close=close)
+update_market_cap(new_start_date='2014-01-01',new_end_date='2021-10-22',market_cap=market_cap, close=close)
 
 
 # financials pe
@@ -97,7 +103,7 @@ circulating_market_cap = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financial
 pe_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/pe_ratio.csv', index_col='Unnamed: 0')
 ps_ratio = pd.read_csv('/Users/caichaohong/Desktop/Zenki/financials/ps_ratio.csv', index_col='Unnamed: 0')
 
-update_financials(new_end_date='2021-09-24', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
+update_financials(new_end_date='2021-10-22', new_start_date='2014-01-01', cir_mc=circulating_market_cap,pe=pe_ratio,ps=ps_ratio)
 
 #  南北向资金持仓 -----------------------------
 share = pd.read_csv('/Users/caichaohong/Desktop/Zenki/南北向资金/share.csv', index_col='Unnamed: 0', date_parser=dateparse)
@@ -161,8 +167,8 @@ def update_north_data(new_end_date, new_start_date, share, ratio, value,close):
 update_north_data(new_end_date='2021-05-26', new_start_date='2014-01-01', share=share, ratio=ratio, value=value, close=close)
 
 
-# 融资融券
-margin_buy_value = pd.read_csv('/Users/caichaohong/Desktop/Zenki/融资融券/margin_buy_value.csv', index_col='Unnamed: 0',date_parser=dateparse)
+# rongzi
+margin_buy_value = pd.read_csv('/Users/caichaohong/Desktop/Zenki/rongzi/margin_buy_value.csv', index_col='Unnamed: 0',date_parser=dateparse)
 
 
 def update_margin_buy(new_start_date, new_end_date, margin_df):
@@ -196,7 +202,7 @@ def update_margin_buy(new_start_date, new_end_date, margin_df):
                 df2.index = pd.to_datetime(df2['date'])
                 margin_df[stock].loc[df2.index] = df2['fin_buy_value'].values
 
-        margin_df.to_csv('/Users/caichaohong/Desktop/Zenki/融资融券/margin_buy_value.csv')
+        margin_df.to_csv('/Users/caichaohong/Desktop/Zenki/rongzi/margin_buy_value.csv')
 
     else:
         print("No need to Update")
@@ -214,8 +220,8 @@ top_10_net_buy = top_10_net_buy.dropna(axis=0, how='all')
 raw_df = pd.read_excel('/Users/caichaohong/Desktop/Zenki/南北向资金/TOP_10_raw_data.xlsx', index_col='Unnamed: 0')
 
 
-margin_buy_value = pd.read_excel('/Users/caichaohong/Desktop/Zenki/融资融券/margin_buy_value.xlsx')
-margin_sell_value = pd.read_excel('/Users/caichaohong/Desktop/Zenki/融资融券/margin_sell_value.xlsx')
+margin_buy_value = pd.read_excel('/Users/caichaohong/Desktop/Zenki/rongzi/margin_buy_value.xlsx')
+margin_sell_value = pd.read_excel('/Users/caichaohong/Desktop/Zenki/rongzi/margin_sell_value.xlsx')
 
 # 南北总资金
 north_amount = finance.run_query(query(finance.STK_ML_QUOTA).filter(finance.STK_ML_QUOTA.day>='2017-03-17',
@@ -228,13 +234,7 @@ north_df = north_df[north_df.index<= '2021-05-10'] #比交易日少很多
 
 
 
-# 所有公司名称
-all_stocks = get_all_securities(types=['stock'], date=None)
-all_stock = finance.run_query(query(finance.STK_COMPANY_INFO.code,
-                                    finance.STK_COMPANY_INFO.short_name).filter(
-    finance.STK_COMPANY_INFO.code.in_(list(all_stocks.index))))
 
-all_stock.to_excel('/Users/caichaohong/Desktop/Zenki/all_stock_names.xlsx')
 
 
 

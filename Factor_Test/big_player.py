@@ -58,6 +58,9 @@ z_df = close_daily.isna().replace(True,0)
 z_df = z_df.replace(False,1)
 factor = factor * z_df
 
+factor = factor.loc[(factor.index >= '2018-01-01') & (factor.index <= '2021-06-30')]
+factor.to_parquet('/Users/caichaohong/PycharmProjects/JIE/data/new_factors/big_player.parquet')
+
 
 date_1 = factor.index
 date_5 = factor.index[::5]
@@ -82,6 +85,9 @@ for i in range(len(date_list)):
 
 z = quantile_factor_test_plot_open(factor=factor, open_rts=open_rts, benchmark_rts=hs300['rts'], quantiles=10, hold_time=5, plot_title=False, weight="avg",
                               comm_fee=0.003)
+
+
+# z = pd.read_parquet('/Users/caichaohong/PycharmProjects/JIE/data/features/raw_qh_minutes_features.parquet')
 
 
 

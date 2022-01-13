@@ -124,12 +124,6 @@ money_5m.to_csv('/Users/caichaohong/Desktop/Zenki/price/5m/money_5m.csv')
 # 金额daily
 close_daily = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
 
-all_name = pd.read_excel('/Users/caichaohong/Desktop/Zenki/all_stock_names.xlsx',index_col='Unnamed: 0')
-all_name.index = all_name['code']
-
-stock_list_days = list(close_daily.isna().sum()[close_daily.isna().sum() <= 244].index)  # 大于一年的
-close_daily = close_daily[stock_list_days]
-
 start = close_daily.index[0]
 end = close_daily.index[-1]
 
@@ -143,6 +137,14 @@ for s in tqdm(close_daily.columns):
                     fields=['money'])
     money_daily[s] = tmp['money']
 money_daily.to_csv('/Users/caichaohong/Desktop/Zenki/price/daily/money.csv')
+
+
+
+
+
+
+
+
 
 
 

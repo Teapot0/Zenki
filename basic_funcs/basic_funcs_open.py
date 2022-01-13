@@ -3,9 +3,7 @@ from numpy import sqrt, pi, e
 import pandas as pd
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-from jqdatasdk import get_industries, get_industry_stocks,get_extras, finance, query, bond
-from sklearn.linear_model import LinearRegression
-import talib
+from basic_funcs.basic_function import *
 
 color_list = ['grey', 'rosybrown', 'saddlebrown', 'orange', 'goldenrod',
               'olive', 'yellow', 'darkolivegreen', 'lime', 'lightseagreen',
@@ -14,17 +12,21 @@ color_list = ['grey', 'rosybrown', 'saddlebrown', 'orange', 'goldenrod',
               'deeppink', 'lightpink']
 
 
+
 def get_ic_table_open_index(factor, open_rts, buy_date_list, index_pool):
     # buy list 是换仓日
     # index_pool 是制定代码池，目前支持300,500,1000
+    start = factor.index[0]
+    end = factor.index[-1]
+    stocks = list(factor.columns)
     if index_pool == 'hs300':
-        index_holds = pd.read_csv('/Users/caichaohong/Desktop/Zenki/hs300_holds.csv', index_col='Unnamed: 0')
+        index_holds = read_csv_select('/Users/caichaohong/Desktop/Zenki/hs300_holds.csv' , start_time= start, end_time = end,stock_list=stocks)
 
     elif index_pool == 'zz500':
-        index_holds = pd.read_csv('/Users/caichaohong/Desktop/Zenki/zz500_holds.csv', index_col='Unnamed: 0')
+        index_holds = read_csv_select('/Users/caichaohong/Desktop/Zenki/zz500_holds.csv' , start_time= start, end_time = end,stock_list=stocks)
 
     elif index_pool == 'zz1000':
-        index_holds = pd.read_csv('/Users/caichaohong/Desktop/Zenki/zz1000_holds.csv', index_col='Unnamed: 0')
+        index_holds = read_csv_select('/Users/caichaohong/Desktop/Zenki/zz1000_holds.csv' , start_time= start, end_time = end,stock_list=stocks)
 
     rts = open_rts.shift(-1)
     out = pd.DataFrame(np.nan,index=buy_date_list,columns=['ic', 'rank_ic'])

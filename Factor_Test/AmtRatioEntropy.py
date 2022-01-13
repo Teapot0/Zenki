@@ -49,7 +49,8 @@ z_df = z_df.replace(False,1)
 mon_ratio = pd.DataFrame(mon_daily.values/mon_daily.sum(axis=0).values, index=mon_daily.index, columns=mon_daily.columns)
 
 factor = (mon_ratio * np.log(mon_ratio)).rolling(20).sum()
-# factor.to_csv('/Users/caichaohong/Desktop/Zenki/factors/amtRatioEntropy.csv')
+factor = factor.loc[(factor.index >= '2018-01-01') & (factor.index <= '2021-06-30')]
+factor.to_parquet('/Users/caichaohong/PycharmProjects/JIE/data/new_factors/amtratioEntropy.parquet')
 
 date_1 = factor.index
 date_5 = factor.index[::5]

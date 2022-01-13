@@ -25,7 +25,7 @@ hs300['net_value'] = hs300['close'] / hs300['close'][0]
 
 close = pd.read_csv('/Users/caichaohong/Desktop/Zenki/price/daily/close.csv', index_col='Unnamed: 0', date_parser=dateparse)
 close_rts_1 = close.pct_change(1)
-margin_total_value = pd.read_csv('/Users/caichaohong/Desktop/Zenki/融资融券/margin_total_value.csv', index_col='Unnamed: 0',date_parser=dateparse)
+margin_total_value = pd.read_csv('/Users/caichaohong/Desktop/Zenki/rongzi/margin_total_value.csv', index_col='Unnamed: 0',date_parser=dateparse)
 
 # excess margin factor
 hs300_list = get_index_stocks('000300.XSHG')
